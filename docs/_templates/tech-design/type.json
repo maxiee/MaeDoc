@@ -84,7 +84,7 @@
       "id": "security-and-privacy",
       "title": "安全与隐私考量",
       "required": true,
-      "description": "系统性分析本方案引入的安全风险和隐私影响，以及对应的缓解措施。不可省略，即使结论是"无新增风险"也需明确写出。",
+      "description": "系统性分析本方案引入的安全风险和隐私影响，以及对应的缓解措施。不可省略，即使结论是\"无新增风险\"也需明确写出。",
       "subsections": [
         {
           "id": "threat-model",
@@ -163,14 +163,14 @@
       "id": "milestones-and-schedule",
       "title": "里程碑与排期",
       "required": false,
-      "description": "将方案分解为可交付的阶段性里程碑，标注预期时间和交付物。信息未知时标注为"未指定"。",
+      "description": "将方案分解为可交付的阶段性里程碑，标注预期时间和交付物。信息未知时标注为\"未指定\"。",
       "subsections": []
     },
     {
       "id": "assumptions-and-unspecified",
       "title": "未指定项与假设清单",
       "required": true,
-      "description": "集中列出所有待确认的假设、未决策的技术选项、需要外部输入的信息。作为本文档的"TODO"跟踪器，在评审时重点关注。",
+      "description": "集中列出所有待确认的假设、未决策的技术选项、需要外部输入的信息。作为本文档的\"TODO\"跟踪器，在评审时重点关注。",
       "subsections": []
     },
     {
