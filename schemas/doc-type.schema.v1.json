@@ -1,0 +1,221 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://maedoc.dev/schemas/doc-type.schema.v1.json",
+  "title": "MaeDoc Document Type Definition",
+  "description": "Schema for registering a document type in the MaeDoc ecosystem. Every built-in or user-defined document type must conform to this schema.",
+  "type": "object",
+  "required": ["type_id", "name", "description", "version", "author", "sections", "output_format"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Optional self-reference to this schema for editor tooling support."
+    },
+    "type_id": {
+      "type": "string",
+      "description": "Unique identifier for this document type. Use kebab-case (e.g. 'tech-design', 'blog-post').",
+      "pattern": "^[a-z][a-z0-9-]*[a-z0-9]$",
+      "minLength": 2,
+      "maxLength": 64,
+      "examples": ["tech-design", "blog-post", "meeting-notes", "adr"]
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable display name for this document type.",
+      "minLength": 1,
+      "maxLength": 128,
+      "examples": ["技术设计文档", "博客文章", "会议纪要"]
+    },
+    "description": {
+      "type": "string",
+      "description": "Short description of what this document type is for and when to use it.",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "version": {
+      "type": "string",
+      "description": "Semantic version of this document type definition (e.g. '1.0.0').",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+      "examples": ["1.0.0", "1.2.3", "2.0.0-beta.1"]
+    },
+    "author": {
+      "type": "string",
+      "description": "Name of the author or organisation that created this document type.",
+      "minLength": 1,
+      "maxLength": 128,
+      "examples": ["MaeDoc", "Jane Doe", "ACME Corp"]
+    },
+    "tags": {
+      "type": "array",
+      "description": "Free-form tags for discovery and filtering.",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]*$",
+        "maxLength": 32
+      },
+      "uniqueItems": true,
+      "default": [],
+      "examples": [["technical", "architecture"], ["content", "marketing"]]
+    },
+    "sections": {
+      "type": "array",
+      "description": "Ordered list of sections that define the structure of this document type.",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/section"
+      }
+    },
+    "variables": {
+      "type": "object",
+      "description": "Template variables that can be interpolated into the document. Keys are variable names in snake_case.",
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9_]*$",
+        "maxLength": 64
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/variable"
+      },
+      "default": {}
+    },
+    "writing_guidelines": {
+      "type": "string",
+      "description": "Relative path to a type-specific writing guidelines file (Markdown). Resolved relative to the document type directory.",
+      "examples": ["guidelines.md", "../../_templates/writing-guidelines.md"]
+    },
+    "output_format": {
+      "type": "string",
+      "description": "Primary output format for documents of this type.",
+      "enum": ["markdown", "html", "pdf", "docx"],
+      "default": "markdown"
+    }
+  },
+  "$defs": {
+    "section": {
+      "type": "object",
+      "title": "Document Section",
+      "description": "Defines a single section (chapter) within a document type.",
+      "required": ["id", "title", "required"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Machine-readable identifier for this section. Use kebab-case.",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "minLength": 1,
+          "maxLength": 64,
+          "examples": ["background", "architecture", "security"]
+        },
+        "title": {
+          "type": "string",
+          "description": "Display title shown as a Markdown heading.",
+          "minLength": 1,
+          "maxLength": 256,
+          "examples": ["背景与目标", "架构设计", "安全与隐私考量"]
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Whether this section must be present in a conforming document."
+        },
+        "description": {
+          "type": "string",
+          "description": "Guidance for the AI on what content to place in this section.",
+          "maxLength": 1024
+        },
+        "subsections": {
+          "type": "array",
+          "description": "Optional nested child sections (one level of nesting is recommended).",
+          "items": {
+            "$ref": "#/$defs/section"
+          },
+          "default": []
+        }
+      }
+    },
+    "variable": {
+      "type": "object",
+      "title": "Template Variable",
+      "description": "Metadata for a single template variable.",
+      "required": ["type"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "JSON-compatible primitive type for this variable.",
+          "enum": ["string", "number", "boolean", "array"]
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Whether the caller must supply a value for this variable.",
+          "default": false
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable explanation of what this variable represents.",
+          "maxLength": 256
+        },
+        "default": {
+          "description": "Default value used when the variable is not explicitly provided."
+        },
+        "examples": {
+          "type": "array",
+          "description": "Representative example values for documentation and tooling.",
+          "items": {}
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "type_id": "tech-design",
+      "name": "技术设计文档",
+      "description": "用于系统架构与技术方案设计",
+      "version": "1.0.0",
+      "author": "MaeDoc",
+      "tags": ["technical", "architecture"],
+      "sections": [
+        {
+          "id": "background",
+          "title": "背景与目标",
+          "required": true,
+          "description": "项目背景、问题陈述、目标与非目标",
+          "subsections": []
+        },
+        {
+          "id": "architecture",
+          "title": "架构设计",
+          "required": true,
+          "description": "系统整体架构，包含 Mermaid 图表",
+          "subsections": [
+            {
+              "id": "components",
+              "title": "组件清单",
+              "required": true,
+              "description": "列出所有关键组件及其职责"
+            },
+            {
+              "id": "data-flow",
+              "title": "数据流与接口定义",
+              "required": false,
+              "description": "组件间的数据流转和 API 契约"
+            }
+          ]
+        }
+      ],
+      "variables": {
+        "project_name": {
+          "type": "string",
+          "required": true,
+          "description": "项目或系统的名称"
+        },
+        "author": {
+          "type": "string",
+          "required": false,
+          "description": "文档作者姓名",
+          "default": "未指定"
+        }
+      },
+      "writing_guidelines": "guidelines.md",
+      "output_format": "markdown"
+    }
+  ]
+}
