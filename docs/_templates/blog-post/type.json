@@ -1,0 +1,183 @@
+{
+  "$schema": "../../schemas/doc-type.schema.v1.json",
+  "type_id": "blog-post",
+  "name": "博客文章",
+  "description": "用于内容创作场景的博客文章类型。适用场景：技术博客、经验分享、观点文章、教程、案例分析等。支持从想法到成稿的完整写作流水线，兼顾读者体验与 SEO 优化。",
+  "version": "1.0.0",
+  "author": "MaeDoc",
+  "tags": ["content", "blog", "writing", "seo"],
+  "sections": [
+    {
+      "id": "header",
+      "title": "标题与副标题",
+      "required": true,
+      "description": "文章的核心标识。标题决定点击率，副标题补充说明核心价值主张。两者共同构成读者对文章的第一印象。",
+      "subsections": [
+        {
+          "id": "title",
+          "title": "主标题",
+          "required": true,
+          "description": "简洁有力的文章标题，20 字以内。应包含核心关键词，传达明确价值，激发读者点击欲望。避免标题党，确保标题与内容一致。"
+        },
+        {
+          "id": "subtitle",
+          "title": "副标题",
+          "required": false,
+          "description": "对主标题的补充说明，进一步阐明文章的核心内容或受益点。可以是一句话的价值主张或内容摘要。"
+        }
+      ]
+    },
+    {
+      "id": "target-audience",
+      "title": "目标受众",
+      "required": true,
+      "description": "明确文章的目标读者画像。定义受众是内容策略的起点——影响写作深度、术语选择、案例类型和行动号召的设计。",
+      "subsections": [
+        {
+          "id": "reader-profile",
+          "title": "读者画像",
+          "required": true,
+          "description": "描述目标读者的身份特征：职业背景、技术水平、关注问题、阅读场景。示例：有 2-5 年经验的后端工程师，正在评估是否引入消息队列。"
+        },
+        {
+          "id": "reader-pain-points",
+          "title": "读者痛点",
+          "required": false,
+          "description": "列出目标读者在文章主题上遇到的典型困惑或挑战。这些痛点应在文章内容中得到直接回应。"
+        }
+      ]
+    },
+    {
+      "id": "hook",
+      "title": "引言（Hook）",
+      "required": true,
+      "description": "文章的开篇钩子，决定读者是否继续阅读。好的引言在 100-200 字内完成三件事：引发共鸣、建立信任、预告价值。",
+      "subsections": [
+        {
+          "id": "opening-hook",
+          "title": "开篇钩子",
+          "required": true,
+          "description": "用一个场景、数据、反问或故事开场，让读者立刻感到"这写的就是我的问题"。避免泛泛的"背景介绍"式开头。"
+        },
+        {
+          "id": "value-promise",
+          "title": "价值承诺",
+          "required": true,
+          "description": "明确告诉读者：读完这篇文章你会得到什么。使用具体、可验证的表述。示例：读完本文，你将掌握 3 种优化 SQL 查询性能的实战技巧。"
+        }
+      ]
+    },
+    {
+      "id": "core-content",
+      "title": "核心论点/内容",
+      "required": true,
+      "description": "文章的主体内容，承载核心价值。根据文章类型（教程/观点/案例）选择合适的内容组织方式。每个子章节聚焦一个论点或步骤，先结论后展开。",
+      "subsections": []
+    },
+    {
+      "id": "examples",
+      "title": "案例/示例",
+      "required": false,
+      "description": "通过具体案例或示例强化核心论点。好的案例让抽象概念变得具体可感。可以是代码示例、真实项目案例、对比实验或场景模拟。",
+      "subsections": [
+        {
+          "id": "example-cases",
+          "title": "具体示例",
+          "required": false,
+          "description": "1-3 个与核心论点直接相关的示例。每个示例应包含：背景说明、示例内容（代码/图表/场景描述）、关键要点解析。"
+        },
+        {
+          "id": "common-pitfalls",
+          "title": "常见误区",
+          "required": false,
+          "description": "列出读者在实践中容易犯的错误，以及正确的处理方式。这部分内容往往是读者最有收获感的章节。"
+        }
+      ]
+    },
+    {
+      "id": "conclusion",
+      "title": "总结与行动号召（CTA）",
+      "required": true,
+      "description": "文章的收尾，完成两件事：强化核心价值、引导读者采取下一步行动。好的结尾让读者有所得，并知道接下来该做什么。",
+      "subsections": [
+        {
+          "id": "key-takeaways",
+          "title": "核心要点回顾",
+          "required": true,
+          "description": "以 3-5 条要点形式总结文章的核心内容。每条要点独立成句，可直接截图分享。"
+        },
+        {
+          "id": "call-to-action",
+          "title": "行动号召（CTA）",
+          "required": true,
+          "description": "引导读者采取具体行动：尝试文中的方法、分享文章、关注作者、参与讨论、查看相关资源。CTA 应与文章内容自然衔接，避免突兀的营销感。"
+        }
+      ]
+    },
+    {
+      "id": "seo-meta",
+      "title": "SEO 元信息",
+      "required": false,
+      "description": "供发布平台使用的 SEO 优化信息。不出现在文章正文中，但对搜索引擎可见性至关重要。",
+      "subsections": [
+        {
+          "id": "meta-description",
+          "title": "Meta 描述",
+          "required": false,
+          "description": "150-160 字的文章摘要，用于搜索引擎结果页展示。应包含核心关键词，准确描述文章价值，吸引点击。"
+        },
+        {
+          "id": "keywords",
+          "title": "目标关键词",
+          "required": false,
+          "description": "列出 3-8 个目标关键词（含长尾词），按搜索量优先级排序。核心关键词应自然出现在标题、引言和小标题中。"
+        },
+        {
+          "id": "tags",
+          "title": "文章标签",
+          "required": false,
+          "description": "5-10 个用于内容分类和发现的标签。格式：以逗号分隔，如：Kafka, 消息队列, 分布式系统, 后端架构。"
+        }
+      ]
+    }
+  ],
+  "variables": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "description": "文章主标题"
+    },
+    "author": {
+      "type": "string",
+      "required": false,
+      "description": "文章作者",
+      "default": "未指定"
+    },
+    "date": {
+      "type": "string",
+      "required": false,
+      "description": "发布日期，格式 YYYY-MM-DD",
+      "default": "未指定"
+    },
+    "status": {
+      "type": "string",
+      "required": false,
+      "description": "文章状态：草稿 / 审阅中 / 已发布",
+      "default": "草稿"
+    },
+    "category": {
+      "type": "string",
+      "required": false,
+      "description": "文章分类，如：技术 / 产品 / 职场 / 思考",
+      "default": "未指定"
+    },
+    "reading_time": {
+      "type": "string",
+      "required": false,
+      "description": "预估阅读时间（分钟）",
+      "default": "未指定"
+    }
+  },
+  "writing_guidelines": "guidelines.md",
+  "output_format": "markdown"
+}
