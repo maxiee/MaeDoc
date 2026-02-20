@@ -387,7 +387,7 @@
 
 ---
 
-### v0018: doc-translate Skill
+### v0018: doc-translate Skill ✅
 
 **目标**：支持文档的多语言翻译，扩大项目的国际化吸引力。
 
