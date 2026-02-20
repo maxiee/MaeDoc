@@ -320,7 +320,7 @@
 
 ---
 
-### v0014: doc-format-normalize Skill
+### v0014: doc-format-normalize Skill ✅
 
 **目标**：统一文档的 Markdown 格式，消除格式不一致。
 
