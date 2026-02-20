@@ -497,7 +497,7 @@
 
 > **设计说明**：当本地模型能力遇到瓶颈时（复杂推理、大量上下文），通过文件中继桥接到更强大的外部 AI（Claude.ai、ChatGPT 等）。整个流程基于 markdown 文件，不依赖任何 API 调用或自定义工具代码。
 
-### v0023: .docforge 中继目录设置
+### v0023: .docforge 中继目录设置 ✅
 
 **目标**：建立远程桥接的工作区，用 markdown 文件作为中继载体（替代原复杂的 JSON 协议方案）。
 
@@ -679,7 +679,7 @@
 | M2: AI 写作 Skills | v0011-v0018 | 8 个核心 Skills | ✅ 完成 |
 | M3: 核心命令 | v0019-v0021 | /create、/review、/iterate | ✅ 完成 |
 | M4: 精简清理 | v0022 | 删除模板系统，/create 自由化 | ✅ 完成 |
-| M5: 远程桥接 | v0023-v0025 | .docforge 中继 + /escalate + /ingest-remote | 待做 |
+| M5: 远程桥接 | v0023-v0025 | .docforge 中继 + /escalate + /ingest-remote | 进行中 |
 | M6: 安全 Skills | v0026-v0028 | 安全扫描 Skills + 使用指南 | 待做 |
 | M7: 个人文档 | v0029-v0030 | Quickstart + README 更新 | 待做 |
 

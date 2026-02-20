@@ -53,7 +53,9 @@ Thumbs.db
 
 # .docforge runtime data
 .docforge/outbox/*.json
+.docforge/outbox/*.md
 .docforge/inbox/*.json
+.docforge/inbox/*.md
 .docforge/audit/
 
 # Temporary files
