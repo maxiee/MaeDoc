@@ -284,7 +284,7 @@
 
 ---
 
-### v0012: doc.content.fill Skill
+### v0012: doc.content.fill Skill ✅
 
 **目标**：根据大纲逐章节生成/填充内容。
 
