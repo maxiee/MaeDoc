@@ -301,7 +301,7 @@
 
 ---
 
-### v0013: doc.review Skill
+### v0013: doc.review Skill ✅
 
 **目标**：对已生成的文档进行多维度审阅。
 
