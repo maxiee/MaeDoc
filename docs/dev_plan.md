@@ -267,7 +267,7 @@
 
 ## Phase 2: 核心 Skills —— AI 写作能力（v0011 - v0018）
 
-### v0011: doc.outline.generate Skill
+### v0011: doc.outline.generate Skill ✅
 
 **目标**：MaeDoc 的核心能力——根据用户想法 + 文档类型，生成结构化大纲。
 
