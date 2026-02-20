@@ -21,6 +21,7 @@
 ```
 .
 ├── docs/                # 用户文档（/create 生成的文档存放于此）
+│   ├── index.md         # 入口文档（导航枢纽，文档地图）
 │   ├── guides/          # 用户指南
 │   └── examples/        # 示例文档
 ├── maedoc/              # MaeDoc 自身的配置与文档
@@ -120,6 +121,14 @@
 - 不在未要求时进行扩展改写或添加额外功能描述
 - 章节内容与标题严格对应，不跑题
 
+### 3.5 多文件架构原则
+
+- `docs/index.md` 是入口文档，Agent 从此处开始浏览文档树
+- 单文档不超过 **300 行**；超出时拆分为子文档并通过相对路径引用
+- 文档间交叉引用使用相对路径：`[标题](./subdir/file.md)`
+- 顶层文档侧重导航和概述，子文档承载详细内容
+- Agent 浏览文档的两条路径：沿 `index.md` 下钻 / 使用 `grep` 工具全文搜索
+
 ---
 
 ## 4. 安全红线
@@ -202,6 +211,7 @@
 | `skill.registry.build` | 自动生成 Skills 目录索引 | WIP |
 | `doc.changelog.generate` | 基于 git 历史生成/更新 CHANGELOG | WIP |
 | `doc.drift.detect` | 检测文档与实际状态之间的漂移 | WIP |
+| `doc.tree.evolve` | 分析文档树快照与用户意图，输出结构变更计划 | WIP |
 
 ### 6.2 用户写作命令（`.opencode/commands/`）
 
@@ -212,6 +222,7 @@
 | `/iterate` | `/iterate docs/my-doc.md 请补充...` | 基于反馈迭代更新文档 |
 | `/escalate` | `/escalate docs/my-doc.md <问题>` | 打包上下文发给外部 AI |
 | `/ingest-remote` | `/ingest-remote <slug>` | 导入外部 AI 的回答并应用 |
+| `/evolve` | `/evolve <新方向或结构调整需求>` | 扫描 docs/ 树并执行结构演进（拆分/合并/移动/归档） |
 
 ### 6.3 典型工作流
 
