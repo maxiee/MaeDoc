@@ -31,7 +31,6 @@ description: 根据已确认的文档大纲逐章节生成和填充内容，输�
 |------|:----:|------|
 | `output_file` | 是* | 目标文件路径（如 `docs/my-doc.md`）；Skill 从此文件读取大纲，并将填充结果逐章节写回此文件。与 `outline` 二选一，优先使用 `output_file` |
 | `outline` | 是* | 已确认的文档大纲（当未提供 `output_file` 时使用，由 `doc-outline-generate` 生成或用户自行提供） |
-| `doc_type` | 是 | 目标文档类型（`type_id`），用于读取写作规范 |
 | `materials` | 否 | 用户提供的素材：背景资料、数据、代码片段、参考文档等 |
 | `constraints` | 否 | 额外约束：目标长度、语言风格、受众、需要强调的内容 |
 
@@ -49,9 +48,7 @@ description: 根据已确认的文档大纲逐章节生成和填充内容，输�
    - 若提供了 `output_file`：直接**从该文件读取**大纲内容（文件当前应包含 `doc-outline-generate` 写入的大纲）
    - 若未提供 `output_file`：从 `outline` 参数读取大纲内容
 2. 解析大纲，提取章节列表和每章节的"所需输入"与"验收标准"
-3. 读取对应文档类型的写作规范：
-   - `docs/_templates/{type_id}/guidelines.md`（类型专属规范）
-   - `maedoc/writing-guidelines.md`（通用写作规范）
+3. 读取通用写作规范：`maedoc/writing-guidelines.md`
 4. 整合用户提供的素材，建立写作上下文
 5. 若提供了 `output_file`：在开始填充前，将文档头部元信息 + 所有章节标题（作为占位结构）写入文件，确保文件在填充过程中始终是可读的部分完成状态：
    ```markdown
@@ -97,7 +94,6 @@ description: 根据已确认的文档大纲逐章节生成和填充内容，输�
 
 2. 结合以下信息生成内容：
    - 章节的"所需输入"和"验收标准"（来自大纲）
-   - 文档类型的章节 `description`（来自 `type.json`）
    - 用户提供的相关素材
    - 写作规范约束
 
@@ -217,8 +213,7 @@ description: 根据已确认的文档大纲逐章节生成和填充内容，输�
 填充内容时，严格遵循以下约束（优先级从高到低）：
 
 1. **用户明确指定的约束**（通过 `constraints` 参数传入）
-2. **文档类型专属规范**（`docs/_templates/{type_id}/guidelines.md`）
-3. **通用写作规范**（`maedoc/writing-guidelines.md`）
+2. **通用写作规范**（`maedoc/writing-guidelines.md`）
 
 核心写作原则（摘自通用规范）：
 
@@ -267,7 +262,7 @@ description: 根据已确认的文档大纲逐章节生成和填充内容，输�
 
 **Skill 行为**：
 1. 读取大纲章节列表，识别各章节所需输入
-2. 读取 `docs/_templates/tech-design/guidelines.md` 和通用写作规范
+2. 读取通用写作规范 `maedoc/writing-guidelines.md`
 3. 按顺序填充各章节：
    - "执行摘要"：基于素材写出问题、方案、预期收益 → 🟢 高
    - "背景与问题陈述"：描述 3 服务耦合现状和延迟问题 → 🟢 高
