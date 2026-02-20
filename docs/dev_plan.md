@@ -447,7 +447,7 @@
 
 ---
 
-### v0021: /iterate 命令
+### v0021: /iterate 命令 ✅
 
 **目标**：基于反馈迭代更新文档。
 
@@ -677,7 +677,7 @@
 | M0: 基础设施 | v0001-v0004 | 项目骨架、配置、规则 | ✅ 完成 |
 | M1: 文档类型系统 | v0005-v0010 | Schema + 3 种内置类型 | ✅ 完成 |
 | M2: AI 写作 Skills | v0011-v0018 | 8 个核心 Skills | ✅ 完成 |
-| M3: 核心命令 | v0019-v0021 | /create、/review、/iterate | v0019-v0020 ✅，v0021 待做 |
+| M3: 核心命令 | v0019-v0021 | /create、/review、/iterate | ✅ 完成 |
 | M4: 精简清理 | v0022 | 删除模板系统，/create 自由化 | 待做 |
 | M5: 远程桥接 | v0023-v0025 | .docforge 中继 + /escalate + /ingest-remote | 待做 |
 | M6: 安全 Skills | v0026-v0028 | 安全扫描 Skills + 使用指南 | 待做 |
