@@ -371,7 +371,7 @@
 
 ---
 
-### v0017: doc-iterate Skill
+### v0017: doc-iterate Skill ✅
 
 **目标**：基于反馈对文档进行定向迭代优化。
 
