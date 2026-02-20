@@ -1,7 +1,6 @@
 # 系统概述
 
 > **文档类型**：技术方案设计
-> **来源**：从 [跨平台个人生产力系统技术概览](../cross-platform-setup/personal-productivity-system-overview.md) 拆分
 > **日期**：2026-02-20
 
 ---

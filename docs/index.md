@@ -6,53 +6,45 @@
 
 ## 当前探索方向
 
-**跨平台个人生产力系统** —— 研究个人生产力系统的技术架构设计，包括文件管理、数据存储、服务集成、GUI 组件化、AI Agent 集成等核心模块，以及 Windows、macOS、Linux 三大平台的实现策略。
+**个人数据与能力总线** —— 打造一个针对个人极客的应用组装平台：底层统一数据与同步（文件为真相源），上层统一能力调用与编排（Intent 协议），让多个小应用不再是孤岛，而是像积木一样能互相接上。不是造"超级 App"，而是造"让多个 App 能彼此组合的公共底座"。
 
 ---
 
 ## 文档地图
 
+### 愿景与概念
+
+| 文档 | 说明 |
+|------|------|
+| [总愿景](./vision/overview.md) | 个人数据与能力总线的定位、目标、核心理念 |
+| [核心概念](./vision/concepts.md) | 数据总线、能力总线、Intent 协议、积木式组装 |
+| [项目拆分](./vision/projects.md) | 独立可复用的开源项目边界与依赖关系 |
+
+### 底层基础设施
+
+| 文档 | 说明 |
+|------|------|
+| [基础设施概述](./infrastructure/overview.md) | 技术系统的整体架构 |
+| [文件存储系统](./infrastructure/file-storage.md) | UUID 分层存储、Sidecar 元信息、文件操作流程 |
+| [数据库系统](./infrastructure/database.md) | SQLite + EAV 架构、与文件系统联动、数据迁移 |
+| [服务中心系统](./infrastructure/service-hub.md) | 服务注册发现、跨平台 IPC、MCP 协议对齐 |
+| [组件化 GUI 系统](./infrastructure/component-gui.md) | 窗口合成机制、组件通信协议、Shell 容器 |
+| [AI Agent 集成](./infrastructure/ai-integration.md) | 权限控制模型、MCP 集成、审计日志 |
+
 ### 系统设计
 
 | 文档 | 说明 |
 |------|------|
-| [系统概述](./system-design/overview.md) | 跨平台个人生产力系统的定位、目标用户、设计理念 |
 | [核心设计原则](./system-design/core-principles.md) | 跨平台策略、AI 集成原则、MCP 原生设计 |
 | [模块间依赖关系](./system-design/module-dependencies.md) | 模块依赖图、启动顺序、接口契约 |
 | [风险与挑战](./system-design/risks-challenges.md) | 技术风险、架构挑战、AI 集成风险及缓解措施 |
 | [演进路线](./system-design/roadmap.md) | 里程碑规划、迭代节奏、长期愿景 |
 
-### 可跨系统复用模块
+### 平台实现
 
 | 文档 | 说明 |
 |------|------|
-| [文件存储系统](./shared-modules/file-storage.md) | UUID 分层存储、Sidecar 元信息、文件操作流程 |
-| [数据库系统](./shared-modules/database.md) | SQLite + EAV 架构、与文件系统联动、数据迁移 |
-| [服务中心系统](./shared-modules/service-hub.md) | 服务注册发现、跨平台 IPC、MCP 协议对齐 |
-| [组件化 GUI 系统](./shared-modules/component-gui.md) | 窗口合成机制、组件通信协议、Shell 容器 |
-| [AI Agent 集成](./shared-modules/ai-integration.md) | 权限控制模型、MCP 集成、审计日志 |
-
-### 不同操作系统实现
-
-| 文档 | 说明 |
-|------|------|
-| [各平台实现策略概览](./platform-implementations/overview.md) | Windows、macOS、Linux 技术栈选择与平台特性利用 |
-
-### 操作系统知识概念
-
-| 文档 | 说明 |
-|------|------|
-| [待创建] Windows 知识概念 | Windows IPC、COM、WinRT 等核心概念 |
-| [待创建] macOS 知识概念 | XPC、Core Animation、UTI 等核心概念 |
-| [待创建] Linux 知识概念 | D-Bus、Wayland/X11、inotify 等核心概念 |
-
-### 编程语言技术概念
-
-| 文档 | 说明 |
-|------|------|
-| [待创建] Rust 技术概念 | Rust 在系统编程中的应用、跨平台编译 |
-| [待创建] Swift 技术概念 | Swift 与 Apple 生态集成 |
-| [待创建] C# 技术概念 | C# 与 Windows 生态集成 |
+| [各平台实现策略概览](./platform/overview.md) | Windows、macOS、Linux 技术栈选择与平台特性利用 |
 
 ### 归档文档
 
@@ -67,23 +59,25 @@
 ```text
 docs/
 ├── index.md                              # 本文件（导航入口）
-├── system-design/                        # 系统设计
-│   ├── overview.md                       # 系统概述
-│   ├── core-principles.md                # 核心设计原则
-│   ├── module-dependencies.md            # 模块间依赖关系
-│   ├── risks-challenges.md               # 风险与挑战
-│   └── roadmap.md                        # 演进路线
-├── shared-modules/                       # 可跨系统复用模块
+├── vision/                               # 愿景与概念
+│   ├── overview.md                       # 总愿景
+│   ├── concepts.md                       # 核心概念
+│   └── projects.md                       # 项目拆分
+├── infrastructure/                       # 底层基础设施
+│   ├── overview.md                       # 基础设施概述
 │   ├── file-storage.md                   # 文件存储系统
 │   ├── database.md                       # 数据库系统
 │   ├── service-hub.md                    # 服务中心系统
 │   ├── component-gui.md                  # 组件化 GUI 系统
 │   └── ai-integration.md                 # AI Agent 集成
-├── platform-implementations/             # 不同操作系统实现
+├── system-design/                        # 系统设计
+│   ├── core-principles.md                # 核心设计原则
+│   ├── module-dependencies.md            # 模块间依赖关系
+│   ├── risks-challenges.md               # 风险与挑战
+│   └── roadmap.md                        # 演进路线
+├── platform/                             # 平台实现
 │   └── overview.md                       # 各平台实现策略概览
-├── os-concepts/                          # 操作系统知识概念
-│   └── （待创建）
-├── tech-concepts/                        # 编程语言技术概念
+├── projects/                             # 独立项目设计（待填充）
 │   └── （待创建）
 └── _archive/                             # 归档文档
     └── windows-component-platform-design.md

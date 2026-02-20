@@ -1,7 +1,6 @@
 # 服务中心系统
 
 > **文档类型**：技术方案设计
-> **来源**：从 [跨平台个人生产力系统技术概览](../cross-platform-setup/personal-productivity-system-overview.md) 拆分
 > **日期**：2026-02-20
 
 ---
@@ -166,4 +165,4 @@ stateDiagram-v2
 
 ---
 
-*本文档是跨平台个人生产力系统设计系列的一部分。其他相关文档：[核心设计原则](../system-design/core-principles.md)、[AI Agent 集成](./ai-integration.md)、[模块间依赖关系](../system-design/module-dependencies.md)*
+*本文档是个人数据与能力总线设计系列的一部分。其他相关文档：[核心设计原则](../system-design/core-principles.md)、[AI Agent 集成](./ai-integration.md)、[模块间依赖关系](../system-design/module-dependencies.md)*

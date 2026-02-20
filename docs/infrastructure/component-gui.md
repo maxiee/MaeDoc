@@ -1,7 +1,6 @@
 # 组件化 GUI 系统
 
 > **文档类型**：技术方案设计
-> **来源**：从 [跨平台个人生产力系统技术概览](../cross-platform-setup/personal-productivity-system-overview.md) 拆分
 > **日期**：2026-02-20
 
 ---
@@ -165,4 +164,4 @@ Shell 是应用的主框架，负责：
 
 ---
 
-*本文档是跨平台个人生产力系统设计系列的一部分。其他相关文档：[服务中心系统](./service-hub.md)、[各平台实现策略](../platform-implementations/overview.md)、[模块间依赖关系](../system-design/module-dependencies.md)*
+*本文档是个人数据与能力总线设计系列的一部分。其他相关文档：[服务中心系统](./service-hub.md)、[各平台实现策略](../platform/overview.md)、[模块间依赖关系](../system-design/module-dependencies.md)*

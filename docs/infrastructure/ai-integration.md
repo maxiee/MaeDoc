@@ -1,7 +1,6 @@
 # AI Agent 集成
 
 > **文档类型**：技术方案设计
-> **来源**：从 [跨平台个人生产力系统技术概览](../cross-platform-setup/personal-productivity-system-overview.md) 拆分
 > **日期**：2026-02-20
 
 ---
@@ -178,4 +177,4 @@ Model Context Protocol（MCP）是连接 AI 与外部工具的标准协议。本
 
 ---
 
-*本文档是跨平台个人生产力系统设计系列的一部分。其他相关文档：[核心设计原则](../system-design/core-principles.md)、[服务中心系统](./service-hub.md)、[风险与挑战](../system-design/risks-challenges.md)*
+*本文档是个人数据与能力总线设计系列的一部分。其他相关文档：[核心设计原则](../system-design/core-principles.md)、[服务中心系统](./service-hub.md)、[风险与挑战](../system-design/risks-challenges.md)*

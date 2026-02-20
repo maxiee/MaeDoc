@@ -1,7 +1,6 @@
 # 各平台实现策略概览
 
 > **文档类型**：技术方案设计
-> **来源**：从 [跨平台个人生产力系统技术概览](../cross-platform-setup/personal-productivity-system-overview.md) 拆分
 > **日期**：2026-02-20
 
 ---
@@ -143,4 +142,4 @@
 
 ---
 
-*本文档是跨平台个人生产力系统设计系列的一部分。其他相关文档：[核心设计原则](../system-design/core-principles.md)、[组件化 GUI 系统](../shared-modules/component-gui.md)*
+*本文档是个人数据与能力总线设计系列的一部分。其他相关文档：[核心设计原则](../system-design/core-principles.md)、[组件化 GUI 系统](../infrastructure/component-gui.md)*

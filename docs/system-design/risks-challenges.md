@@ -1,7 +1,6 @@
 # 风险与挑战
 
 > **文档类型**：技术方案设计
-> **来源**：从 [跨平台个人生产力系统技术概览](../cross-platform-setup/personal-productivity-system-overview.md) 拆分
 > **日期**：2026-02-20
 
 ---
@@ -131,4 +130,4 @@
 
 ---
 
-*本文档是跨平台个人生产力系统设计系列的一部分。其他相关文档：[AI Agent 集成](../shared-modules/ai-integration.md)、[模块间依赖关系](./module-dependencies.md)、[演进路线](./roadmap.md)*
+*本文档是个人数据与能力总线设计系列的一部分。其他相关文档：[AI Agent 集成](../infrastructure/ai-integration.md)、[模块间依赖关系](./module-dependencies.md)、[演进路线](./roadmap.md)*
