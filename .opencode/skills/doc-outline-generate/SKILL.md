@@ -1,6 +1,11 @@
-# doc.outline.generate
+---
+name: doc-outline-generate
+description: 根据用户想法描述和目标文档类型，生成结构化 Markdown 大纲，标注所需输入、验收标准与待确认问题清单，缺失信息不阻塞生成
+---
 
-> **Skill ID**：`doc.outline.generate`
+# doc-outline-generate
+
+> **Skill ID**：`doc-outline-generate`
 > **版本**：1.0.0
 > **类型**：instruction
 > **用途**：根据用户想法描述 + 目标文档类型，生成结构化 Markdown 大纲
@@ -149,7 +154,7 @@
 
 ---
 
-*确认大纲后，可使用 `doc.content.fill` Skill 逐章节填充内容。*
+*确认大纲后，可使用 `doc-content-fill` Skill 逐章节填充内容。*
 ```
 
 ---

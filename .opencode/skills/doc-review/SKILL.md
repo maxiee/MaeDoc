@@ -1,6 +1,11 @@
-# doc.review
+---
+name: doc-review
+description: 对文档进行结构完整性、逻辑一致性、语言质量、信息准确性、可读性五个维度的审阅，输出 P0/P1/P2 分级问题列表与修改建议
+---
 
-> **Skill ID**：`doc.review`
+# doc-review
+
+> **Skill ID**：`doc-review`
 > **版本**：1.0.0
 > **类型**：instruction
 > **用途**：对已生成的文档进行多维度审阅，输出问题列表、修改建议与优先级
@@ -173,11 +178,11 @@
 
 1. {优先级最高的行动项，如：先修复 P0 问题中的结构缺失}
 2. {次要行动项，如：确认「假设清单」中的遗留待确认项}
-3. {可选行动项，如：使用 `doc.format.normalize` Skill 统一格式}
+3. {可选行动项，如：使用 `doc-format-normalize` Skill 统一格式}
 
 ---
 
-*如需针对特定问题修改文档，可使用 `doc.iterate` Skill 进行定向优化。*
+*如需针对特定问题修改文档，可使用 `doc-iterate` Skill 进行定向优化。*
 ```
 
 ---

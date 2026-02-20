@@ -1,6 +1,11 @@
-# doc.content.fill
+---
+name: doc-content-fill
+description: 根据已确认的文档大纲逐章节生成和填充内容，输出完整 Markdown 文档，为每章节标注信心等级（高/中/低），并输出填充摘要
+---
 
-> **Skill ID**：`doc.content.fill`
+# doc-content-fill
+
+> **Skill ID**：`doc-content-fill`
 > **版本**：1.0.0
 > **类型**：instruction
 > **用途**：根据文档大纲逐章节生成/填充内容，输出完整的 Markdown 文档
@@ -24,7 +29,7 @@
 
 | 参数 | 必需 | 说明 |
 |------|:----:|------|
-| `outline` | 是 | 已确认的文档大纲（由 `doc.outline.generate` 生成，或用户自行提供） |
+| `outline` | 是 | 已确认的文档大纲（由 `doc-outline-generate` 生成，或用户自行提供） |
 | `doc_type` | 是 | 目标文档类型（`type_id`），用于读取写作规范 |
 | `materials` | 否 | 用户提供的素材：背景资料、数据、代码片段、参考文档等 |
 | `constraints` | 否 | 额外约束：目标长度、语言风格、受众、需要强调的内容 |
@@ -142,9 +147,9 @@
 
 ### 建议后续操作
 
-1. 确认上述待确认项，使用 `doc.iterate` Skill 针对性更新对应章节
-2. 使用 `doc.review` Skill 对全文进行质量审阅
-3. 使用 `doc.format.normalize` Skill 统一格式
+1. 确认上述待确认项，使用 `doc-iterate` Skill 针对性更新对应章节
+2. 使用 `doc-review` Skill 对全文进行质量审阅
+3. 使用 `doc-format-normalize` Skill 统一格式
 ```
 
 ---
@@ -215,7 +220,7 @@
 ## 示例
 
 **输入**：
-> 大纲：Kafka 替换同步 HTTP 调用技术设计文档（由 `doc.outline.generate` 生成）
+> 大纲：Kafka 替换同步 HTTP 调用技术设计文档（由 `doc-outline-generate` 生成）
 > 素材：现有系统包含 3 个服务（订单服务、库存服务、通知服务），订单服务同步调用另外两个，峰值 QPS 约 500，P99 延迟目前 800ms，目标 < 200ms
 
 **Skill 行为**：

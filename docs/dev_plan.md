@@ -4,7 +4,10 @@
 > **核心差异**：不限于技术文档，支持任意文档类型（技术设计、博客文章、项目提案、研究报告、会议纪要等），用户可自定义文档类型并复用 AI 写作技能
 > **目标**：打造网红开源项目，从 0 到 1 交付可用 MVP
 
-注意：如果有任何疑问，随时可以调用提问工具向我提问。
+注意：
+
+1. 如果有任何疑问，随时可以调用提问工具向我提问。
+2. 对 OpenCode Skill 功能的文档可参见：third_party/open_code_doc/open_code_skill_doc.md
 
 ---
 
@@ -267,12 +270,12 @@
 
 ## Phase 2: 核心 Skills —— AI 写作能力（v0011 - v0018）
 
-### v0011: doc.outline.generate Skill ✅
+### v0011: doc-outline-generate Skill ✅
 
 **目标**：MaeDoc 的核心能力——根据用户想法 + 文档类型，生成结构化大纲。
 
 **产出文件**：
-- `.opencode/skills/doc.outline.generate/SKILL.md`
+- `.opencode/skills/doc-outline-generate/SKILL.md`
 
 **Skill 行为**：
 - 输入：用户的想法描述 + 目标文档类型
@@ -284,12 +287,12 @@
 
 ---
 
-### v0012: doc.content.fill Skill ✅
+### v0012: doc-content-fill Skill ✅
 
 **目标**：根据大纲逐章节生成/填充内容。
 
 **产出文件**：
-- `.opencode/skills/doc.content.fill/SKILL.md`
+- `.opencode/skills/doc-content-fill/SKILL.md`
 
 **Skill 行为**：
 - 输入：文档大纲 + 用户提供的素材/约束
@@ -301,12 +304,12 @@
 
 ---
 
-### v0013: doc.review Skill ✅
+### v0013: doc-review Skill ✅
 
 **目标**：对已生成的文档进行多维度审阅。
 
 **产出文件**：
-- `.opencode/skills/doc.review/SKILL.md`
+- `.opencode/skills/doc-review/SKILL.md`
 
 **Skill 行为**：
 - 输入：待审阅的文档
@@ -317,12 +320,12 @@
 
 ---
 
-### v0014: doc.format.normalize Skill
+### v0014: doc-format-normalize Skill
 
 **目标**：统一文档的 Markdown 格式，消除格式不一致。
 
 **产出文件**：
-- `.opencode/skills/doc.format.normalize/SKILL.md`
+- `.opencode/skills/doc-format-normalize/SKILL.md`
 
 **Skill 行为**：
 - 检查并修正：标题层级、列表格式、代码块语言标注、表格对齐、空行规范
@@ -332,12 +335,12 @@
 
 ---
 
-### v0015: doc.structure.audit Skill
+### v0015: doc-structure-audit Skill
 
 **目标**：检查文档是否符合其文档类型定义的结构要求。
 
 **产出文件**：
-- `.opencode/skills/doc.structure.audit/SKILL.md`
+- `.opencode/skills/doc-structure-audit/SKILL.md`
 
 **Skill 行为**：
 - 输入：文档 + 对应的文档类型定义
@@ -348,12 +351,12 @@
 
 ---
 
-### v0016: doc.quality.score Skill
+### v0016: doc-quality-score Skill
 
 **目标**：对文档进行量化质量评分。
 
 **产出文件**：
-- `.opencode/skills/doc.quality.score/SKILL.md`
+- `.opencode/skills/doc-quality-score/SKILL.md`
 
 **Skill 行为**：
 - 评分维度（各占权重）：
@@ -368,12 +371,12 @@
 
 ---
 
-### v0017: doc.iterate Skill
+### v0017: doc-iterate Skill
 
 **目标**：基于反馈对文档进行定向迭代优化。
 
 **产出文件**：
-- `.opencode/skills/doc.iterate/SKILL.md`
+- `.opencode/skills/doc-iterate/SKILL.md`
 
 **Skill 行为**：
 - 输入：当前文档 + 用户反馈（自然语言或结构化）
@@ -384,12 +387,12 @@
 
 ---
 
-### v0018: doc.translate Skill
+### v0018: doc-translate Skill
 
 **目标**：支持文档的多语言翻译，扩大项目的国际化吸引力。
 
 **产出文件**：
-- `.opencode/skills/doc.translate/SKILL.md`
+- `.opencode/skills/doc-translate/SKILL.md`
 
 **Skill 行为**：
 - 输入：源文档 + 目标语言
@@ -539,12 +542,12 @@
 
 ---
 
-### v0026: skill.schema.validate Skill
+### v0026: skill-schema-validate Skill
 
 **目标**：校验所有 Skill 是否符合 Skill Contract 规范。
 
 **产出文件**：
-- `.opencode/skills/skill.schema.validate/SKILL.md`
+- `.opencode/skills/skill-schema-validate/SKILL.md`
 
 **Skill 行为**：
 - 扫描 .opencode/skills/ 下所有 SKILL.md
@@ -555,12 +558,12 @@
 
 ---
 
-### v0027: skill.registry.build Skill
+### v0027: skill-registry-build Skill
 
 **目标**：自动生成 Skills 清单索引，方便发现和文档化。
 
 **产出文件**：
-- `.opencode/skills/skill.registry.build/SKILL.md`
+- `.opencode/skills/skill-registry-build/SKILL.md`
 
 **Skill 行为**：
 - 扫描所有 Skills（.opencode/skills/）
@@ -571,12 +574,12 @@
 
 ---
 
-### v0028: doc.changelog.generate Skill
+### v0028: doc-changelog-generate Skill
 
 **目标**：基于 git 提交历史自动生成/更新 CHANGELOG。
 
 **产出文件**：
-- `.opencode/skills/doc.changelog.generate/SKILL.md`
+- `.opencode/skills/doc-changelog-generate/SKILL.md`
 
 **Skill 行为**：
 - 读取 git log（要求 Conventional Commits 格式）
@@ -587,12 +590,12 @@
 
 ---
 
-### v0029: doc.drift.detect Skill
+### v0029: doc-drift-detect Skill
 
 **目标**：检测文档与实际状态之间的漂移。
 
 **产出文件**：
-- `.opencode/skills/doc.drift.detect/SKILL.md`
+- `.opencode/skills/doc-drift-detect/SKILL.md`
 
 **Skill 行为**：
 - 检查文档间的交叉引用是否有效
@@ -695,12 +698,12 @@
 
 ---
 
-### v0035: hardness.classify Skill
+### v0035: hardness-classify Skill
 
 **目标**：定义何时自动判定为"疑难问题"，需要升级到远程强模型。
 
 **产出文件**：
-- `.opencode/skills/hardness.classify/SKILL.md`
+- `.opencode/skills/hardness-classify/SKILL.md`
 
 **判定信号**：
 - 循环/停滞信号：doom_loop 触发或多轮无进展
@@ -733,12 +736,12 @@
 
 ## Phase 6: 安全与审计（v0037 - v0042）
 
-### v0037: sec.secret.scan Skill
+### v0037: sec-secret-scan Skill
 
 **目标**：检测文档和 Prompt Pack 中的敏感信息。
 
 **产出文件**：
-- `.opencode/skills/sec.secret.scan/SKILL.md`
+- `.opencode/skills/sec-secret-scan/SKILL.md`
 
 **Skill 行为**：
 - 扫描目标：API Key 模式、密码模式、PII（邮箱、手机号）、私钥
@@ -749,12 +752,12 @@
 
 ---
 
-### v0038: sec.prompt_injection.check Skill
+### v0038: sec-prompt-injection-check Skill
 
 **目标**：对外部输入内容做提示注入风险检查。
 
 **产出文件**：
-- `.opencode/skills/sec.prompt_injection.check/SKILL.md`
+- `.opencode/skills/sec-prompt-injection-check/SKILL.md`
 
 **Skill 行为**：
 - 检测外部内容（网页、用户粘贴的需求文本）中的注入模式
