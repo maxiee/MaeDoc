@@ -323,7 +323,7 @@ graph TD
 | M9: 更多类型 | ADR、会议纪要、API 文档等 | ⏳ 计划中 |
 | M10: 品牌发布 | 文档完善 + README 升级 | ⏳ 计划中 |
 
-完整迭代计划见 [`docs/dev_plan.md`](docs/dev_plan.md)。
+完整迭代计划见 [`maedoc/dev_plan.md`](maedoc/dev_plan.md)。
 
 ---
 

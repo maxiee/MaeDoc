@@ -20,9 +20,12 @@
 **项目结构**：
 ```
 .
-├── docs/_templates/     # 文档类型模板库（每种类型含 type.json + template.md + guidelines.md）
-├── docs/guides/         # 用户指南
-├── docs/examples/       # 示例文档
+├── docs/                # 用户文档（/create 生成的文档存放于此）
+│   ├── guides/          # 用户指南
+│   └── examples/        # 示例文档
+├── maedoc/              # MaeDoc 自身的配置与文档
+│   ├── dev_plan.md      # 迭代计划
+│   └── writing-guidelines.md  # 通用写作规范
 ├── schemas/             # JSON Schema 定义
 ├── .opencode/
 │   ├── skills/          # AI 写作 Skills
@@ -170,47 +173,11 @@
 
 ---
 
-## 5. 文档类型扩展规范
+## 5. 写作规范
 
-### 5.1 文档类型三件套
+通用写作规范文件位于 `maedoc/writing-guidelines.md`，由 `opencode.jsonc` 的 `instructions` 字段自动加载为 AI 写作的基线约束。
 
-每种文档类型由三个文件组成，存放于 `docs/_templates/{type_id}/`：
-
-| 文件 | 用途 |
-|------|------|
-| `type.json` | 文档类型元数据（符合 `schemas/doc-type.schema.v1.json`） |
-| `template.md` | 文档结构模板（章节骨架 + 填写提示） |
-| `guidelines.md` | 该类型专属的写作指南 |
-
-### 5.2 type.json 关键字段
-
-```json
-{
-  "type_id": "my-doc-type",          // 唯一标识符，kebab-case
-  "name": "我的文档类型",             // 展示名称
-  "description": "用途说明",          // 一句话描述
-  "version": "1.0.0",                // SemVer 版本
-  "author": "MaeDoc",                // 作者
-  "tags": ["category"],              // 分类标签
-  "sections": [                      // 章节定义
-    {
-      "id": "section-id",
-      "title": "章节标题",
-      "required": true,              // 是否必需
-      "description": "章节说明"
-    }
-  ],
-  "variables": {},                   // 模板变量定义
-  "output_format": "markdown"        // 输出格式
-}
-```
-
-### 5.3 扩展原则
-
-- `type_id` 全局唯一，使用 kebab-case 命名
-- 必需章节（`required: true`）缺失时，生成的文档**不得**视为合格
-- 新文档类型须通过 `schemas/doc-type.schema.v1.json` 校验
-- 可通过 `/new-type` 命令交互式创建，或参考 `docs/_templates/_doc-type-definition.template.md` 手动创建
+所有文档写作遵循该规范，无需手动引用。
 
 ---
 
@@ -243,13 +210,8 @@
 | `/create` | `/create 我想写一篇关于...` | 一键创建新文档（大纲 → 内容 → 格式化） |
 | `/review` | `/review docs/my-doc.md` | 对文档进行全面审阅 |
 | `/iterate` | `/iterate docs/my-doc.md 请补充...` | 基于反馈迭代更新文档 |
-| `/audit` | `/audit docs/` | 批量文档质量审计 |
-| `/list-types` | `/list-types` | 列出所有可用的文档类型 |
-| `/new-type` | `/new-type 我想创建一个...` | 交互式创建自定义文档类型 |
-| `/escalate` | `/escalate 请深度审阅安全章节` | 手动触发远程增强流程 |
-| `/ingest-remote` | `/ingest-remote RFC-2026-0001` | 导入远程模型的增强回答 |
-
-> 以上命令均为 WIP，将在后续迭代中逐步实现。
+| `/escalate` | `/escalate docs/my-doc.md <问题>` | 打包上下文发给外部 AI |
+| `/ingest-remote` | `/ingest-remote <slug>` | 导入外部 AI 的回答并应用 |
 
 ### 6.3 典型工作流
 

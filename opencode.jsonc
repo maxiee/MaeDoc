@@ -20,6 +20,6 @@
   // 写作指南：引用通用写作规范作为 AI 基线约束
   // 注意：writing-guidelines.md 将在 v0006 中生成
   "instructions": [
-    "docs/_templates/writing-guidelines.md"
+    "maedoc/writing-guidelines.md"
   ]
 }

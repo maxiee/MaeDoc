@@ -51,7 +51,7 @@ description: 根据已确认的文档大纲逐章节生成和填充内容，输�
 2. 解析大纲，提取章节列表和每章节的"所需输入"与"验收标准"
 3. 读取对应文档类型的写作规范：
    - `docs/_templates/{type_id}/guidelines.md`（类型专属规范）
-   - `docs/_templates/writing-guidelines.md`（通用写作规范）
+   - `maedoc/writing-guidelines.md`（通用写作规范）
 4. 整合用户提供的素材，建立写作上下文
 5. 若提供了 `output_file`：在开始填充前，将文档头部元信息 + 所有章节标题（作为占位结构）写入文件，确保文件在填充过程中始终是可读的部分完成状态：
    ```markdown
@@ -218,7 +218,7 @@ description: 根据已确认的文档大纲逐章节生成和填充内容，输�
 
 1. **用户明确指定的约束**（通过 `constraints` 参数传入）
 2. **文档类型专属规范**（`docs/_templates/{type_id}/guidelines.md`）
-3. **通用写作规范**（`docs/_templates/writing-guidelines.md`）
+3. **通用写作规范**（`maedoc/writing-guidelines.md`）
 
 核心写作原则（摘自通用规范）：
 

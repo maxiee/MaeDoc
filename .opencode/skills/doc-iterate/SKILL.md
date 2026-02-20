@@ -56,7 +56,7 @@ description: 基于用户反馈对文档进行定向迭代优化，精准定位�
 3. 若提供 `doc_type`：
    - 读取 `docs/_templates/{type_id}/type.json`（获取章节结构要求）
    - 读取 `docs/_templates/{type_id}/guidelines.md`（获取类型专属写作规范）
-4. 读取通用写作规范：`docs/_templates/writing-guidelines.md`
+4. 读取通用写作规范：`maedoc/writing-guidelines.md`
 
 ---
 
@@ -102,7 +102,7 @@ description: 基于用户反馈对文档进行定向迭代优化，精准定位�
 
 按操作计划逐条执行，遵循以下原则：
 
-**通用写作规范**（参见 `docs/_templates/writing-guidelines.md`）：
+**通用写作规范**（参见 `maedoc/writing-guidelines.md`）：
 - 新增内容与原文风格保持一致（语言、语气、术语使用）
 - 保持章节头部的元信息格式（如"**负责人**：XXX"等已有格式）
 - 新增内容中的不确定信息，显式标注为 `[假设]` 或 `[待确认]`
