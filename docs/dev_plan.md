@@ -551,7 +551,7 @@
 
 ---
 
-### v0025: /ingest-remote 命令
+### v0025: /ingest-remote 命令 ✅
 
 **目标**：读取用户从外部 AI 获取的回答，引导应用到文档中。
 
@@ -679,7 +679,7 @@
 | M2: AI 写作 Skills | v0011-v0018 | 8 个核心 Skills | ✅ 完成 |
 | M3: 核心命令 | v0019-v0021 | /create、/review、/iterate | ✅ 完成 |
 | M4: 精简清理 | v0022 | 删除模板系统，/create 自由化 | ✅ 完成 |
-| M5: 远程桥接 | v0023-v0025 | .docforge 中继 + /escalate + /ingest-remote | 进行中 |
+| M5: 远程桥接 | v0023-v0025 | .docforge 中继 + /escalate + /ingest-remote | ✅ 完成 |
 | M6: 安全 Skills | v0026-v0028 | 安全扫描 Skills + 使用指南 | 待做 |
 | M7: 个人文档 | v0029-v0030 | Quickstart + README 更新 | 待做 |
 
