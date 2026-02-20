@@ -133,6 +133,12 @@ description: 一键创建新文档——MaeDoc 最核心的用户入口。与用
 📁 文档将保存至：docs/{文件名}
 ```
 
+同时，根据 `output_file` 推导 `base_dir` 候选路径（供多文件模式使用）：
+- 若 `output_file` 在 `docs/` 根目录（如 `docs/my-topic.md`）：`base_dir = docs/my-topic/`
+- 若 `output_file` 已在子目录（如 `docs/cross-platform-setup/my-topic.md`）：`base_dir = docs/cross-platform-setup/`（使用其父目录）
+
+`base_dir` 此时仅作候选记录，实际创建形式由阶段 2.2 的用户确认决定。
+
 ---
 
 ### 阶段 2：大纲生成
@@ -151,7 +157,28 @@ description: 一键创建新文档——MaeDoc 最核心的用户入口。与用
 
 **步骤 2.2：大纲交互确认**
 
-大纲生成并写入文件完毕后，使用 `question` 工具呈现大纲并请求确认：
+大纲生成并写入文件完毕后，读取大纲中的**规模评估**（`## 规模评估` 部分），获取"建议形式"字段：
+
+**若"建议形式"为"多文件文档树"**，使用 `question` 工具：
+
+- **标题**：确认文档大纲与创建形式
+- **问题**：大纲已生成并保存至 `{output_file}`，规模评估建议以多文件文档树形式创建（预估 ~{N} 行，超出单文档 300 行上限）。请选择创建形式：
+- **选项**：
+  1. 以多文件文档树形式创建（Recommended）
+  2. 改为单文件创建（不拆分）
+  3. 修改大纲（请在选择后说明需要调整的内容）
+  4. 重新生成大纲（请在选择后补充更多背景信息）
+  5. 放弃
+
+根据用户回应：
+
+- **选择 1（多文件）**：记录 `creation_mode = multi_file`，继续阶段 3-B
+- **选择 2（单文件）**：记录 `creation_mode = single_file`，继续阶段 3-A
+- **选择 3（修改）**：收集用户修改意见，更新大纲并重新写入 `output_file`，再次执行步骤 2.2
+- **选择 4（重新生成）**：使用 `question` 工具收集更多背景信息，重新调用 `doc-outline-generate`（附带 `output_file`），再次执行步骤 2.2
+- **选择 5（放弃）**：输出 `已取消文档创建流程。` 并终止
+
+**若"建议形式"为"单文件"**，使用 `question` 工具：
 
 - **标题**：确认文档大纲
 - **问题**：大纲已生成并保存至 `{output_file}`（见上方输出），请选择下一步操作：
@@ -163,26 +190,33 @@ description: 一键创建新文档——MaeDoc 最核心的用户入口。与用
 
 根据用户回应：
 
-- **选择 1（确认）**：继续阶段 3
-- **选择 2（修改）**：收集用户修改意见，更新大纲，将修改后的大纲重新写入 `output_file`，再次使用 `question` 工具确认
-- **选择 3（重新生成）**：使用 `question` 工具收集更多背景信息，重新调用 `doc-outline-generate`（附带 `output_file`），再次确认
+- **选择 1（确认）**：记录 `creation_mode = single_file`，继续阶段 3-A
+- **选择 2（修改）**：收集用户修改意见，更新大纲并重新写入 `output_file`，再次执行步骤 2.2
+- **选择 3（重新生成）**：使用 `question` 工具收集更多背景信息，重新调用 `doc-outline-generate`（附带 `output_file`），再次执行步骤 2.2
 - **选择 4（放弃）**：输出 `已取消文档创建流程。` 并终止
 
 ---
 
 ### 阶段 3：内容填充
 
-**步骤 3.1：调用 `doc-content-fill` Skill**
+根据阶段 2.2 确认的 `creation_mode`，执行对应的填充流程：
+
+---
+
+#### 阶段 3-A：单文件填充（`creation_mode = single_file`）
+
+**步骤 3-A.1：调用 `doc-content-fill` Skill**
 
 加载 `doc-content-fill` Skill，传入以下参数：
 
 - `output_file`：阶段 1 确定的文件路径（Skill 从此文件读取大纲，并逐章节将内容写回此文件）
 - `materials`：用户在对话中提供的任何素材（背景资料、数据、代码片段等）
 - `constraints`：用户指定的额外约束（语言风格、目标长度等）
+- `max_lines`：`300`
 
 **`doc-content-fill` 直接操作 `output_file`**：从文件读取大纲，逐章节填充内容后写回文件，文件在此过程中持续更新。
 
-**步骤 3.2：内容填充进度提示**
+**步骤 3-A.2：内容填充进度提示**
 
 每开始填充一个章节时，输出进度提示：
 
@@ -192,31 +226,56 @@ description: 一键创建新文档——MaeDoc 最核心的用户入口。与用
 
 ---
 
+#### 阶段 3-B：多文件文档树填充（`creation_mode = multi_file`）
+
+**步骤 3-B.1：确认 `base_dir` 并清理临时大纲文件**
+
+使用阶段 1.4 推导的 `base_dir` 候选路径。
+
+删除 `output_file`（该文件仅用于存储草稿大纲，多文件模式下由 `doc-tree-fill` 在 `base_dir` 内创建正式文件）。
+
+**步骤 3-B.2：调用 `doc-tree-fill` Skill**
+
+加载 `doc-tree-fill` Skill，传入以下参数：
+
+- `tree_plan`：阶段 2 大纲中的"建议的文档树结构"部分（各子文档文件名、标题、覆盖章节、预估行数）
+- `base_dir`：步骤 3-B.1 确认的目录路径
+- `original_idea`：阶段 0.5 汇总的 `enriched_context`
+- `materials`：用户在对话中提供的任何素材
+- `constraints`：用户指定的额外约束
+- `max_lines_per_doc`：`300`
+
+**`doc-tree-fill` 在 `base_dir` 下逐子文档创建文件、生成大纲、填充内容，最后生成 `{base_dir}/index.md` 作为导航入口**。
+
+---
+
 ### 阶段 4：格式规范化
 
 **步骤 4.1：调用 `doc-format-normalize` Skill**
 
-加载 `doc-format-normalize` Skill，传入以下参数：
+加载 `doc-format-normalize` Skill：
 
-- `document`：`output_file`（文件路径，Skill 直接读取并写回该文件）
-- `dry_run`：`false`（直接修改文件，不是预览）
+- **单文件模式**：传入 `document = output_file`，`dry_run = false`
+- **多文件模式**：对 `base_dir` 下每个填充完成的 `.md` 文件（含 `index.md`）依次调用，确保所有子文档格式统一
 
-**`doc-format-normalize` 直接读取 `output_file`，完成格式修正后写回同一文件**。
+**`doc-format-normalize` 直接读取文件，完成格式修正后写回同一文件**。
 
 ---
 
 ### 阶段 5：输出完成摘要
 
-> 此时 `output_file` 已包含完整的、格式规范的文档内容。
+> 此时文档已就绪：单文件模式下 `output_file` 包含完整文档；多文件模式下 `base_dir/` 包含所有子文档和导航入口。
 
 **步骤 5.1：输出完成摘要**
+
+**单文件模式（`creation_mode = single_file`）**：
 
 ```
 ---
 
 文档创建完成！
 
-📄 **文件路径**：`docs/{文件名}`
+📄 **文件路径**：`{output_file}`
 📊 **文档概况**：共 {N} 个章节，约 {N} 字
 
 **各章节信心等级**：
@@ -228,8 +287,26 @@ description: 一键创建新文档——MaeDoc 最核心的用户入口。与用
 ---
 
 📌 **建议后续操作**：
-- 使用 `/review docs/{文件名}` 进行全面审阅
-- 使用 `/iterate docs/{文件名} <反馈>` 进行定向优化
+- 使用 `/review {output_file}` 进行全面审阅
+- 使用 `/iterate {output_file} <反馈>` 进行定向优化
+```
+
+**多文件模式（`creation_mode = multi_file`）**：
+
+```
+---
+
+文档树创建完成！
+
+📁 **文档目录**：`{base_dir}`
+📄 **文件清单**：（来自 doc-tree-fill 完成摘要）
+
+---
+
+📌 **建议后续操作**：
+- 查看 `{base_dir}/index.md` 确认导航结构
+- 使用 `/review {base_dir}/index.md` 进行整体审阅
+- 使用 `/evolve` 对文档树进行后续结构调整
 ```
 
 ---
@@ -246,9 +323,8 @@ description: 一键创建新文档——MaeDoc 最核心的用户入口。与用
 
 1. 根据文档内容判断应归入哪个分类
 2. 若文档地图中已有匹配的分类，在该分类表格末尾追加一行：
-   ```markdown
-   | [文档标题](./相对路径) | 一句话描述 |
-   ```
+   - **单文件模式**：`| [文档标题](./相对路径) | 一句话描述 |`
+   - **多文件模式**：`| [文档标题](./{base_dir}/index.md) | 一句话描述（多文档集合，含 N 个子文档）|`
 3. 若无匹配分类，创建新的分类标题（H3）并添加条目
 4. 更新目录结构树
 
@@ -259,7 +335,7 @@ description: 一键创建新文档——MaeDoc 最核心的用户入口。与用
 输出：
 
 ```
-已将 docs/{文件名} 添加到 docs/index.md 文档地图。
+已将 {文档/文档树} 添加到 docs/index.md 文档地图。
 ```
 
 ---
@@ -289,31 +365,47 @@ description: 一键创建新文档——MaeDoc 最核心的用户入口。与用
     │   ├─ 用户未选终止 → 记录问答 → 推断下一追问 → 继续循环
     │   └─ 用户选终止  → 汇总 enriched_context → 继续
     ▼
-[阶段 1] 确定输出文件路径 → 创建 docs/ 目录（如需）→ 判断路径深度（归入已有分类或根目录）→ 告知用户文件路径
+[阶段 1] 确定输出文件路径 → 创建 docs/ 目录（如需）→ 判断路径深度 → 记录 output_file + base_dir 候选
     │
     ▼
-[阶段 2] doc-outline-generate（传入 enriched_context，AI 自主决定结构）→ 写入 output_file → 用户确认
-    │ 确认 / 修改（重新写入文件）/ 重新生成（重新写入文件）
-    ▼
-[阶段 3] doc-content-fill → 从 output_file 读取大纲 → 逐章节填充 → 逐章节写回 output_file
+[阶段 2] doc-outline-generate（传入 enriched_context，AI 自主决定结构 + 规模评估）→ 写入 output_file
     │
     ▼
-[阶段 4] doc-format-normalize → 读取 output_file → 格式修正 → 写回 output_file
+[阶段 2.2] 读取规模评估"建议形式"
+    │   ├─ 多文件文档树 → question（5 选项：多文件推荐/单文件/修改/重新生成/放弃）
+    │   │     ├─ 选多文件 → creation_mode = multi_file
+    │   │     ├─ 选单文件 → creation_mode = single_file
+    │   │     ├─ 修改/重新生成 → 更新大纲 → 重新执行 2.2
+    │   │     └─ 放弃 → 终止
+    │   └─ 单文件 → question（4 选项：确认/修改/重新生成/放弃）
+    │         ├─ 确认 → creation_mode = single_file
+    │         ├─ 修改/重新生成 → 更新大纲 → 重新执行 2.2
+    │         └─ 放弃 → 终止
+    ▼
+[阶段 3] 内容填充
+    │   ├─ single_file → [3-A] doc-content-fill（max_lines=300）→ 逐章节填充 → 写回 output_file
+    │   └─ multi_file  → [3-B] 删除临时 output_file → doc-tree-fill（base_dir, tree_plan）
+    │                          → 逐子文档（doc-outline-generate + doc-content-fill）
+    │                          → 生成 base_dir/index.md
+    ▼
+[阶段 4] doc-format-normalize → 单文件：规范 output_file；多文件：逐一规范 base_dir/*.md
     │
     ▼
-[阶段 5] 输出完成摘要（文件已就绪）
+[阶段 5] 输出完成摘要（单文件：文件路径+章节信心；多文件：目录+文件清单）
     │
     ▼
-[阶段 6] 更新 docs/index.md → 读取 index → 追加文档地图条目 → 写回 index
+[阶段 6] 更新 docs/index.md → 追加文档地图条目（单文件链接文档；多文件链接 base_dir/index.md）
 ```
 
 ---
 
 ## 注意事项
 
-1. **文件优先**：`output_file` 在阶段 1 确定后贯穿全流程，所有 Skill 都操作同一文件
+1. **文件优先**：`output_file` 在阶段 1 确定后贯穿全流程，所有 Skill 都操作同一文件（单文件模式）；多文件模式下以 `base_dir` 为根，各子文档独立操作
 2. **交互优先**：大纲确认等关键决策节点必须等待用户响应，不得跳过
 3. **不阻塞原则**：大纲和内容中的未知信息用 `[待确认: ...]` 占位，不因信息缺失而暂停整个流程
 4. **权限意识**：写入 `docs/` 目录前，遵循 `opencode.jsonc` 中 `edit` 权限配置；若需要询问，先询问再执行
 5. **幂等设计**：若目标文件已存在，不直接覆盖，改用带序号的新文件名，并告知用户
 6. **自由结构**：AI 根据内容自主判断最合适的文档结构，不依赖预设模板；同一个 `/create` 命令对不同主题可能产生完全不同的章节组织
+7. **规模优先**：对于预估超出 300 行的主题，优先建议多文件文档树形式；不强迫用户选择，但应主动说明单文件的超限风险
+8. **临时文件清理**：多文件模式下，阶段 3-B 会删除阶段 1-2 创建的临时大纲文件（`output_file`），确保 `base_dir` 下的文件是唯一的正式版本
