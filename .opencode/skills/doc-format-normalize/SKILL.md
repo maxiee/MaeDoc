@@ -125,7 +125,7 @@ description: 检查并修正 Markdown 文档的格式问题，包括标题层级
 1. 对比原始内容与修正内容，生成 unified diff 格式（`--- original` / `+++ formatted`）
 2. 统计变更汇总：各规则命中数量、总修改行数
 3. 若 `dry_run = true`（默认）：只输出报告和 diff，不修改文件
-4. 若 `dry_run = false`：将修正内容写回原文件，并输出报告和 diff
+4. 若 `dry_run = false`：使用 **`write` 工具**将修正内容完整写回原文件，并输出报告和 diff
 
 ---
 
