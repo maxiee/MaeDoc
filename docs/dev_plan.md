@@ -335,7 +335,7 @@
 
 ---
 
-### v0015: doc-structure-audit Skill
+### v0015: doc-structure-audit Skill ✅
 
 **目标**：检查文档是否符合其文档类型定义的结构要求。
 
