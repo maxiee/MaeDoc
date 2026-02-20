@@ -1,90 +1,265 @@
 # MaeDoc
 
-> **通用文档 AI Agent 生成器，基于 Open Code**
+> **通用文档 AI Agent 生成器，基于 OpenCode**
 >
 > Generate any document, with any AI, on your terms.
 
 ---
 
-## 为什么是 MaeDoc？
+## 这是什么？
 
-大多数 AI 写作工具只解决"写什么"，而忽略了"怎么管理"。MaeDoc 把文档视为**结构化产物**，通过可复用的文档类型模板和 AI Skills 流水线，让你从想法到成稿的每一步都可控、可追溯、可复用。
+MaeDoc 是一个**文档工作区模板**，也是一套运行在 [OpenCode](https://opencode.ai) 上的 AI 写作流水线。
+
+**使用方式很简单**：把这个仓库 Clone 下来（或 Fork、Use as Template），它就是你的文档工作区。你在 `docs/` 里写文档，AI Skills 和模板就在同一个仓库里。
+
+```
+你的文档仓库（从 MaeDoc fork/clone）
+├── docs/              ← 你写的文档存在这里
+│   └── _templates/    ← 内置文档类型（tech-design、blog-post 等）
+└── .opencode/
+    ├── skills/        ← AI 写作能力（MaeDoc 内置）
+    └── commands/      ← 写作命令，如 /create
+```
+
+**核心差异**：不限于技术文档，支持任意文档类型；每个环节都有对应的 AI Skill；结构化、可追溯、可复用。
 
 ---
 
-## 核心价值
+## 前置准备
 
-- **任意文档类型** — 技术设计、博客文章、项目提案、会议纪要、API 文档、ADR……不受场景限制，你定义文档的形状
-- **开箱即用 + 可自定义扩展** — 内置多种文档类型模板，一条命令注册你自己的文档类型
-- **AI 驱动的完整写作流水线** — 从大纲生成、内容填充、格式规范化到质量审阅，每个环节都有专属 Skill
-- **本地优先 + 远程增强** — 默认一切在本地运行，隐私可控；遇到疑难问题可主动升级到远程强模型
-- **基于 Open Code Skills 生态** — Skills 可复用、可组合、可共享，社区协作生产高质量写作能力
+### 1. 安装 OpenCode
+
+OpenCode 是运行 MaeDoc 的 AI 终端工具。
+
+```bash
+# macOS / Linux（推荐）
+curl -fsSL https://opencode.ai/install.sh | sh
+
+# 或通过 npm
+npm install -g opencode
+```
+
+> 完整安装指南见 [opencode.ai/docs](https://opencode.ai/docs)
+
+### 2. 配置 AI 模型
+
+OpenCode 支持多种 AI 模型。设置你已有的服务商 API Key：
+
+```bash
+# 使用 Anthropic Claude（推荐）
+export ANTHROPIC_API_KEY="your-key-here"
+
+# 或 OpenAI
+export OPENAI_API_KEY="your-key-here"
+
+# 或使用本地 Ollama（完全免费，完全本地）
+# 先安装 Ollama: https://ollama.ai
+ollama pull llama3.1
+```
 
 ---
 
-## 功能预览
+## 5 分钟快速上手
 
-### 核心写作命令
+### Step 1：获取 MaeDoc
+
+**方式 A：Fork（推荐个人使用）**
+
+点击 GitHub 右上角 Fork 按钮，Fork 到你的账号后 clone：
+
+```bash
+git clone https://github.com/YOUR_USERNAME/maedoc.git
+cd maedoc
+```
+
+**方式 B：直接 Clone（快速体验）**
+
+```bash
+git clone https://github.com/your-org/maedoc.git
+cd maedoc
+```
+
+### Step 2：启动 OpenCode
+
+```bash
+# 在 maedoc 目录下运行
+opencode
+```
+
+OpenCode 启动后，会自动发现 `.opencode/skills/` 下的所有 AI Skills 和 `.opencode/commands/` 下的写作命令。
+
+你会看到类似这样的交互界面：
+
+```
+Welcome to OpenCode
+Working directory: /path/to/maedoc
+Skills loaded: 8 (doc-outline-generate, doc-content-fill, ...)
+Commands loaded: 1 (create)
+
+>
+```
+
+### Step 3：创建你的第一个文档
+
+在 OpenCode 的输入框中输入：
+
+```
+/create 我想写一篇关于微服务架构迁移的技术设计文档
+```
+
+接下来，MaeDoc 会引导你完成完整的写作流程：
+
+```
+MaeDoc: 根据你的描述，我建议使用以下文档类型：
+
+📄 技术设计文档（tech-design）
+用于系统架构与技术方案设计。
+
+可用类型：
+1. 技术设计文档（tech-design）
+2. 博客文章（blog-post）
+3. 通用文档（generic）
+
+✅ 是否使用推荐类型「技术设计文档」？
+
+> 1（确认）
+
+MaeDoc: 正在生成大纲...
+
+# 文档大纲：微服务架构迁移技术设计
+
+## 1. 执行摘要 [必需]
+所需输入：迁移目标、核心方案、预期收益
+...
+
+✅ 是否确认大纲，开始填充内容？
+1. 确认，开始填充
+2. 修改大纲
+3. 重新生成
+
+> 1
+
+MaeDoc: 正在填充：## 执行摘要（1/10）
+正在填充：## 背景与问题陈述（2/10）
+...
+
+🎉 文档创建完成！
+📄 文件路径：docs/microservice-migration-design.md
+```
+
+### Step 4：查看生成的文档
+
+```bash
+# 在终端里查看
+cat docs/microservice-migration-design.md
+
+# 或用你喜欢的编辑器打开
+code docs/microservice-migration-design.md
+```
+
+---
+
+## 当前可用功能
+
+### 命令
 
 | 命令 | 描述 | 状态 |
-|------|------|------|
-| `/create` | 一键创建新文档（意图 → 大纲 → 成稿） | WIP |
-| `/review` | 对现有文档进行全面审阅 | WIP |
-| `/iterate` | 基于反馈定向迭代文档 | WIP |
-| `/audit` | 批量文档质量检查 | WIP |
-| `/list-types` | 浏览所有可用文档类型 | WIP |
-| `/new-type` | 交互式创建自定义文档类型 | WIP |
-| `/escalate` | 手动触发远程增强流程 | WIP |
-| `/ingest-remote` | 接收并合并远程模型回答 | WIP |
+|------|------|:----:|
+| `/create` | 一键创建新文档（意图 → 大纲确认 → 内容填充 → 格式化） | ✅ 可用 |
+| `/review` | 对现有文档进行全面审阅 | 🚧 开发中 |
+| `/iterate` | 基于反馈定向迭代文档 | 🚧 开发中 |
+| `/audit` | 批量文档质量检查 | 🚧 开发中 |
+| `/list-types` | 浏览所有可用文档类型 | 🚧 开发中 |
+| `/new-type` | 交互式创建自定义文档类型 | 🚧 开发中 |
 
-### AI Skills
+### AI Skills（由命令自动调用，也可单独使用）
 
 | Skill | 功能 | 状态 |
-|-------|------|------|
-| `doc.outline.generate` | 根据想法 + 文档类型生成结构化大纲 | WIP |
-| `doc.content.fill` | 按章节填充完整内容 | WIP |
-| `doc.review` | 多维度文档审阅 | WIP |
-| `doc.format.normalize` | Markdown 格式规范化 | WIP |
-| `doc.structure.audit` | 结构合规性检查 | WIP |
-| `doc.quality.score` | 量化质量评分（0-100） | WIP |
-| `doc.iterate` | 基于反馈定向修改 | WIP |
-| `doc.translate` | 保持结构的多语言翻译 | WIP |
-| `doc.changelog.generate` | 从 git 历史生成 CHANGELOG | WIP |
-| `doc.drift.detect` | 文档与现实状态漂移检测 | WIP |
-| `sec.secret.scan` | 敏感信息扫描 | WIP |
-| `sec.prompt_injection.check` | 提示注入风险检查 | WIP |
+|-------|------|:----:|
+| `doc-outline-generate` | 根据想法 + 文档类型生成结构化大纲 | ✅ 可用 |
+| `doc-content-fill` | 按章节填充完整内容，标注信心等级 | ✅ 可用 |
+| `doc-review` | 结构、逻辑、语言多维度审阅 | ✅ 可用 |
+| `doc-format-normalize` | Markdown 格式规范化，输出 diff | ✅ 可用 |
+| `doc-structure-audit` | 检查是否符合文档类型结构要求 | ✅ 可用 |
+| `doc-quality-score` | 量化质量评分（0–100）+ 改进建议 | ✅ 可用 |
+| `doc-iterate` | 基于反馈定向修改，输出 diff | ✅ 可用 |
+| `doc-translate` | 保持结构的多语言翻译 | ✅ 可用 |
+
+Skills 可单独调用，例如直接在 OpenCode 中说：
+
+```
+帮我用 doc-quality-score 给这篇文档打分：docs/my-design.md
+```
 
 ### 内置文档类型
 
-| 类型 | 描述 | 状态 |
-|------|------|------|
-| `generic` | 通用文档 | WIP |
-| `tech-design` | 技术设计文档 | WIP |
-| `blog-post` | 博客文章 | WIP |
-| `project-proposal` | 项目提案 | WIP |
-| `meeting-notes` | 会议纪要 | WIP |
-| `api-doc` | API 文档 | WIP |
-| `adr` | 架构决策记录（ADR） | WIP |
+| 类型 ID | 名称 | 状态 |
+|---------|------|:----:|
+| `tech-design` | 技术设计文档 | ✅ 可用 |
+| `blog-post` | 博客文章 | ✅ 可用 |
+| `generic` | 通用文档 | ✅ 可用 |
+| `project-proposal` | 项目提案 | 🚧 开发中 |
+| `meeting-notes` | 会议纪要 | 🚧 开发中 |
+| `api-doc` | API 文档 | 🚧 开发中 |
+| `adr` | 架构决策记录（ADR） | 🚧 开发中 |
 
 ---
 
-## Quick Start
+## 使用场景示例
 
-> 详细指南见 [`docs/guides/quickstart.md`](docs/guides/quickstart.md)（WIP）
+### 写一篇技术设计文档
 
-```bash
-# 1. 安装 Open Code
-# https://opencode.ai/docs/installation
+```
+/create 我们要把用户认证模块从单体抽出来，做成独立的认证服务，用 JWT 替换 Session
+```
 
-# 2. 克隆 MaeDoc
-git clone https://github.com/your-org/maedoc.git
-cd maedoc
+### 写博客文章
 
-# 3. 启动 Open Code
-opencode
+```
+/create 写一篇讲解 Rust 生命周期的博客文章，面向有 C++ 背景的读者
+```
 
-# 4. 创建你的第一个文档
-/create 我想写一篇关于微服务架构迁移的技术设计文档
+### 对已有文档质量评分
+
+```
+帮我用 doc-quality-score 评估 docs/my-doc.md 的质量
+```
+
+### 翻译文档
+
+```
+帮我用 doc-translate 把 docs/design.md 翻译成英文
+```
+
+### 审阅并给出修改建议
+
+```
+帮我用 doc-review 审阅 docs/proposal.md，重点关注逻辑一致性
+```
+
+---
+
+## 项目结构
+
+```
+maedoc/
+├── docs/
+│   ├── _templates/         # 文档类型模板库
+│   │   ├── tech-design/    # type.json + template.md + guidelines.md
+│   │   ├── blog-post/
+│   │   └── generic/
+│   ├── guides/             # 用户指南
+│   └── examples/           # 示例文档
+├── schemas/                # JSON Schema 定义
+├── .opencode/
+│   ├── skills/             # AI 写作 Skills（8 个）
+│   ├── commands/           # 写作命令（/create 等）
+│   ├── tools/              # 可执行工具
+│   └── plugins/            # 插件
+├── .docforge/              # 远程增强桥接（本地↔远程模型）
+├── scripts/                # 自动化脚本
+├── tests/                  # 测试套件
+└── opencode.jsonc          # OpenCode 配置（权限、模型、规范）
 ```
 
 ---
@@ -93,26 +268,24 @@ opencode
 
 ```mermaid
 graph TD
-    User["用户输入\n（想法 / 反馈）"]
+    User["用户\n（/create 想法描述）"]
 
     subgraph Local["本地环境（隐私安全）"]
         Commands["/create /review /iterate\n写作命令层"]
-        Skills["AI Skills\n写作能力层"]
-        Templates["文档类型模板\n结构定义层"]
-        Schemas["JSON Schema\n规范约束层"]
+        Skills["8 个 AI Skills\n写作能力层"]
+        Templates["文档类型模板\ntech-design / blog-post / ..."]
     end
 
     subgraph Remote["远程增强（可选）"]
         Bridge[".docforge 桥接协议"]
-        RemoteModel["远程强模型\nOpenAI / Anthropic / ..."]
+        RemoteModel["远程强模型\nClaude / GPT-4 / ..."]
     end
 
-    Docs["输出文档\n（Markdown）"]
+    Docs["docs/ 输出文档\n（Markdown）"]
 
     User --> Commands
     Commands --> Skills
     Skills --> Templates
-    Templates --> Schemas
     Skills --> Docs
     Skills -->|"疑难升级"| Bridge
     Bridge --> RemoteModel
@@ -126,36 +299,11 @@ graph TD
 
 | 层级 | 技术 |
 |------|------|
-| AI 运行时 | [Open Code](https://opencode.ai) |
-| Skills 语言 | Markdown（提示型）/ TypeScript（工具型） |
+| AI 运行时 | [OpenCode](https://opencode.ai) |
+| Skills | Markdown（提示型） / TypeScript（工具型） |
 | 文档格式 | Markdown + Mermaid |
-| Schema 规范 | JSON Schema Draft-07 |
-| 远程桥接协议 | JSON（`.docforge` 文件协议） |
-| CI/CD | GitHub Actions |
-| 质量门禁 | Python + pytest |
-
----
-
-## 项目结构
-
-```
-maedoc/
-├── docs/
-│   ├── _templates/      # 文档类型模板库（type.json + template.md + guidelines.md）
-│   ├── guides/          # 用户指南
-│   └── examples/        # 示例文档
-├── schemas/             # JSON Schema 定义
-├── .opencode/
-│   ├── skills/          # AI 写作 Skills
-│   ├── commands/        # 写作命令
-│   ├── tools/           # 可执行工具
-│   └── plugins/         # 插件
-├── .docforge/
-│   ├── outbox/          # 远程请求出队
-│   └── inbox/           # 远程响应入队
-├── scripts/             # 自动化脚本
-└── tests/               # 测试套件
-```
+| 类型规范 | JSON Schema Draft-07 |
+| 配置 | `opencode.jsonc` |
 
 ---
 
@@ -163,17 +311,17 @@ maedoc/
 
 | 里程碑 | 内容 | 状态 |
 |--------|------|------|
-| M0: 基础设施 | 项目骨架、配置、Agent 规则 | 🚧 进行中 |
-| M1: 文档类型系统 | 类型 Schema + 内置模板 | ⏳ 计划中 |
-| M2: AI 写作能力 | 8 个核心 Skills | ⏳ 计划中 |
-| M3: 写作命令 | 6 个用户命令 | ⏳ 计划中 |
-| M4: 技能治理 | Schema + 自检 Skills | ⏳ 计划中 |
+| M0: 基础设施 | 项目骨架、配置、Agent 规则 | ✅ 完成 |
+| M1: 文档类型系统 | 类型 Schema + 3 种内置模板 | ✅ 完成 |
+| M2: AI 写作能力 | 8 个核心 Skills | ✅ 完成 |
+| M3: 写作命令 | `/create` 等 6 个命令 | 🚧 进行中（1/6） |
+| M4: 技能治理 | Schema 校验 + 自检 Skills | ⏳ 计划中 |
 | M5: 远程桥接 | 本地+远程协同写作 | ⏳ 计划中 |
-| M6: 安全审计 | 安全扫描 + 审计日志 | ⏳ 计划中 |
-| M7: CI/CD | 自动化质量保障 | ⏳ 计划中 |
+| M6: 安全审计 | 敏感信息扫描 + 审计日志 | ⏳ 计划中 |
+| M7: CI/CD | GitHub Actions + 质量门禁 | ⏳ 计划中 |
 | M8: 测试 | 测试框架 + 回归用例 | ⏳ 计划中 |
-| M9: 更多类型 | 4 种新文档类型 | ⏳ 计划中 |
-| M10: 品牌发布 | 文档打磨 + README 升级 | ⏳ 计划中 |
+| M9: 更多类型 | ADR、会议纪要、API 文档等 | ⏳ 计划中 |
+| M10: 品牌发布 | 文档完善 + README 升级 | ⏳ 计划中 |
 
 完整迭代计划见 [`docs/dev_plan.md`](docs/dev_plan.md)。
 
