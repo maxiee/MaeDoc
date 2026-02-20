@@ -571,68 +571,9 @@
 
 ---
 
-## Phase 6: 安全——纯 Skill 实现（v0026 - v0028）
+## Phase 6: 个人使用文档（v0026 - v0027）
 
-> **设计说明**：Open Code 没有插件系统，所有安全能力通过 SKILL.md 提示词指令实现；运行时权限控制依赖 opencode.jsonc 配置，不需要额外的可执行代码。
-
-### v0026: sec-secret-scan Skill
-
-**目标**：在外发到远程 AI 之前，检测文档中是否含有敏感信息。
-
-**产出文件**：
-- `.opencode/skills/sec-secret-scan/SKILL.md`
-
-**Skill 行为**（提示词指令）：
-- 扫描目标内容：API Key 模式、Token、密码、邮箱、手机号、私钥头部
-- 命中即告警，列出位置和类型，建议替换为占位符后再外发
-- 在 /escalate 命令中引用此 Skill 作为前置检查
-
-**Commit**: `feat: add sec-secret-scan skill for pre-escalation sensitive content check`
-
----
-
-### v0027: sec-prompt-injection-check Skill
-
-**目标**：当文档内容来自外部来源（网页、粘贴内容）时，检测潜在的提示注入风险。
-
-**产出文件**：
-- `.opencode/skills/sec-prompt-injection-check/SKILL.md`
-
-**Skill 行为**（提示词指令）：
-- 识别可疑的指令注入模式（如"忽略上述指令"、隐藏的系统提示）
-- 输出：风险等级（低/中/高）+ 可疑片段位置 + 处理建议
-
-**Commit**: `feat: add sec-prompt-injection-check skill for input validation`
-
----
-
-### v0028: 安全使用指南 + 模型选择指南
-
-**目标**：帮助个人用户理解 MaeDoc 的数据流和如何选择合适的模型配置。
-
-**产出文件**：
-- `docs/guides/security.md`
-- `docs/guides/model-selection.md`
-
-**security.md 内容**：
-- 数据留在哪里（本地文件、opencode 会话）
-- 什么情况下数据会外发（/escalate 流程、模型 API 调用）
-- 使用 /escalate 前的安全检查清单
-- opencode.jsonc 权限配置说明
-
-**model-selection.md 内容**：
-- Open Code 支持的本地模型接入方式（Ollama、LM Studio）
-- 推荐的本地模型：Llama 3.1、Qwen2.5、Gemma 3、DeepSeek-R1
-- 远程 API 对比：Anthropic、OpenAI、Gemini、阿里云百炼
-- 何时用本地模型、何时用远程强模型的决策建议
-
-**Commit**: `docs: add security guide and model selection guide`
-
----
-
-## Phase 7: 个人使用文档（v0029 - v0030）
-
-### v0029: Quickstart 指南
+### v0026: Quickstart 指南
 
 **目标**：让自己（或未来的使用者）能快速上手，跑通第一个文档写作流程。
 
@@ -651,7 +592,7 @@
 
 ---
 
-### v0030: README 更新
+### v0027: README 更新
 
 **目标**：将 README 更新为真实反映项目当前状态和定位的版本，去除"打造网红开源项目"的定位，聚焦个人使用场景。
 
@@ -680,8 +621,7 @@
 | M3: 核心命令 | v0019-v0021 | /create、/review、/iterate | ✅ 完成 |
 | M4: 精简清理 | v0022 | 删除模板系统，/create 自由化 | ✅ 完成 |
 | M5: 远程桥接 | v0023-v0025 | .docforge 中继 + /escalate + /ingest-remote | ✅ 完成 |
-| M6: 安全 Skills | v0026-v0028 | 安全扫描 Skills + 使用指南 | 待做 |
-| M7: 个人文档 | v0029-v0030 | Quickstart + README 更新 | 待做 |
+| M6: 个人文档 | v0026-v0027 | Quickstart + README 更新 | 待做 |
 
 ---
 
@@ -689,6 +629,6 @@
 
 - **M3-M4（v0021-v0022）优先**：完成 /iterate 命令，清理模板系统，让 /create 彻底自由化
 - **M5（v0023-v0025）次之**：建立远程桥接能力，这是扩展写作深度的关键
-- **M6-M7（v0026-v0030）最后**：安全补充和文档收尾，按需做
+- **M6（v0026-v0027）最后**：文档收尾，按需做
 
 每个迭代（v-number）对应一次独立 Commit，遵循 Conventional Commits 规范。使用 `feat:` / `docs:` / `chore:` 前缀。
