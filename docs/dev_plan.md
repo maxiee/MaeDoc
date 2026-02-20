@@ -351,7 +351,7 @@
 
 ---
 
-### v0016: doc-quality-score Skill
+### v0016: doc-quality-score Skill ✅
 
 **目标**：对文档进行量化质量评分。
 
