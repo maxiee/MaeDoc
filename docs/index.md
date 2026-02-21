@@ -102,7 +102,7 @@ MaeDoc 由三层组成：**用户层**（命令输入）→ **OpenCode 运行时
 |------|------|
 | [OpenCode 使用指南](./opencode/index.md) | OpenCode 安装、配置、使用的完整指南 |
 | [安装指南](./opencode/installation.md) | 下载地址、桌面端/CLI 安装、文件结构 |
-| [Skills 配置](./opencode/skills-configuration.md) | .opencode 目录、GitHub Skills 安装、/init 验证 |
+| [Skills 配置](./opencode/skills-configuration.md) | Skills 搜索路径、SKILL.md 规范、权限配置、禁用技能、常见问题 |
 | [常用命令](./opencode/commands-reference.md) | /models、/connect、@ 引用、命令汇总 |
 
 ### 我想参与讨论
