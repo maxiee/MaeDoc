@@ -101,6 +101,8 @@ doc_contents = { "docs/vision/overview.md": "<full content>", ... }
 
 **步骤 1.4：生成结构诊断**
 
+> **docs 结构标准**：遵循 `maedoc/docs-structure-standard.md` 判断以下违规项。
+
 - **超长文档**：行数 > 300 的文件列表
 - **孤立文档**：未被任何文档（含 index.md）引用的文件
 - **断裂引用**：引用了不存在文件的链接列表
