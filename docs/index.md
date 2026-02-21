@@ -29,7 +29,7 @@
 
 **落地方案**：MaeDoc 强依赖本地运行时引擎（OpenCode），所有上下文组装和安全红线校验均在本地完成。远程模型仅在用户主动触发 `/escalate` 时介入，且外发内容必须经过敏感信息扫描。
 
-👉 详见：[核心架构设计 — OpenCode 运行时边界](./maedoc-architecture.md#1-系统全景)
+👉 详见：[核心架构设计 — 系统全景](./maedoc/system-overview.md)
 
 ### 理念 2：一切皆契约
 
@@ -37,7 +37,7 @@
 
 **落地方案**：通过 SKILL.md 中的结构化 Prompt 格式约定规范每个 Skill 的输入输出——明确说明接收什么、如何处理、输出什么格式，让 AI 的创造力在可预测的工作流上运行。
 
-👉 详见：[核心架构设计 — Skill 契约设计](./maedoc-architecture.md#3-skill-契约设计)
+👉 详见：[核心架构设计 — Skill 契约设计](./maedoc/skill-contract.md)
 
 ### 理念 3：流水线胜于对话框
 
@@ -45,7 +45,7 @@
 
 **落地方案**：将写作过程拆解为定义命令、加载 Skill、执行生成的标准化工作流。`/create` 从意图到大纲再到内容，`/iterate` 精准修改目标章节，`/review` 多维度质量审计——每一步都可追溯、可验证。
 
-👉 详见：[核心架构设计 — 命令分发机制](./maedoc-architecture.md#4-命令分发机制)
+👉 详见：[核心架构设计 — 命令分发机制](./maedoc/command-dispatch.md)
 
 ---
 
@@ -67,7 +67,7 @@ MaeDoc 由三层组成：**用户层**（命令输入）→ **OpenCode 运行时
                                     (docs/ 输出文档)
 ```
 
-**完整架构文档**：[核心架构设计](./maedoc-architecture.md)
+**完整架构文档**：[核心架构设计](./maedoc/index.md)
 
 ---
 
@@ -79,7 +79,7 @@ MaeDoc 由三层组成：**用户层**（命令输入）→ **OpenCode 运行时
 
 | 文档 | 说明 |
 |------|------|
-| [核心架构设计](./maedoc-architecture.md) | OpenCode 运行时、Skill 契约、命令机制的完整说明 |
+| [核心架构设计](./maedoc/index.md) | OpenCode 运行时、Skill 契约、命令机制的完整说明 |
 
 ### 我想回顾设计决策
 
@@ -121,7 +121,14 @@ MaeDoc 由三层组成：**用户层**（命令输入）→ **OpenCode 运行时
 ```
 docs/
 ├── index.md                          # 本文件（导航入口）
-├── maedoc-architecture.md            # 核心架构设计
+├── maedoc/                           # MaeDoc 核心架构设计（拆分）
+│   ├── index.md                      # 架构设计导航入口
+│   ├── system-overview.md            # 系统全景
+│   ├── data-flow.md                  # 核心数据流
+│   ├── skill-contract.md             # Skill 契约设计
+│   ├── command-dispatch.md           # 命令分发机制
+│   ├── extension-mechanism.md        # 扩展机制
+│   └── security-boundary.md          # 安全边界
 ├── TODO.md                           # 待办事项（由 /do-todo 处理）
 ├── opencode/                         # OpenCode 使用指南（新增）
 │   ├── index.md                      # 分组导航
@@ -167,5 +174,7 @@ docs/
 ---
 
 *本文档由 `/create` 和 `/evolve` 命令维护。新建文档会自动追加到文档地图。*
+
+*结构演进于 2026-02-22：拆分 maedoc-architecture.md (233 行) 为 docs/maedoc/ 目录（index.md + 6 个子文档）*
 
 *结构演进于 2026-02-22：拆分 skills-configuration.md (377 行) 为 3 个子文档（skills-basics、skill-md-spec、skills-permissions）*
