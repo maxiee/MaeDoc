@@ -5,17 +5,17 @@
   "share": "disabled",
   // 权限策略：所有敏感操作均需用户确认
   "permission": {
-    "edit": "ask", // 文件编辑前询问
-    "bash": "ask", // 执行 Shell 命令前询问
-    "webfetch": "ask", // 网络请求前询问
-    "external_directory": "ask", // 访问外部目录前询问
-    "doom_loop": "ask" // 检测到循环卡死时询问
+    "edit": "allow", // 文件编辑前询问
+    "bash": "allow", // 执行 Shell 命令前询问
+    "webfetch": "allow", // 网络请求前询问
+    "external_directory": "allow", // 访问外部目录前询问
+    "doom_loop": "allow" // 检测到循环卡死时询问
   },
   // 上下文压缩策略：自动压缩，保留关键上下文
   "compaction": {
     "auto": true, // 接近上下文窗口限制时自动压缩
     "prune": true, // 裁剪低价值历史消息
-    "reserved": 10000 // 为新内容预留 10000 token
+    // "reserved": 10000 // 为新内容预留 10000 token
   },
   // 写作指南：引用通用写作规范作为 AI 基线约束
   // 注意：writing-guidelines.md 将在 v0006 中生成
