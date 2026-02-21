@@ -299,30 +299,44 @@ mkdir -p {path}
 
 ---
 
-### 阶段 5.5：记录遗留操作为 TODO
+### 阶段 5.5：TODO 录入检查（必做，不可跳过）
 
-以下两类情况存在时，**必须**调用 `todo-append` Skill 追加到 `docs/TODO.md`：
+命令主体完成后，执行以下两类检查：
 
-**情况 A：用户选择了部分执行（`deferred_ops` 非空）**
+**专项检查 A：用户选择了部分执行（`deferred_ops` 非空）**
 
-将 `deferred_ops` 中被跳过的操作记录为 TODO：
+将 `deferred_ops` 中被跳过的操作记录为 TODO，对每项执行：
+1. 读取 `.opencode/skills/todo-append/SKILL.md`
+2. 按照 Skill 步骤追加到 `docs/TODO.md`：
+   - 跳过了内容操作（`UPDATE_SECTION` / `CREATE_FILE` / `SYNC_CONCEPT`）：以操作目标文件为维度合并，`priority = 中`
+   - 跳过了中/高风险操作（拆分/合并/移动等）：以操作类型为维度合并，`priority = 高`
+   - `description`：列出所有被跳过的操作（操作类型 + 目标文件 + 跳过原因）
+   - `source`：`由 /evolve 命令在执行"{演进意图摘要}"时用户选择部分执行而跳过`
+   - `background`：说明这些操作是在演进分析中识别出的必要变更，后续执行时可直接重新运行 `/evolve` 并选择全部执行
 
-- 跳过了内容操作（`UPDATE_SECTION` / `CREATE_FILE` / `SYNC_CONCEPT`）：以操作目标文件为维度合并，`priority = 中`
-- 跳过了中/高风险操作（拆分/合并/移动等）：以操作类型为维度合并，`priority = 高`
-- `description`：列出所有被跳过的操作（操作类型 + 目标文件 + 跳过原因）
-- `source`：`由 /evolve 命令在执行"{演进意图摘要}"时用户选择部分执行而跳过`
-- `background`：说明这些操作是在演进分析中识别出的必要变更，后续执行时可直接重新运行 `/evolve` 并选择全部执行
-
-**情况 B：阶段 4 中操作执行失败（`UPDATE_SECTION` 找不到目标章节等）**
+**专项检查 B：阶段 4 中操作执行失败（`UPDATE_SECTION` 找不到目标章节等）**
 
 为每个失败操作单独记录一条 TODO：
+1. 读取 `.opencode/skills/todo-append/SKILL.md`
+2. 按照 Skill 步骤追加到 `docs/TODO.md`：
+   - `description`：说明操作类型、目标文件、目标章节，以及失败原因
+   - `source`：`由 /evolve 命令在执行阶段 4 时发生错误`
+   - `priority`：`高`
+   - `background`：注明该操作在完整变更计划中的位置，以及手动处理时需要注意的内容
 
-- `description`：说明操作类型、目标文件、目标章节，以及失败原因
-- `source`：`由 /evolve 命令在执行阶段 4 时发生错误`
-- `priority`：`高`
-- `background`：注明该操作在完整变更计划中的位置，以及手动处理时需要注意的内容
+**通用检查（不论 A/B 情况，逐条判断）**：
 
-**若所有操作均已成功执行、且无操作被跳过，跳过此步骤。**
+| # | 检查项 | 是否发生 |
+|---|--------|:----:|
+| 1 | 演进过程中发现某文档存在问题，但修复超出本次演进范围 | 是 / 否 |
+| 2 | 用户在对话中提到了需要后续跟进的事项，本次未处理 | 是 / 否 |
+| 3 | 演进分析识别出的改进点，因风险或范围原因未纳入执行计划 | 是 / 否 |
+
+**对通用检查中判断为"是"的项**：读取 `.opencode/skills/todo-append/SKILL.md`，按其步骤追加到 `docs/TODO.md`。
+
+**完成摘要中必须包含以下之一（不可省略）**：
+- 有记录：`已记录 TODO：{编号列表}`
+- 无记录：`TODO 扫描：无项`
 
 ---
 
@@ -375,6 +389,11 @@ mkdir -p {path}
     │ 每步输出进度
     ▼
 [阶段 5] 输出完成摘要
+    │
+    ▼
+[阶段 5.5] TODO 录入检查（必做）→ 专项检查 A/B + 通用检查 3 条
+    │   ├─ 有项 → 读取 .opencode/skills/todo-append/SKILL.md → 按步骤追加 docs/TODO.md → 摘要列出编号
+    │   └─ 无项 → 摘要注明"TODO 扫描：无项"
 ```
 
 ---
