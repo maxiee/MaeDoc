@@ -611,6 +611,30 @@
 
 ---
 
+---
+
+## Phase 7: TODO 管理机制（v0028）
+
+### v0028: TODO 管理机制 ✅
+
+**目标**：引入全局 TODO 管理，让 Commands 和 Skills 执行过程中发现的代办事项得到追踪，并提供专门的执行命令。
+
+**产出文件**：
+- `docs/TODO.md`（TODO 列表存储文件）
+- `.opencode/skills/todo-append/SKILL.md`（供 Commands/Skills 调用的追加 Skill）
+- `.opencode/commands/do-todo.md`（执行 TODO 的专用命令）
+- 更新：`docs/index.md`（添加 TODO.md 引用和目录）
+- 更新：`AGENTS.md`（新增 §3.6 TODO 管理原则，更新 Skills/Commands 列表）
+
+**核心设计**：
+- `todo-append` Skill：任何 Command/Skill 均可调用，将代办写入 `docs/TODO.md`
+- `docs/TODO.md`：全局 TODO 列表，分"待处理"和"已完成"两区
+- `/do-todo`：执行时先全库扫描获取完整上下文，遇到不确定用 `question` 工具提问
+
+**Commit**: `feat: add TODO management system with todo-append skill and /do-todo command`
+
+---
+
 ## 里程碑概览
 
 | 里程碑 | 版本范围 | 核心交付 | 状态 |
@@ -622,6 +646,7 @@
 | M4: 精简清理 | v0022 | 删除模板系统，/create 自由化 | ✅ 完成 |
 | M5: 远程桥接 | v0023-v0025 | .docforge 中继 + /escalate + /ingest-remote | ✅ 完成 |
 | M6: 个人文档 | v0026-v0027 | Quickstart + README 更新 | 待做 |
+| M7: TODO 管理 | v0028 | todo-append Skill + /do-todo 命令 + docs/TODO.md | ✅ 完成 |
 
 ---
 

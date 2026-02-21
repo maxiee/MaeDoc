@@ -129,6 +129,18 @@
 - 顶层文档侧重导航和概述，子文档承载详细内容
 - Agent 浏览文档的两条路径：沿 `index.md` 下钻 / 使用 `grep` 工具全文搜索
 
+### 3.6 TODO 管理原则
+
+在执行任何 Command 或 Skill 过程中，遇到**来不及立刻完成**或**更适合后续专门处理**的事项时，必须调用 `todo-append` Skill 记录到 `docs/TODO.md`，而不是静默跳过。
+
+**应记录为 TODO 的典型场景**：
+- 发现某文档内容不完整，但修复超出当前任务范围
+- 需要先获取用户更多信息才能处理的事项
+- 执行主任务时发现的低优先级改善点
+- 需要跨多文档协调的复杂操作，当前时机不合适
+
+**TODO 的执行**：使用 `/do-todo` 命令，以整个文档库为上下文处理遗留事项，遇到不确定时用 `question` 工具向用户提问。
+
 ---
 
 ## 4. 安全红线
@@ -207,6 +219,7 @@
 | `sec.secret.scan` | 扫描敏感信息（API Key、密码、PII） | WIP |
 | `sec.prompt_injection.check` | 检测外部输入中的提示注入风险 | WIP |
 | `hardness-classify` | 六维硬度评估，超阈值时自动打包上下文并生成外部求助文件 | ✅ |
+| `todo-append` | 向 docs/TODO.md 追加代办事项，供 Commands/Skills 在无法立刻处理时记录 | ✅ |
 | `skill.schema.validate` | 校验 Skills 是否符合 Skill Contract 规范 | WIP |
 | `skill.registry.build` | 自动生成 Skills 目录索引 | WIP |
 | `doc.changelog.generate` | 基于 git 历史生成/更新 CHANGELOG | WIP |
@@ -223,6 +236,7 @@
 | `/escalate` | `/escalate docs/my-doc.md <问题>` | 打包上下文发给外部 AI |
 | `/ingest-remote` | `/ingest-remote <slug>` | 导入外部 AI 的回答并应用 |
 | `/evolve` | `/evolve <新方向或结构调整需求>` | 扫描 docs/ 树并执行结构演进（拆分/合并/移动/归档） |
+| `/do-todo` | `/do-todo` 或 `/do-todo <编号>` | 查看或执行 docs/TODO.md 中的代办事项 |
 
 ### 6.3 典型工作流
 
