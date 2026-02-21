@@ -1,33 +1,89 @@
-# MaeDoc 设计反思与演进
+# MaeDoc 文档库
 
-> **当前探索方向**：MaeDoc 设计反思与 AI 能力深化
+> **面向读者**：Maeiee（记录个人品味与技术判断）
 > **最后更新**：2026-02-21
 
 ---
 
-## 概述
+## 简介
 
-这是 **MaeDoc** 项目的文档库——一个基于 OpenCode 的**通用文档 AI Agent 生成器**。
+**MaeDoc** 是一个基于 OpenCode 的**通用文档 AI Agent 生成器**。
 
-**核心特点**：
+它不只是一个文档工具，而是一套**品味驱动的写作系统**：将 AI 的创造力约束在强类型的轨道上，让严肃的写作变成可预测的工业流水线。
+
+**核心能力**：
 - **本地优先**：隐私可控，敏感内容不离开本地
 - **文档类型可扩展**：不限于技术文档，支持任意文档类型
 - **AI 写作流水线**：从想法到成稿的完整工作流
 - **Skills 可组合**：能力可复用、可扩展
 
-这份文档集合是对 MaeDoc 项目的整体反思与演进规划。它不只是记录「做了什么」，更要回答「为什么这么做」和「怎么做更好」。
+---
 
-**核心主题**：
-- 方案复盘：审视已做出的设计决策
-- 演进规划：规划未来的发展方向
-- 架构说明：系统性描述设计理念
-- 思考笔记：记录探索过程中的洞察
+## 核心设计理念
+
+以下三条理念是 MaeDoc 架构的**不妥协原则**，由 Maeiee 的技术品味驱动。
+
+### 理念 1：绝对的数据主权
+
+**我的判断**：拒绝任何让核心资产和敏感文档离开本地工作流的方案。
+
+**落地方案**：MaeDoc 强依赖本地运行时引擎（OpenCode），所有上下文组装和安全红线校验均在本地完成。远程模型仅在用户主动触发 `/escalate` 时介入，且外发内容必须经过敏感信息扫描。
+
+👉 详见：[核心架构设计 — OpenCode 运行时边界](./maedoc-architecture.md#1-系统全景)
+
+### 理念 2：一切皆契约
+
+**我的判断**：AI 的能力不应该是一个黑盒 prompt，而应该像可组装的乐高——边界清晰、输入输出可校验。
+
+**落地方案**：我们使用 JSON Schema (Draft-07) 和 Markdown 强制规范 Skill 的输入输出。每个 Skill 都有显式的 Contract，让 AI 的创造力在强类型的轨道上运行。
+
+**权衡**：强约束带来编写繁琐的痛点，但换来了可预测性。👉 详见：[设计反思 — 强类型的代价与改进](./retrospect/design-reflections/skills-architecture.md)
+
+👉 详见：[核心架构设计 — Skill 契约设计](./maedoc-architecture.md#3-skill-契约设计)
+
+### 理念 3：流水线胜于对话框
+
+**我的判断**：严肃的写作不需要闲聊，需要的是工业级的生产流水线——每个环节都有明确的输入输出。
+
+**落地方案**：将写作过程拆解为定义命令、加载 Skill、执行生成的标准化工作流。`/create` 从意图到大纲再到内容，`/iterate` 精准修改目标章节，`/review` 多维度质量审计——每一步都可追溯、可验证。
+
+👉 详见：[核心架构设计 — 命令分发机制](./maedoc-architecture.md#4-命令分发机制)
 
 ---
 
-## 文档目录
+## 系统架构快照
 
-### 回顾与反思
+MaeDoc 由三层组成：**用户层**（命令输入）→ **OpenCode 运行时**（Commands + Skills + Templates）→ **本地文件系统**（输出与配置）。
+
+```
+用户 ──► /create /iterate /review ──► OpenCode Runtime
+                                            │
+                    ┌───────────────────────┼───────────────────────┐
+                    ▼                       ▼                       ▼
+               Commands                  Skills                Templates
+              (/create 等)           (AI 写作能力)           (文档类型模板)
+                    │                       │                       │
+                    └───────────────────────┼───────────────────────┘
+                                            ▼
+                                     本地文件系统
+                                    (docs/ 输出文档)
+```
+
+**完整架构文档**：[核心架构设计](./maedoc-architecture.md)
+
+---
+
+## 文档大地图
+
+按**认知逻辑**组织，帮助你快速找到需要的内容。
+
+### 我想了解架构设计
+
+| 文档 | 说明 |
+|------|------|
+| [核心架构设计](./maedoc-architecture.md) | OpenCode 运行时、Skill 契约、命令机制的完整说明 |
+
+### 我想回顾设计决策
 
 | 文档 | 说明 |
 |------|------|
@@ -35,24 +91,18 @@
 | [核心设计反思](./retrospect/design-reflections/index.md) | 四个关键设计的批判性审视 |
 | [痛点与不足](./retrospect/pain-points.md) | 当前设计的摩擦点与改进方向 |
 
-### 方向与规划
+### 我想规划未来方向
 
 | 文档 | 说明 |
 |------|------|
 | [AI 能力深化方向](./forward/ai-capability-deepening.md) | 本地模型强化与协作模式优化 |
 | [演进路线图](./forward/evolution-roadmap.md) | 从 v0029 到未来的版本规划 |
 
-### 开放问题
+### 我想参与讨论
 
 | 文档 | 说明 |
 |------|------|
 | [开放问题](./questions/open-questions.md) | 还没有答案的问题 |
-
-### 运维文档
-
-| 文档 | 说明 |
-|------|------|
-| [待办事项](./TODO.md) | 文档库的待处理事项（由 `/do-todo` 处理） |
 
 ---
 
@@ -61,17 +111,13 @@
 ```
 docs/
 ├── index.md                          # 本文件（导航入口）
+├── maedoc-architecture.md            # 核心架构设计
 ├── TODO.md                           # 待办事项（由 /do-todo 处理）
 ├── retrospect/                       # 回顾与反思
 │   ├── index.md                      # 分组导航
 │   ├── current-state.md              # 项目现状回顾
 │   ├── pain-points.md                # 痛点与不足
-│   └── design-reflections/           # 设计反思（4篇子文档）
-│       ├── index.md                  # 设计反思导航
-│       ├── skills-architecture.md    # Skills 架构反思
-│       ├── create-freedom.md         # /create 自由化反思
-│       ├── remote-bridge.md          # 远程桥接反思
-│       └── proactive-escalation.md   # 主动求助机制反思
+│   └── design-reflections/           # 设计反思（4 篇子文档）
 ├── forward/                          # 方向与规划
 │   ├── index.md                      # 分组导航
 │   ├── ai-capability-deepening.md    # AI 能力深化方向
@@ -84,18 +130,7 @@ docs/
 
 ---
 
-## 阅读建议
-
-| 你的目标 | 建议路径 |
-|---------|---------|
-| 快速了解项目全貌 | [项目现状回顾](./retrospect/current-state.md) → [演进路线图](./forward/evolution-roadmap.md) |
-| 深入理解设计理念 | [核心设计反思](./retrospect/design-reflections/index.md) → [AI 能力深化](./forward/ai-capability-deepening.md) |
-| 找具体改进方向 | [痛点与不足](./retrospect/pain-points.md) → [演进路线图](./forward/evolution-roadmap.md) |
-| 参与讨论 | [开放问题](./questions/open-questions.md) |
-
----
-
-## 项目文档关系
+## 项目上下文
 
 | 文档 | 位置 | 职责 |
 |------|------|------|
@@ -103,56 +138,14 @@ docs/
 | `AGENTS.md` | 项目根目录 | AI Agent 行为准则、写作原则、安全红线 |
 | `maedoc/writing-guidelines.md` | maedoc/ | 通用写作规范 |
 | `maedoc/dev_plan.md` | maedoc/ | 任务清单、迭代计划（「做什么」） |
-| `docs/` | docs/ | 本文档库（「为什么」「怎么做更好」） |
+| `docs/` | docs/ | 本文档库（「为什么」「怎么做」） |
 
 **关键区别**：
 - `maedoc/dev_plan.md` 是**执行层面**的任务跟踪
-- `docs/` 是**思考层面**的深度探索
-
----
-
-## 能力概览
-
-### 可用命令
-
-| 命令 | 描述 | 状态 |
-|------|------|:----:|
-| `/create` | 一键创建新文档（意图 → 大纲 → 内容 → 格式化） | ✅ |
-| `/review` | 对现有文档进行全面审阅 | ✅ |
-| `/iterate` | 基于反馈定向迭代文档 | ✅ |
-| `/evolve` | 文档库结构演进（拆分/合并/归档） | ✅ |
-| `/escalate` | 打包上下文发给外部 AI | ✅ |
-| `/ingest-remote` | 导入外部 AI 的回答 | ✅ |
-| `/do-todo` | 处理 docs/TODO.md 中的代办事项 | ✅ |
-
-### AI Skills
-
-| Skill | 功能 | 状态 |
-|-------|------|:----:|
-| `doc-outline-generate` | 根据想法 + 文档类型生成结构化大纲 | ✅ |
-| `doc-content-fill` | 按章节填充完整内容，标注信心等级 | ✅ |
-| `doc-review` | 结构、逻辑、语言多维度审阅 | ✅ |
-| `doc-format-normalize` | Markdown 格式规范化 | ✅ |
-| `doc-structure-audit` | 检查是否符合文档类型结构要求 | ✅ |
-| `doc-quality-score` | 量化质量评分（0–100）+ 改进建议 | ✅ |
-| `doc-iterate` | 基于反馈定向修改 | ✅ |
-| `doc-translate` | 保持结构的多语言翻译 | ✅ |
-
----
-
-## 与 dev_plan.md 的关系
-
-| 文档 | 定位 | 性质 |
-|------|------|------|
-| `maedoc/dev_plan.md` | 任务清单 | 「做什么」 |
-| 本文档库 | 设计反思 | 「为什么」「怎么做更好」 |
-
-两者互补：
-- dev_plan.md 是执行层面的任务跟踪
-- 本文档库是思考层面的深度探索
+- `docs/` 是**思考层面**的深度探索和架构说明
 
 ---
 
 *本文档由 `/create` 和 `/evolve` 命令维护。新建文档会自动追加到文档地图。*
 
-*结构演进于 2026-02-21：去掉 maedoc-reflections 层级，将内容提升到 docs/ 级别。*
+*结构演进于 2026-02-21：重构为「简介 + 理念 + 导航」结构，新增架构文档。*
