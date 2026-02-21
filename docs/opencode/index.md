@@ -22,7 +22,9 @@
 | 文档 | 说明 |
 |------|------|
 | [安装指南](./installation.md) | 下载地址、桌面端/CLI 安装、文件结构 |
-| [Skills 配置](./skills-configuration.md) | .opencode 目录、GitHub Skills 安装、/init 验证 |
+| [Skills 使用入门](./skills-basics.md) | 什么是 Skills、目录结构、安装与验证 |
+| [SKILL.md 开发规范](./skill-md-spec.md) | Frontmatter 字段、名称验证规则、完整示例 |
+| [Skills 权限配置](./skills-permissions.md) | 权限模式、禁用技能、常见问题 |
 | [环境变量](./environment-variables.md) | 全局配置 vs 项目配置 |
 | [常用命令](./commands-reference.md) | /models、/connect、@ 引用、命令汇总 |
 | [常见问题](./faq.md) | 问题解决与使用技巧 |
@@ -57,3 +59,4 @@ MaeDoc 是运行在 OpenCode 之上的**文档写作 AI Agent**：
 ---
 
 *本导航由 `/evolve` 命令生成，最后更新：2026-02-22*
+*结构演进于 2026-02-22：拆分 skills-configuration.md 为 3 个子文档*

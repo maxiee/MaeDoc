@@ -102,7 +102,9 @@ MaeDoc 由三层组成：**用户层**（命令输入）→ **OpenCode 运行时
 |------|------|
 | [OpenCode 使用指南](./opencode/index.md) | OpenCode 安装、配置、使用的完整指南 |
 | [安装指南](./opencode/installation.md) | 下载地址、桌面端/CLI 安装、文件结构 |
-| [Skills 配置](./opencode/skills-configuration.md) | Skills 搜索路径、SKILL.md 规范、权限配置、禁用技能、常见问题 |
+| [Skills 使用入门](./opencode/skills-basics.md) | 什么是 Skills、目录结构、安装与验证 |
+| [SKILL.md 开发规范](./opencode/skill-md-spec.md) | Frontmatter 字段、名称验证规则、完整示例 |
+| [Skills 权限配置](./opencode/skills-permissions.md) | 权限模式、禁用技能、常见问题 |
 | [常用命令](./opencode/commands-reference.md) | /models、/connect、@ 引用、命令汇总 |
 
 ### 我想参与讨论
@@ -123,7 +125,9 @@ docs/
 ├── opencode/                         # OpenCode 使用指南（新增）
 │   ├── index.md                      # 分组导航
 │   ├── installation.md               # 安装指南
-│   ├── skills-configuration.md       # Skills 配置
+│   ├── skills-basics.md              # Skills 使用入门
+│   ├── skill-md-spec.md              # SKILL.md 开发规范
+│   ├── skills-permissions.md         # Skills 权限配置
 │   ├── environment-variables.md      # 环境变量
 │   ├── commands-reference.md         # 常用命令
 │   └── faq.md                        # 常见问题
@@ -162,4 +166,4 @@ docs/
 
 *本文档由 `/create` 和 `/evolve` 命令维护。新建文档会自动追加到文档地图。*
 
-*结构演进于 2026-02-22：新增 OpenCode 使用指南子文档树（6 篇），吸收技术文章知识。*
+*结构演进于 2026-02-22：拆分 skills-configuration.md (377 行) 为 3 个子文档（skills-basics、skill-md-spec、skills-permissions）*
