@@ -105,7 +105,8 @@ MaeDoc 由三层组成：**用户层**（命令输入）→ **OpenCode 运行时
 | [Skills 使用入门](./opencode/skills-basics.md) | 什么是 Skills、目录结构、安装与验证 |
 | [SKILL.md 开发规范](./opencode/skill-md-spec.md) | Frontmatter 字段、名称验证规则、完整示例 |
 | [Skills 权限配置](./opencode/skills-permissions.md) | 权限模式、禁用技能、常见问题 |
-| [常用命令](./opencode/commands-reference.md) | /models、/connect、@ 引用、命令汇总 |
+| [内置命令参考](./opencode/commands-built-in.md) | /models、/connect、/init、模式切换、命令汇总表 |
+| [自定义命令开发](./opencode/commands-custom.md) | 创建、配置、参数、选项详解、完整示例 |
 
 ### 我想参与讨论
 
@@ -129,7 +130,8 @@ docs/
 │   ├── skill-md-spec.md              # SKILL.md 开发规范
 │   ├── skills-permissions.md         # Skills 权限配置
 │   ├── environment-variables.md      # 环境变量
-│   ├── commands-reference.md         # 常用命令
+│   ├── commands-built-in.md          # 内置命令参考
+│   ├── commands-custom.md            # 自定义命令开发
 │   └── faq.md                        # 常见问题
 ├── retrospect/                       # 回顾与反思
 │   ├── index.md                      # 分组导航

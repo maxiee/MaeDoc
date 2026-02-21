@@ -22,11 +22,12 @@
 | 文档 | 说明 |
 |------|------|
 | [安装指南](./installation.md) | 下载地址、桌面端/CLI 安装、文件结构 |
+| [内置命令参考](./commands-built-in.md) | /models、/connect、/init、模式切换、命令汇总表 |
+| [自定义命令开发](./commands-custom.md) | 创建、配置、参数、选项详解、完整示例 |
 | [Skills 使用入门](./skills-basics.md) | 什么是 Skills、目录结构、安装与验证 |
 | [SKILL.md 开发规范](./skill-md-spec.md) | Frontmatter 字段、名称验证规则、完整示例 |
 | [Skills 权限配置](./skills-permissions.md) | 权限模式、禁用技能、常见问题 |
 | [环境变量](./environment-variables.md) | 全局配置 vs 项目配置 |
-| [常用命令](./commands-reference.md) | /models、/connect、@ 引用、命令汇总 |
 | [常见问题](./faq.md) | 问题解决与使用技巧 |
 
 ---
