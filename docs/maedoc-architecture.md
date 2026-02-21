@@ -85,52 +85,36 @@ sequenceDiagram
 
 ## 3. Skill 契约设计
 
-### 3.1 Skill 的三要素
+### 3.1 Skill 的唯一要素
 
-每个 Skill 由三部分组成：
+每个 Skill 由单一文件组成：
 
 ```
-┌─────────────────────────────────────────┐
-│              Skill: AI Writer           │
-├─────────────────────────────────────────┤
-│  ┌─────────────────────────────────┐   │
-│  │ Prompt (Markdown)               │   │
-│  │ 定义任务描述、输入输出格式        │   │
-│  └─────────────────────────────────┘   │
-│  ┌─────────────────────────────────┐   │
-│  │ Tool Logic (TypeScript)         │   │
-│  │ 可选：文件操作、格式转换等工具     │   │
-│  └─────────────────────────────────┘   │
-│  ┌─────────────────────────────────┐   │
-│  │ Contract (JSON Schema)          │   │
-│  │ 定义输入输出的强类型约束          │   │
-│  └─────────────────────────────────┘   │
-└─────────────────────────────────────────┘
+.opencode/skills/my-skill/
+└── SKILL.md        # 全大写，唯一必需文件
 ```
 
-**契约约束关系**：
-- Prompt 是**任务定义**，但必须符合 Contract 的输入输出格式
-- Tool Logic 是**能力扩展**，用于执行 Prompt 无法完成的操作
-- Contract 是**边界守护**，确保输入输出可校验
+**SKILL.md 结构**：
+- **frontmatter**：包含 `name`（Skill 名称）和 `description`（功能描述）
+- **Markdown 正文**：任务说明，定义 AI 的输入、处理方式和输出格式约定
+
+**设计原则**：通过结构化的 Prompt 格式约定规范 Skill 的行为，让 AI 的创造力在可预测的工作流上运行。
 
 ### 3.2 Skill 分类
 
 | 类型 | 说明 | 示例 |
 |------|------|------|
-| **Instruction 型** | 纯提示词，依赖 LLM 生成内容 | `doc-outline-generate` |
-| **Tool 型** | 包含 TypeScript 工具逻辑 | `doc-format-normalize` |
-| **混合型** | 提示词 + 工具逻辑 | `doc-content-fill` |
+| **生成型** | 依赖 LLM 生成内容 | `doc-outline-generate` |
+| **审阅型** | 对已有内容进行评估和反馈 | `doc-review` |
+| **操作型** | 对文档结构进行修改和整理 | `doc-content-fill` |
 
-### 3.3 为什么是契约而非 Prompt？
+### 3.3 为什么是结构化 Prompt 而非自由对话？
 
 **Maeiee 的判断**：让大模型自由决定调用什么能力，会导致系统**不可靠**。
 
-**解决方案**：
-1. 所有 Skill 必须通过 JSON Schema 显式声明输入输出
-2. Command 在调用 Skill 前校验参数是否符合 Contract
-3. Skill 输出后校验结果是否符合 Contract
+**解决方案**：通过 SKILL.md 中的结构化 Prompt 格式约定规范 Skill 的输入输出——明确说明接收什么、如何处理、输出什么格式，让 AI 的创造力在可预测的工作流上运行。
 
-**权衡**：强约束带来编写繁琐的痛点，但换来了**可预测性**。
+**权衡**：Prompt 约定没有强类型校验，依赖约定而非机制，但实现简单、维护成本低。
 
 ---
 
@@ -201,14 +185,16 @@ docs/_templates/my-type/
 
 ### 5.2 新增 Skill
 
-在 `.opencode/skills/` 下创建 Skill 目录：
+在 `.opencode/skills/` 下创建 Skill 目录，目录中只需一个文件：
 
 ```
 .opencode/skills/my-skill/
-├── skill.md        # Skill 定义（Prompt）
-├── contract.json   # 输入输出 Schema
-└── tool.ts         # 可选：工具逻辑
+└── SKILL.md        # 全大写，唯一必需文件
 ```
+
+`SKILL.md` 包含：
+- frontmatter：`name` 和 `description`
+- 正文：任务描述、输入格式说明、输出格式约定
 
 ### 5.3 新增 Command
 

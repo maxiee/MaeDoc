@@ -27,7 +27,6 @@
 ├── maedoc/              # MaeDoc 自身的配置与文档
 │   ├── dev_plan.md      # 迭代计划
 │   └── writing-guidelines.md  # 通用写作规范
-├── schemas/             # JSON Schema 定义
 ├── .opencode/
 │   ├── skills/          # AI 写作 Skills
 │   ├── commands/        # 用户写作命令（/create、/review 等）
@@ -225,7 +224,6 @@
 | `sec.prompt_injection.check` | 检测外部输入中的提示注入风险 | WIP |
 | `hardness-classify` | 六维硬度评估，超阈值时自动打包上下文并生成外部求助文件 | ✅ |
 | `todo-append` | 向 docs/TODO.md 追加代办事项，供 Commands/Skills 在无法立刻处理时记录 | ✅ |
-| `skill.schema.validate` | 校验 Skills 是否符合 Skill Contract 规范 | WIP |
 | `skill.registry.build` | 自动生成 Skills 目录索引 | WIP |
 | `doc.changelog.generate` | 基于 git 历史生成/更新 CHANGELOG | WIP |
 | `doc.drift.detect` | 检测文档与实际状态之间的漂移 | WIP |
@@ -283,7 +281,6 @@
 
 - 本规范版本：`v1.1.0`
 - 对应 MaeDoc 迭代：`v0005`
-- Skill Contract Schema：`schemas/skill.contract.v1.json`（WIP，v0025 实现）
 
 ---
 
