@@ -1,4 +1,4 @@
-# 文件存储系统
+# UUID 分层存储与 Sidecar 元信息架构
 
 > **文档类型**：技术方案设计
 > **日期**：2026-02-20
@@ -21,7 +21,7 @@
 
 - **文件名语义无关**：所有文件以 UUID 命名，语义信息全部外置到 Sidecar 文件
 - **统一的元信息层**：Sidecar 文件采用 Markdown 格式，包含结构化 frontmatter 和自由格式的正文
-- **数据库镜像**：Sidecar 中的结构化信息自动同步到 SQLite 数据库，支持高效查询
+- **数据库镜像**：Sidecar 中的结构化信息自动同步到 SQLite 数据库，支持高效查询（详见 [数据库系统](./database.md)）
 
 ---
 
@@ -34,7 +34,7 @@ UUID 采用 v4（随机）版本，格式为 36 字符（32 位十六进制 + 4 
 ```
 原始 UUID：a1b2c3d4-e5f6-7890-abcd-ef1234567890.pdf
 存储路径：storage/a1/b2/c3/a1b2c3d4-e5f6-7890-abcd-ef1234567890.pdf
-Sidecar： storage/a1/b2/c3/a1b2c3d4-e5f6-7890-abcd-ef1234567890.pdf.meta.md
+Sidecar： storage/a1/b2/c3/a1b2c3d4-e5f6-7890-abcd-ef1234567890.md
 ```
 
 **优点**：
@@ -47,7 +47,12 @@ Sidecar： storage/a1/b2/c3/a1b2c3d4-e5f6-7890-abcd-ef1234567890.pdf.meta.md
 
 ## 3.3 Sidecar 文件格式
 
-Sidecar 文件与原始文件同名，追加 `.meta.md` 后缀。格式为 **YAML frontmatter + Markdown 正文**。
+Sidecar 文件命名规则：
+
+- **非 Markdown 文件**：Sidecar 文件名为 `{uuid}.{ext}.md`（即原始文件名直接追加 `.md` 后缀）
+- **Markdown 文件**：数据文件与 Sidecar 是同一个文件，格式为 frontmatter + 原有 Markdown 内容
+
+Sidecar 文件采用 **YAML frontmatter + Markdown 正文** 格式。
 
 ```markdown
 ---
@@ -62,7 +67,7 @@ tags:
   - 工作
   - 项目A
   - 2026Q1
-entities:
+classes:
   - type: project
     name: 项目A
   - type: person
@@ -88,6 +93,7 @@ custom_fields:
 - **人类可读可编辑**：用户可以直接编辑 Sidecar 文件，修改会被同步到数据库
 - **版本控制友好**：Markdown 格式适合 git diff
 - **扩展性强**：`custom_fields` 支持任意键值对，无需修改 Schema
+- **字段稳定可扩展**：现有字段（如 `uuid`、`original_name`、`tags`、`classes`）保持稳定，只做增量扩展。新版本兼容旧 Sidecar 文件，旧版本读取新文件时忽略未知字段
 
 ---
 
@@ -109,9 +115,9 @@ custom_fields:
 
 **删除**：
 
-1. 标记为"已删除"（软删除），保留 Sidecar
-2. 可选：移动到 `.trash/` 目录
-3. 定期清理任务永久删除（可配置保留时长）
+1. 将文件（原始文件 + Sidecar）移动到 `.trash/` 目录，保留原目录结构
+2. 更新数据库状态，标记为"已回收"
+3. 定期清理任务永久删除（清理周期可配置，默认 30 天）
 
 ---
 

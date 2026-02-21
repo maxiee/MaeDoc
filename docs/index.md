@@ -35,7 +35,7 @@
 | 文档 | 说明 |
 |------|------|
 | [基础设施概述](./infrastructure/overview.md) | 技术系统的整体架构 |
-| [文件存储系统](./infrastructure/file-storage.md) | UUID 分层存储、Sidecar 元信息、文件操作流程 |
+| [UUID 分层存储与 Sidecar 元信息架构](./infrastructure/file-storage.md) | UUID 分层存储、Sidecar 元信息（frontmatter + Markdown）、文件操作流程、并发冲突处理 |
 | [数据库系统](./infrastructure/database.md) | SQLite + EAV 架构、与文件系统联动、数据迁移 |
 | [服务中心系统](./infrastructure/service-hub.md) | 服务注册发现、跨平台 IPC、MCP 协议对齐 |
 | [组件化 GUI 系统](./infrastructure/component-gui.md) | 窗口合成机制、组件通信协议、Shell 容器 |
