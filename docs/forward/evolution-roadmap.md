@@ -8,6 +8,8 @@
 
 ## 1. 路线图概述
 
+> **最近完成**：渐进式求助（hardness-classify MEDIUM 等级改进）+ 基础跨文档上下文感知（doc-outline-generate / doc-content-fill 读取 docs/index.md）
+
 基于前面的分析，MaeDoc 的演进分为三个阶段：
 
 | 阶段 | 主题 | 版本范围 | 核心目标 |
