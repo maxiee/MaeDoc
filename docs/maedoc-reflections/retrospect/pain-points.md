@@ -1,7 +1,8 @@
 # 痛点与不足
 
 > **本文档定位**：诚实面对 MaeDoc 当前的不足，为后续改进提供方向
-> **阅读建议**：每个痛点都附有具体的场景描述和潜在改进方向
+> **所属分组**：[回顾与反思](./index.md)
+> **相关文档**：[核心设计反思](./design-reflections/index.md)、[AI 能力深化方向](../forward/ai-capability-deepening.md)
 
 ---
 

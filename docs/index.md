@@ -32,14 +32,23 @@
 
 ### 子文档（设计反思系列）
 
+**回顾与反思**：
 | 文档 | 说明 |
 |------|------|
-| [项目现状回顾](./maedoc-reflections/current-state.md) | Phase 0-7 的关键产出与设计决策 |
-| [核心设计反思](./maedoc-reflections/design-reflections.md) | 四个关键设计的批判性审视 |
-| [痛点与不足](./maedoc-reflections/pain-points.md) | 当前设计的摩擦点与改进方向 |
-| [AI 能力深化方向](./maedoc-reflections/ai-capability-deepening.md) | 本地模型强化与协作模式优化 |
-| [演进路线图](./maedoc-reflections/evolution-roadmap.md) | 从 v0029 到未来的版本规划 |
-| [开放问题](./maedoc-reflections/open-questions.md) | 还没有答案的问题 |
+| [项目现状回顾](./maedoc-reflections/retrospect/current-state.md) | Phase 0-7 的关键产出与设计决策 |
+| [核心设计反思](./maedoc-reflections/retrospect/design-reflections/index.md) | 四个关键设计的批判性审视 |
+| [痛点与不足](./maedoc-reflections/retrospect/pain-points.md) | 当前设计的摩擦点与改进方向 |
+
+**方向与规划**：
+| 文档 | 说明 |
+|------|------|
+| [AI 能力深化方向](./maedoc-reflections/forward/ai-capability-deepening.md) | 本地模型强化与协作模式优化 |
+| [演进路线图](./maedoc-reflections/forward/evolution-roadmap.md) | 从 v0029 到未来的版本规划 |
+
+**开放问题**：
+| 文档 | 说明 |
+|------|------|
+| [开放问题](./maedoc-reflections/questions/open-questions.md) | 还没有答案的问题 |
 
 ### 待补充
 
@@ -61,16 +70,20 @@
 - 诚实面对不确定性和痛点
 - 为未来演进提供方向
 
-**文档关系**：
+**文档结构**：
 
 ```
-index.md（导航入口）
-    ├── current-state.md     ← 回顾：我们建成了什么
-    ├── design-reflections.md ← 反思：四个核心设计的得失
-    ├── pain-points.md       ← 痛点：当前的问题在哪里
-    ├── ai-capability-deepening.md ← 方向：如何让 AI 更强
-    ├── evolution-roadmap.md ← 规划：具体版本计划
-    └── open-questions.md    ← 开放：还没答案的问题
+maedoc-reflections/
+├── index.md                     # 导航入口
+├── retrospect/                  # 回顾与反思
+│   ├── current-state.md         # 项目现状回顾
+│   ├── design-reflections/      # 设计反思（4篇子文档）
+│   └── pain-points.md           # 痛点与不足
+├── forward/                     # 方向与规划
+│   ├── ai-capability-deepening.md
+│   └── evolution-roadmap.md
+└── questions/                   # 开放问题
+    └── open-questions.md
 ```
 
 ---
@@ -80,23 +93,23 @@ index.md（导航入口）
 ### 如果你是新用户
 
 1. 先阅读项目根目录的 [README.md](../README.md) 了解项目概况
-2. 快速浏览 [项目现状回顾](./maedoc-reflections/current-state.md)
+2. 快速浏览 [项目现状回顾](./maedoc-reflections/retrospect/current-state.md)
 3. 尝试使用 `/create` 命令创建一个简单文档
 
 ### 如果你想了解设计理念
 
-1. 重点阅读 [核心设计反思](./maedoc-reflections/design-reflections.md)
-2. 配合阅读 [AI 能力深化方向](./maedoc-reflections/ai-capability-deepening.md)
-3. 查看 [开放问题](./maedoc-reflections/open-questions.md) 了解探索方向
+1. 重点阅读 [核心设计反思](./maedoc-reflections/retrospect/design-reflections/index.md)
+2. 配合阅读 [AI 能力深化方向](./maedoc-reflections/forward/ai-capability-deepening.md)
+3. 查看 [开放问题](./maedoc-reflections/questions/open-questions.md) 了解探索方向
 
 ### 如果你想知道接下来要做什么
 
-1. 直接看 [演进路线图](./maedoc-reflections/evolution-roadmap.md)
+1. 直接看 [演进路线图](./maedoc-reflections/forward/evolution-roadmap.md)
 2. 参考第 5 节的「版本规划总览」
 
 ### 如果你想参与讨论
 
-1. 查看 [开放问题](./maedoc-reflections/open-questions.md)
+1. 查看 [开放问题](./maedoc-reflections/questions/open-questions.md)
 2. 如果你有想法，欢迎交流
 
 ---
@@ -156,12 +169,17 @@ docs/
 ├── index.md                          # 本文件（文档地图）
 ├── maedoc-reflections/               # 设计反思与演进
 │   ├── index.md                      # 导航入口
-│   ├── current-state.md              # 项目现状回顾
-│   ├── design-reflections.md         # 核心设计反思
-│   ├── pain-points.md                # 痛点与不足
-│   ├── ai-capability-deepening.md    # AI 能力深化方向
-│   ├── evolution-roadmap.md          # 演进路线图
-│   └── open-questions.md             # 开放问题
+│   ├── retrospect/                   # 回顾与反思
+│   │   ├── index.md                  # 分组导航
+│   │   ├── current-state.md          # 项目现状回顾
+│   │   ├── design-reflections/       # 设计反思（4篇子文档）
+│   │   └── pain-points.md            # 痛点与不足
+│   ├── forward/                      # 方向与规划
+│   │   ├── index.md                  # 分组导航
+│   │   ├── ai-capability-deepening.md
+│   │   └── evolution-roadmap.md
+│   └── questions/                    # 开放问题
+│       └── open-questions.md
 ├── guides/                           # 用户指南（WIP）
 └── examples/                         # 示例文档（WIP）
 ```
@@ -170,11 +188,11 @@ docs/
 
 ## 快速导航
 
-**新用户**：阅读 [README.md](../README.md) 后，可先浏览 [项目现状回顾](./maedoc-reflections/current-state.md)
+**新用户**：阅读 [README.md](../README.md) 后，可先浏览 [项目现状回顾](./maedoc-reflections/retrospect/current-state.md)
 
-**想了解演进计划**：直接看 [演进路线图](./maedoc-reflections/evolution-roadmap.md)
+**想了解演进计划**：直接看 [演进路线图](./maedoc-reflections/forward/evolution-roadmap.md)
 
-**想参与讨论**：查看 [开放问题](./maedoc-reflections/open-questions.md)
+**想参与讨论**：查看 [开放问题](./maedoc-reflections/questions/open-questions.md)
 
 **想快速上手写作**：在 OpenCode 中使用 `/create [你的想法]`
 

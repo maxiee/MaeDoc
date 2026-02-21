@@ -2,7 +2,7 @@
 
 > **文档类型**：多文档集合（导航入口）
 > **日期**：2026-02-21
-> **版本**：1.0.0
+> **版本**：2.0.0
 > **状态**：草稿
 
 ---
@@ -27,99 +27,62 @@
 
 ## 文档目录
 
-| 文档 | 说明 | 预估阅读时间 |
-|------|------|------------|
-| [项目现状回顾](./current-state.md) | Phase 0-7 的关键产出与设计决策 | ~8 分钟 |
-| [核心设计反思](./design-reflections.md) | 四个关键设计的批判性审视 | ~15 分钟 |
-| [痛点与不足](./pain-points.md) | 当前设计的摩擦点与改进方向 | ~10 分钟 |
-| [AI 能力深化方向](./ai-capability-deepening.md) | 本地模型强化与协作模式优化 | ~15 分钟 |
-| [演进路线图](./evolution-roadmap.md) | 从 v0029 到未来的版本规划 | ~12 分钟 |
-| [开放问题](./open-questions.md) | 还没有答案的问题 | ~8 分钟 |
+### 回顾与反思
+
+| 文档 | 说明 |
+|------|------|
+| [项目现状回顾](./retrospect/current-state.md) | Phase 0-7 的关键产出与设计决策 |
+| [核心设计反思](./retrospect/design-reflections/index.md) | 四个关键设计的批判性审视 |
+| [痛点与不足](./retrospect/pain-points.md) | 当前设计的摩擦点与改进方向 |
+
+### 方向与规划
+
+| 文档 | 说明 |
+|------|------|
+| [AI 能力深化方向](./forward/ai-capability-deepening.md) | 本地模型强化与协作模式优化 |
+| [演进路线图](./forward/evolution-roadmap.md) | 从 v0029 到未来的版本规划 |
+
+### 开放问题
+
+| 文档 | 说明 |
+|------|------|
+| [开放问题](./questions/open-questions.md) | 还没有答案的问题 |
 
 ---
 
-## 内容导览
+## 目录结构
 
-### [项目现状回顾](./current-state.md)
-
-回顾 MaeDoc 从 Phase 0 到 Phase 7 的演进历程，梳理关键里程碑和设计决策。
-
-**核心内容**：
-- AGENTS.md 作为智能体规则的定位
-- 从模板系统到 Skills 架构的演进
-- `/create` 命令的自由化之路
-- 远程桥接的设计考量
-- TODO 管理机制
-
-### [核心设计反思](./design-reflections.md)
-
-深入审视 MaeDoc 的四个关键设计，分析得失并探讨改进方向。
-
-**核心内容**：
-- Skills 架构的设计哲学与问题
-- `/create` 自由化的代价与权衡
-- 远程桥接机制的实用性评估
-- 主动求助机制的触发条件分析
-
-### [痛点与不足](./pain-points.md)
-
-诚实面对当前设计的不足，为后续改进提供方向。
-
-**核心痛点**：
-- 交互摩擦：question 工具的过度使用
-- 上下文断裂：多文档树的上下文管理
-- Skills 组合困惑：用户不知道该用哪个
-- 质量把控：生成内容的质量不稳定
-- 迭代成本：修改大章节效率低
-
-### [AI 能力深化方向](./ai-capability-deepening.md)
-
-探讨如何让 MaeDoc 的 AI 能力更强，聚焦本地模型强化。
-
-**核心内容**：
-- 本地模型的能力评估
-- RAG、提示工程、微调的投入产出比
-- 本地-远程协作模式设计
-- 能力边界认知的提升方向
-
-### [演进路线图](./evolution-roadmap.md)
-
-将思考转化为具体的版本规划，从 v0029 到未来。
-
-**三个阶段**：
-1. 收尾（v0029-v0030）：补齐 Quickstart 和 README
-2. 深化（v0031-v0040）：提示优化、交互改进、RAG 探索
-3. 演进（v0041-v0050）：Skills 重组、协作模式优化
-
-### [开放问题](./open-questions.md)
-
-记录思考过程中产生的、暂时无法回答的问题。
-
-**部分问题**：
-- 本地模型 2 年后会进化到什么程度？
-- Skills 架构是否有更好的替代方案？
-- 交互式 vs 自动化的平衡点在哪里？
-- 文档写作 Agent 的终局是什么？
+```
+docs/maedoc-reflections/
+├── index.md                          # 本文件（导航入口）
+├── retrospect/                       # 回顾与反思
+│   ├── index.md                      # 分组导航
+│   ├── current-state.md              # 项目现状回顾
+│   ├── design-reflections/           # 设计反思（拆分后）
+│   │   ├── index.md                  # 设计反思导航
+│   │   ├── skills-architecture.md    # Skills 架构反思
+│   │   ├── create-freedom.md         # /create 自由化反思
+│   │   ├── remote-bridge.md          # 远程桥接反思
+│   │   └── proactive-escalation.md   # 主动求助机制反思
+│   └── pain-points.md                # 痛点与不足
+├── forward/                          # 方向与规划
+│   ├── index.md                      # 分组导航
+│   ├── ai-capability-deepening.md    # AI 能力深化方向
+│   └── evolution-roadmap.md          # 演进路线图
+└── questions/                        # 开放问题
+    └── open-questions.md             # 还没有答案的问题
+```
 
 ---
 
 ## 阅读建议
 
-**如果你想快速了解项目全貌**：
-1. 先读 [项目现状回顾](./current-state.md)
-2. 再读 [演进路线图](./evolution-roadmap.md)
-
-**如果你想深入理解设计理念**：
-1. 重点读 [核心设计反思](./design-reflections.md)
-2. 配合读 [AI 能力深化方向](./ai-capability-deepening.md)
-
-**如果你想知道接下来要做什么**：
-1. 直接看 [演进路线图](./evolution-roadmap.md)
-2. 参考第 5 节的「版本规划总览」
-
-**如果你想参与讨论**：
-1. 看 [开放问题](./open-questions.md)
-2. 如果你有想法，欢迎交流
+| 你的目标 | 建议路径 |
+|---------|---------|
+| 快速了解项目全貌 | [项目现状回顾](./retrospect/current-state.md) → [演进路线图](./forward/evolution-roadmap.md) |
+| 深入理解设计理念 | [核心设计反思](./retrospect/design-reflections/index.md) → [AI 能力深化](./forward/ai-capability-deepening.md) |
+| 找具体改进方向 | [痛点与不足](./retrospect/pain-points.md) → [演进路线图](./forward/evolution-roadmap.md) |
+| 参与讨论 | [开放问题](./questions/open-questions.md) |
 
 ---
 
@@ -137,5 +100,7 @@
 ---
 
 *本文档集合由 `/create` 命令以多文件文档树形式创建于 2026-02-21。*
+
+*结构演进于 2026-02-21：从扁平结构改为分组结构，拆分超长文档。*
 
 *如需调整结构，使用 `/evolve`。如需审阅，使用 `/review`。*
