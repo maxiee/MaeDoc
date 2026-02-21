@@ -8,6 +8,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+third_party/
+
 # Python
 __pycache__/
 *.py[cod]

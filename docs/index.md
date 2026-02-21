@@ -1,7 +1,7 @@
 # MaeDoc 文档库
 
 > **面向读者**：Maeiee（记录个人品味与技术判断）
-> **最后更新**：2026-02-21
+> **最后更新**：2026-02-22
 
 ---
 
@@ -96,6 +96,15 @@ MaeDoc 由三层组成：**用户层**（命令输入）→ **OpenCode 运行时
 | [AI 能力深化方向](./forward/ai-capability-deepening.md) | 本地模型强化与协作模式优化 |
 | [演进路线图](./forward/evolution-roadmap.md) | 从 v0029 到未来的版本规划 |
 
+### 我想学习 OpenCode 使用
+
+| 文档 | 说明 |
+|------|------|
+| [OpenCode 使用指南](./opencode/index.md) | OpenCode 安装、配置、使用的完整指南 |
+| [安装指南](./opencode/installation.md) | 下载地址、桌面端/CLI 安装、文件结构 |
+| [Skills 配置](./opencode/skills-configuration.md) | .opencode 目录、GitHub Skills 安装、/init 验证 |
+| [常用命令](./opencode/commands-reference.md) | /models、/connect、@ 引用、命令汇总 |
+
 ### 我想参与讨论
 
 | 文档 | 说明 |
@@ -111,6 +120,13 @@ docs/
 ├── index.md                          # 本文件（导航入口）
 ├── maedoc-architecture.md            # 核心架构设计
 ├── TODO.md                           # 待办事项（由 /do-todo 处理）
+├── opencode/                         # OpenCode 使用指南（新增）
+│   ├── index.md                      # 分组导航
+│   ├── installation.md               # 安装指南
+│   ├── skills-configuration.md       # Skills 配置
+│   ├── environment-variables.md      # 环境变量
+│   ├── commands-reference.md         # 常用命令
+│   └── faq.md                        # 常见问题
 ├── retrospect/                       # 回顾与反思
 │   ├── index.md                      # 分组导航
 │   ├── current-state.md              # 项目现状回顾
@@ -146,4 +162,4 @@ docs/
 
 *本文档由 `/create` 和 `/evolve` 命令维护。新建文档会自动追加到文档地图。*
 
-*结构演进于 2026-02-21：重构为「简介 + 理念 + 导航」结构，新增架构文档。*
+*结构演进于 2026-02-22：新增 OpenCode 使用指南子文档树（6 篇），吸收技术文章知识。*
