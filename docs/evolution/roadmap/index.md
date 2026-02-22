@@ -25,9 +25,9 @@
 
 ## 与回顾反思的关联
 
-本分组的规划基于 [回顾与反思](../retrospect/index.md) 中识别的痛点和设计问题：
-- [痛点与不足](../retrospect/pain-points.md) → 演进优先级
-- [核心设计反思](../retrospect/design-reflections/index.md) → 架构调整方向
+本分组的规划基于 [历史回顾](../history/index.md) 中识别的痛点和设计问题：
+ [痛点与不足](../pain-points.md) → 演进优先级
+ [核心设计反思](../history/design-reflections/index.md) → 架构调整方向
 
 ---
 

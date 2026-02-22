@@ -63,15 +63,18 @@ MaeDoc 由四层组成：**用户层**（命令输入）→ **OpenCode 运行时
 | [扩展机制](./maedoc/extension-mechanism.md) | 新增 Skill 和 Command |
 | [安全边界](./maedoc/security-boundary.md) | 文件访问、外部请求、写入确认的安全措施 |
 
-### 项目演进
+### 演进史
+
+MaeDoc 从想法到成型的完整历程：历史回顾、设计反思、痛点分析、演进规划。
 
 | 文档 | 说明 |
 |------|------|
-| [项目现状回顾](./retrospect/current-state.md) | Phase 0-7 的关键产出与设计决策 |
-| [核心设计反思](./retrospect/design-reflections/index.md) | 四个关键设计的批判性审视 |
-| [痛点与不足](./retrospect/pain-points.md) | 当前设计的摩擦点与改进方向 |
-| [AI 能力深化方向](./forward/ai-capability-deepening.md) | 本地模型强化与协作模式优化 |
-| [演进路线图](./forward/evolution-roadmap.md) | 从 v0029 到未来的版本规划 |
+| [MaeDoc 演进史](./evolution/index.md) | **演进导航入口** — 过去、现在、未来的完整历程 |
+| [项目现状回顾](./evolution/history/current-state.md) | Phase 0-7 的关键产出与设计决策 |
+| [核心设计反思](./evolution/history/design-reflections/index.md) | 四个关键设计的批判性审视 |
+| [痛点与不足](./evolution/pain-points.md) | 当前设计的摩擦点与改进方向 |
+| [演进路线图](./evolution/roadmap/evolution-roadmap.md) | 从 v0029 到未来的版本规划 |
+| [AI 能力深化方向](./evolution/roadmap/ai-capability-deepening.md) | 本地模型强化与协作模式优化 |
 
 ### 伴侣控制平面
 
@@ -118,14 +121,11 @@ MaeDoc 由四层组成：**用户层**（命令输入）→ **OpenCode 运行时
 
 ---
 
-## 三、其他
-
-### 学习笔记
+## 三、学习笔记
 
 | 文档 | 说明 |
 |------|------|
 | [Coding Agents 内部机制](./learning/coding-agents-internals.md) | OpenCode 深度解析，系统提示词设计 |
-
 
 ---
 
@@ -140,6 +140,17 @@ docs/
 │   ├── theme-map.md
 │   ├── knowledge-crystals.md
 │   └── session-brief.md
+├── evolution/                        # MaeDoc 演进史
+│   ├── index.md                      # 演进导航入口
+│   ├── pain-points.md                # 痛点与不足
+│   ├── history/                      # 历史回顾
+│   │   ├── index.md
+│   │   ├── current-state.md
+│   │   └── design-reflections/
+│   └── roadmap/                      # 演进规划
+│       ├── index.md
+│       ├── ai-capability-deepening.md
+│       └── evolution-roadmap.md
 ├── maedoc/                           # MaeDoc 核心架构设计
 │   ├── index.md                      # 架构设计导航
 │   ├── system-overview.md            # 系统全景
@@ -168,18 +179,8 @@ docs/
 │       ├── server-sdk.md
 │       ├── security-boundary.md
 │       └── learning-path.md
-├── retrospect/                       # 回顾与反思
-│   ├── index.md
-│   ├── current-state.md
-│   ├── pain-points.md
-│   └── design-reflections/
-├── forward/                          # 方向与规划
-│   ├── index.md
-│   ├── ai-capability-deepening.md
-│   └── evolution-roadmap.md
 ├── learning/                         # 学习笔记
 │   └── coding-agents-internals.md
-
 ├── TODO.md                           # 待办事项
 └── _archive/                         # 已归档文档
 ```
@@ -204,4 +205,4 @@ docs/
 
 *本文档由 `/create`、`/evolve` 与 `/companion` 命令维护。*
 
-*结构演进于 2026-02-22：将"我想……"导航重构为主题导向的两级结构*
+*结构演进于 2026-02-22：将 retrospect/ + forward/ 合并为 evolution/，以"MaeDoc 演进史"为主线*
