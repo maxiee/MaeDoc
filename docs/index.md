@@ -107,6 +107,19 @@ MaeDoc 由三层组成：**用户层**（命令输入）→ **OpenCode 运行时
 | [内置命令参考](./opencode/commands-built-in.md) | /models、/connect、/init、模式切换、命令汇总表 |
 | [自定义命令开发](./opencode/commands-custom.md) | 创建、配置、参数、选项详解、完整示例 |
 
+### 我想学习 OpenCode 扩展开发
+
+| 文档 | 说明 |
+|------|------|
+| [**扩展能力总览**](./opencode/extensibility/index.md) | 六支柱架构导航、能力选择指南 |
+| [Plugins 扩展机制](./opencode/extensibility/plugins.md) | 事件总线 Hook、改写 LLM/工具调用行为 |
+| [Custom Tools](./opencode/extensibility/custom-tools.md) | TypeScript/JS 定义 LLM 可调用函数 |
+| [MCP Servers](./opencode/extensibility/mcp-servers.md) | 外部工具集接入（本地/远程） |
+| [Agents/Rules/Skills](./opencode/extensibility/agents-rules-skills.md) | 可组合工作流定义体系 |
+| [Server/SDK](./opencode/extensibility/server-sdk.md) | OpenAPI 3.1 + SSE 远程集成 |
+| [安全边界](./opencode/extensibility/security-boundary.md) | 权限控制、审计、应急响应 |
+| [扩展开发学习路径](./opencode/extensibility/learning-path.md) | 从入门到精通的完整路线图 |
+
 ### 我想参与讨论
 
 | 文档 | 说明 |
@@ -129,7 +142,7 @@ docs/
 │   ├── extension-mechanism.md        # 扩展机制
 │   └── security-boundary.md          # 安全边界
 ├── TODO.md                           # 待办事项（由 /do-todo 处理）
-├── opencode/                         # OpenCode 使用指南（新增）
+├── opencode/                         # OpenCode 使用指南
 │   ├── index.md                      # 分组导航
 │   ├── installation.md               # 安装指南
 │   ├── skills-basics.md              # Skills 使用入门
@@ -138,7 +151,16 @@ docs/
 │   ├── environment-variables.md      # 环境变量
 │   ├── commands-built-in.md          # 内置命令参考
 │   ├── commands-custom.md            # 自定义命令开发
-│   └── faq.md                        # 常见问题
+│   ├── faq.md                        # 常见问题
+│   └── extensibility/                # 扩展能力（六支柱架构）
+│       ├── index.md                  # 扩展能力导航
+│       ├── plugins.md                # Plugins 扩展机制
+│       ├── custom-tools.md           # Custom Tools
+│       ├── mcp-servers.md            # MCP Servers
+│       ├── agents-rules-skills.md    # Agents/Rules/Skills 体系
+│       ├── server-sdk.md             # Server/SDK 远程集成
+│       ├── security-boundary.md      # 安全边界
+│       └── learning-path.md          # 扩展开发学习路径
 ├── retrospect/                       # 回顾与反思
 │   ├── index.md                      # 分组导航
 │   ├── current-state.md              # 项目现状回顾
@@ -173,6 +195,8 @@ docs/
 ---
 
 *本文档由 `/create` 和 `/evolve` 命令维护。新建文档会自动追加到文档地图。*
+
+*结构演进于 2026-02-22：新增 docs/opencode/extensibility/ 目录（六支柱扩展架构，8 个子文档）*
 
 *结构演进于 2026-02-22：拆分 maedoc-architecture.md (233 行) 为 docs/maedoc/ 目录（index.md + 6 个子文档）*
 

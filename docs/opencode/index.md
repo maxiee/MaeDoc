@@ -7,7 +7,7 @@
 
 ## 简介
 
-[OpenCode](https://opencode.ai) 是 MaeDoc 的底层 AI 运行时引擎。本系列文档帮助你快速掌握 OpenCode 的安装、配置和使用。
+[OpenCode](https://opencode.ai) 是 MaeDoc 的底层 AI 运行时引擎。本系列文档帮助你快速掌握 OpenCode 的安装、配置、使用和扩展开发。
 
 **为什么选择 OpenCode**：
 - **国内首选**：相比 Claude Code，访问更稳定，支持国内用户
@@ -18,6 +18,8 @@
 ---
 
 ## 文档目录
+
+### 入门使用
 
 | 文档 | 说明 |
 |------|------|
@@ -30,6 +32,19 @@
 | [环境变量](./environment-variables.md) | 全局配置 vs 项目配置 |
 | [常见问题](./faq.md) | 问题解决与使用技巧 |
 
+### 扩展开发（六支柱架构）
+
+| 文档 | 说明 | 风险等级 |
+|------|------|:--------:|
+| [**扩展能力总览**](./extensibility/index.md) | 六支柱架构导航、能力选择指南 | — |
+| [Plugins 扩展机制](./extensibility/plugins.md) | 事件总线 Hook、改写 LLM/工具调用行为 | 🔴 高 |
+| [Custom Tools](./extensibility/custom-tools.md) | TypeScript/JS 定义 LLM 可调用函数 | 🔴 高 |
+| [MCP Servers](./extensibility/mcp-servers.md) | 外部工具集接入（本地/远程） | 🟡 中 |
+| [Agents/Rules/Skills](./extensibility/agents-rules-skills.md) | 可组合工作流定义体系 | 🟢 低 |
+| [Server/SDK](./extensibility/server-sdk.md) | OpenAPI 3.1 + SSE 远程集成 | 🔴 高 |
+| [安全边界](./extensibility/security-boundary.md) | 权限控制、审计、应急响应 | — |
+| [扩展开发学习路径](./extensibility/learning-path.md) | 从入门到精通的完整路线图 | — |
+
 ---
 
 ## 快速上手
@@ -38,6 +53,27 @@
 2. **配置模型**：启动后使用 `/connect` 添加你的 API Key
 3. **加载 Skills**：将 Skills 放入 `.opencode/skills/` 目录，执行 `/init`
 4. **开始使用**：输入问题或命令，与 AI 交互
+
+---
+
+## 六支柱扩展架构
+
+OpenCode 的可扩展性主干可以拆成六条能力面：
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    OpenCode 可扩展性主干                      │
+├─────────────────────────────────────────────────────────────┤
+│  Plugins         │ 事件总线挂钩，改写 LLM/工具调用行为          │
+│  Custom Tools     │ TypeScript/JS 函数，LLM 可调用             │
+│  MCP Servers      │ 外部工具集，本地/远程接入                   │
+│  Agents/Rules     │ 可组合工作流，提示词/权限/工具定义          │
+│  Server/SDK       │ OpenAPI 3.1 + SSE，可编程代理后端          │
+│  安全边界         │ 权限、CORS、工作区信任、审计日志             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+👉 详见：[扩展能力总览](./extensibility/index.md)
 
 ---
 
@@ -60,4 +96,4 @@ MaeDoc 是运行在 OpenCode 之上的**文档写作 AI Agent**：
 ---
 
 *本导航由 `/evolve` 命令生成，最后更新：2026-02-22*
-*结构演进于 2026-02-22：拆分 skills-configuration.md 为 3 个子文档*
+*结构演进于 2026-02-22：新增 extensibility/ 目录（六支柱扩展架构）*
