@@ -1,6 +1,7 @@
 ---
 name: doc-translate
 description: 将文档翻译为指定目标语言，保持文档结构不变，保留代码块和专业术语，输出完整的翻译后文档
+mode: read-write
 ---
 
 # doc-translate

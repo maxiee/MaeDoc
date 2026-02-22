@@ -1,6 +1,7 @@
 ---
 name: doc-structure-audit
 description: 检查文档的结构完整性，包括标题层级、断链检测、重复内容检测，以及 docs/ 目录级别的结构合规检查（行数限制、index.md 导航规范、未注册文档），输出结构审计报告（问题定位 + 修复建议）
+mode: read-only
 ---
 
 # doc-structure-audit

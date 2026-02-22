@@ -1,6 +1,7 @@
 ---
 name: doc-tree-evolve
 description: 接收 docs/ 文档库全文内容与演进意图，从知识图谱视角分析跨文档方向对齐/概念一致性/覆盖缺口，输出包含结构操作与内容操作的整体变更计划，供 /evolve 命令执行
+mode: read-write
 ---
 
 # doc-tree-evolve

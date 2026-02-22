@@ -1,6 +1,9 @@
 ---
 name: doc-iterate
 description: 基于用户反馈对文档进行定向迭代优化，精准定位需要修改的章节，生成修改方案，输出 diff 格式变更内容与变更说明
+mode: read-write
+calls:
+  - todo-append
 ---
 
 # doc-iterate
@@ -9,6 +12,32 @@ description: 基于用户反馈对文档进行定向迭代优化，精准定位�
 > **版本**：1.0.0
 > **类型**：instruction
 > **用途**：根据用户反馈（自然语言或结构化）对文档进行定向迭代，输出修改后的文档 diff 与变更说明
+
+---
+
+## 使用指南
+
+> 以下是 LLM 在调用本 Skill 时需要了解的关键约束和最佳实践。
+
+**正确调用时机**（满足以下任一条件时调用）：
+- 用户提供了具体反馈，需要对已有文档进行定向修改时
+- 质量门检查（阶段 4.5）返回 `PASS: false` 后，将 `TOP_ISSUES` 作为反馈调用
+- 由 `/iterate` 命令内部调用
+
+**不应调用的情况**：
+- 文档尚未创建时（应先调用 `doc-content-fill`）
+- 只需要格式修正时（应改为调用 `doc-format-normalize`，更轻量）
+- 需要量化评分或问题审阅时（应改为调用 `doc-quality-score` / `doc-review`）
+
+**输入约束**：
+- `document` 必须是已存在的文件路径（不能是目录）
+- `feedback` 必须具体可操作；若来自质量门，直接传入 `TOP_ISSUES` 列表
+- `style = minimal`（默认）：只修改反馈涉及的章节，不触碰其他内容
+
+**与其他 Skills 的协作**：
+- 通常在 `doc-quality-score` 或 `doc-review` 之后调用（基于评分结果执行改进）
+- 输出的完整修改后文档可直接传入 `doc-format-normalize` 做最终格式规范化
+- 若有未处理的反馈项，会自动调用 `todo-append` 记录
 
 ---
 

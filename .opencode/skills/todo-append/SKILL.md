@@ -1,6 +1,7 @@
 ---
 name: todo-append
 description: 向 docs/TODO.md 追加一条代办事项。在任何 Command 或 Skill 执行过程中，当遇到来不及立刻完成、或更适合后续专门处理的事项时调用本 Skill。
+mode: read-write
 ---
 
 # todo-append
@@ -9,6 +10,30 @@ description: 向 docs/TODO.md 追加一条代办事项。在任何 Command 或 S
 > **版本**：1.0.0
 > **类型**：instruction
 > **用途**：在 Commands / Skills 执行过程中，将代办事项写入 `docs/TODO.md`，形成可追踪的全局 TODO 列表
+
+---
+
+## 使用指南
+
+> 以下是 LLM 在调用本 Skill 时需要了解的关键约束和最佳实践。
+
+**正确调用时机**（满足以下任一条件时调用）：
+- 发现了需要后续处理的事项，但当前时机不适合立即处理
+- 当前任务末尾的"TODO 录入"阶段（见各 Command 的最后阶段）
+- 其他 Skills（`doc-content-fill`、`doc-iterate`、`doc-review`、`doc-outline-generate`）在完成主体工作后的遗留项记录
+
+**不应调用的情况**：
+- 当前时机完全可以立即处理该事项时（优先直接执行）
+- 仅仅是"想法"而非需要执行的事项时
+
+**输入约束**：
+- `description` 必须清晰可执行，足够让六个月后的人或 Agent 无需额外上下文即可理解
+- `source` 必须说明触发来源（如"由 /create 命令在写 xxx 时发现"）
+- `priority` 必须明确：`高` / `中` / `低`，不得模糊
+
+**与其他 Skills 的协作**：
+- 被多个 Skills 调用（`doc-content-fill`、`doc-iterate`、`doc-review`、`doc-outline-generate`）
+- 输出记录到 `docs/TODO.md`，由 `/do-todo` 命令执行
 
 ---
 

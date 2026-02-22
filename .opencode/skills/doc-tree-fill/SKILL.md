@@ -1,6 +1,10 @@
 ---
 name: doc-tree-fill
 description: 根据文档树规划，在指定目录下逐子文档生成大纲并填充内容，最后生成入口导航文档（index.md）。由 /create 命令在用户选择"多文件文档树"创建形式后调用
+mode: read-write
+calls:
+  - doc-content-fill
+  - doc-outline-generate
 ---
 
 # doc-tree-fill

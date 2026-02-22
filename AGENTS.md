@@ -28,7 +28,8 @@
 │   └── writing-guidelines.md  # 通用写作规范
 ├── .opencode/
 │   ├── skills/          # AI 写作 Skills
-│   ├── commands/        # 用户写作命令（/create、/review 等）
+│   ├── commands/        # 用户写作命令（/create、/iterate 等）
+│   ├── agents/          # SubAgent 定义（如 doc-analyst）
 │   ├── tools/           # 可执行工具
 │   └── plugins/         # 插件（审计日志、环境保护等）
 ├── .docforge/
@@ -223,7 +224,7 @@
 |----------|------|------|
 | `doc.outline.generate` | 根据想法生成结构化大纲 | WIP |
 | `doc.content.fill` | 根据大纲逐章节填充内容 | WIP |
-| `doc.review` | 多维度文档审阅（结构/逻辑/语言/可读性） | WIP |
+| `doc.review` | 多维度文档审阅（结构/逻辑/语言/可读性）——仅内部调用（由 doc-analyst SubAgent 使用） | WIP |
 | `doc.format.normalize` | 统一 Markdown 格式规范 | WIP |
 | `doc.structure.audit` | 检查文档是否符合类型结构要求 | WIP |
 | `doc.quality.score` | 量化质量评分（0-100）+ 改进建议 | WIP |
@@ -242,24 +243,29 @@
 
 | 命令 | 用法 | 功能 |
 |------|------|------|
-| `/create` | `/create 我想写一篇关于...` | 一键创建新文档（大纲 → 内容 → 格式化） |
-| `/review` | `/review docs/my-doc.md` | 对文档进行全面审阅 |
-| `/iterate` | `/iterate docs/my-doc.md 请补充...` | 基于反馈迭代更新文档 |
+| `/create` | `/create 我想写一篇关于...` | 一键创建新文档（大纲 → 内容 → 格式化 → 质量门） |
+| `/iterate` | `/iterate docs/my-doc.md 请补充...` | 基于反馈迭代更新文档（含质量门） |
 | `/escalate` | `/escalate docs/my-doc.md <问题>` | 打包上下文发给外部 AI |
 | `/ingest-remote` | `/ingest-remote <slug>` | 导入外部 AI 的回答并应用 |
 | `/evolve` | `/evolve <新方向或结构调整需求>` | 扫描 docs/ 树并执行结构演进（拆分/合并/移动/归档） |
 | `/do-todo` | `/do-todo` 或 `/do-todo <编号>` | 查看或执行 docs/TODO.md 中的代办事项 |
 
-### 6.3 典型工作流
+### 6.3 SubAgent（`.opencode/agents/`）
+
+| Agent ID | 调用方式 | 功能 | 工具权限 |
+|----------|---------|------|---------|
+| `doc-analyst` | `task` 工具（自动，由 /create、/iterate 质量门触发）| 只读文档质量分析，输出评分报告 | 只读（write/edit/bash 均禁用）|
+
+### 6.4 典型工作流
 
 **基础写作流程**：
 ```
-/create [描述] → 大纲确认 → 内容生成 → 格式化 → 输出到 docs/
+/create [描述] → 大纲确认 → 内容生成 → 格式化 → [质量门：评分 ≥ 70 自动完成 / < 70 自动改进] → 输出到 docs/
 ```
 
-**审阅与迭代流程**：
+**迭代优化流程**：
 ```
-/review [文件] → 审阅报告 → /iterate [文件] [反馈] → 应用修改
+/iterate [文件] [反馈] → 应用修改 → [质量门：评分 ≥ 70 继续 / < 70 自动改进]
 ```
 
 **远程增强流程**（遇到疑难问题时）：

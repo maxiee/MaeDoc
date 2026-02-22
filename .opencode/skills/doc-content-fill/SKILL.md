@@ -1,6 +1,7 @@
 ---
 name: doc-content-fill
 description: 根据已确认的文档大纲逐章节生成和填充内容，输出完整 Markdown 文档，为每章节标注信心等级（高/中/低），并输出填充摘要
+mode: read-write
 ---
 
 # doc-content-fill
@@ -9,6 +10,31 @@ description: 根据已确认的文档大纲逐章节生成和填充内容，输�
 > **版本**：1.0.0
 > **类型**：instruction
 > **用途**：根据文档大纲逐章节生成/填充内容，输出完整的 Markdown 文档
+
+---
+
+## 使用指南
+
+> 以下是 LLM 在调用本 Skill 时需要了解的关键约束和最佳实践。
+
+**正确调用时机**（满足以下任一条件时调用）：
+- 大纲已确认（用户在 `/create` 流程中选择"确认大纲"），需要填充内容时
+- 单文件模式（`creation_mode = single_file`）下的内容生成阶段
+
+**不应调用的情况**：
+- 大纲尚未确认时（应先调用 `doc-outline-generate`）
+- 多文件文档树模式下（应改为调用 `doc-tree-fill`，它在内部会调用本 Skill）
+- 需要对已有文档做定向修改时（应改为调用 `doc-iterate`）
+
+**输入约束**：
+- `output_file` 和 `outline` 至少提供一个；优先使用 `output_file`（Skill 从文件读取大纲）
+- `output_file` 必须是已存在的文件路径（由 `doc-outline-generate` 写入的大纲文件）
+- `max_lines` 建议使用默认值 300，超出时 Skill 会输出警告
+
+**与其他 Skills 的协作**：
+- 必须在 `doc-outline-generate` 之后调用（大纲文件是本 Skill 的输入）
+- 输出结果可直接传入 `doc-format-normalize` 进行格式规范化
+- 若遗留待确认项非空，Skill 会自动调用 `todo-append`
 
 ---
 

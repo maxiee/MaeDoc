@@ -1,6 +1,9 @@
 ---
 name: doc-outline-generate
 description: 根据用户想法描述，生成结构化 Markdown 大纲，自动评估文档规模（单文件 vs 多文件文档树），标注所需输入、验收标准与待确认问题清单，缺失信息不阻塞生成
+mode: read-write
+calls:
+  - todo-append
 ---
 
 # doc-outline-generate
@@ -9,6 +12,30 @@ description: 根据用户想法描述，生成结构化 Markdown 大纲，自动
 > **版本**：1.0.0
 > **类型**：instruction
 > **用途**：根据用户想法描述，生成结构化 Markdown 大纲
+
+---
+
+## 使用指南
+
+> 以下是 LLM 在调用本 Skill 时需要了解的关键约束和最佳实践。
+
+**正确调用时机**（满足以下任一条件时调用）：
+- `/create` 命令阶段 2，需要根据用户描述生成文档大纲时
+- 用户明确要求"生成大纲"或"先列结构"时
+
+**不应调用的情况**：
+- 大纲已存在且已确认，需要填充内容时（应改为调用 `doc-content-fill`）
+- 需要对已有文档做结构演进时（应改为调用 `doc-tree-evolve`）
+
+**输入约束**：
+- `idea` 必须是具体的文档描述（至少一句话），不能为空
+- `output_file` 若提供，Skill 生成大纲后会自动写入该文件（文件可不存在）
+- `max_lines` 默认 300，超出时建议多文件文档树
+
+**与其他 Skills 的协作**：
+- 是 `/create` 流程的第一个写作 Skill（阶段 2）
+- 输出写入 `output_file` 后，可直接传入 `doc-content-fill`（单文件）或 `doc-tree-fill`（多文件）
+- 若"必须回答"问题列表非空，会自动调用 `todo-append` 记录关键信息缺口
 
 ---
 

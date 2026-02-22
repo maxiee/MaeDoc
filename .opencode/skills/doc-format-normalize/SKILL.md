@@ -1,6 +1,7 @@
 ---
 name: doc-format-normalize
 description: 检查并修正 Markdown 文档的格式问题，包括标题层级、列表格式、代码块语言标注、表格对齐、空行规范，输出格式化后的文档 diff
+mode: read-write
 ---
 
 # doc-format-normalize
@@ -9,6 +10,30 @@ description: 检查并修正 Markdown 文档的格式问题，包括标题层级
 > **版本**：1.0.0
 > **类型**：instruction
 > **用途**：统一文档的 Markdown 格式，消除格式不一致，输出格式化后的 diff
+
+---
+
+## 使用指南
+
+> 以下是 LLM 在调用本 Skill 时需要了解的关键约束和最佳实践。
+
+**正确调用时机**（满足以下任一条件时调用）：
+- 文档内容填充完成后（`doc-content-fill` 或 `doc-iterate` 之后），统一格式规范时
+- 用户明确要求"格式化文档"或"统一 Markdown 格式"时
+- `/create` 命令阶段 4，对生成的文档执行格式规范化时
+
+**不应调用的情况**：
+- 需要修改文档内容（文字、结构）时（应改为调用 `doc-iterate`）
+- 需要检查内容逻辑问题时（应改为调用 `doc-review`）
+
+**输入约束**：
+- `document` 必须是 Markdown 格式的文件路径或内容，不支持其他格式
+- `dry_run` 默认为 `true`（只预览 diff，不写回文件）；调用时通常应传入 `false` 以实际写入
+- 代码块内部内容不会被任何规则修改
+
+**与其他 Skills 的协作**：
+- 通常在 `doc-content-fill` 或 `doc-iterate` 之后调用（作为最后的格式收尾步骤）
+- 输出的格式规范化文档可直接传入质量门（`doc-analyst` SubAgent）进行评分
 
 ---
 
