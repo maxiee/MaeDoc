@@ -120,6 +120,12 @@ MaeDoc 由三层组成：**用户层**（命令输入）→ **OpenCode 运行时
 | [安全边界](./opencode/extensibility/security-boundary.md) | 权限控制、审计、应急响应 |
 | [扩展开发学习路径](./opencode/extensibility/learning-path.md) | 从入门到精通的完整路线图 |
 
+### 我想学习外部最佳实践
+
+| 文档 | 说明 |
+|------|------|
+| [Coding Agents 内部机制](./learning/coding-agents-internals.md) | OpenCode 深度解析，系统提示词设计、工具描述模式、子代理协作 |
+
 ### 我想参与讨论
 
 | 文档 | 说明 |
@@ -133,6 +139,8 @@ MaeDoc 由三层组成：**用户层**（命令输入）→ **OpenCode 运行时
 ```
 docs/
 ├── index.md                          # 本文件（导航入口）
+├── learning/                          # 学习笔记（外部最佳实践）
+│   └── coding-agents-internals.md     # OpenCode 深度解析
 ├── maedoc/                           # MaeDoc 核心架构设计（拆分）
 │   ├── index.md                      # 架构设计导航入口
 │   ├── system-overview.md            # 系统全景
@@ -201,3 +209,5 @@ docs/
 *结构演进于 2026-02-22：拆分 maedoc-architecture.md (233 行) 为 docs/maedoc/ 目录（index.md + 6 个子文档）*
 
 *结构演进于 2026-02-22：拆分 skills-configuration.md (377 行) 为 3 个子文档（skills-basics、skill-md-spec、skills-permissions）*
+
+*结构演进于 2026-02-22：新增 docs/learning/ 目录（外部最佳实践学习笔记）*

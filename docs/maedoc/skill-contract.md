@@ -42,7 +42,80 @@
 
 ---
 
+## Skill 描述设计模式
+
+> **核心洞察**：Skill 的描述不是"功能说明"，而是"使用指南"——告诉 LLM 什么时候用、怎么用、注意什么。
+
+### 描述即 Prompt
+
+每个 Skill 的描述应该告诉 LLM：
+
+1. **功能概述**：这个 Skill 做什么
+2. **使用场景**：什么时候应该使用
+3. **输入格式**：参数的正确格式
+4. **输出格式**：返回内容的结构
+5. **注意事项**：边界情况和常见错误
+
+### SKILL.md 描述结构建议
+
+```markdown
+---
+name: doc-quality-score
+description: |
+  对文档进行量化质量评分（0-100 分）。
+  
+  使用场景：
+  - 评估文档的整体质量
+  - 识别需要改进的章节
+  - 对比不同版本的质量变化
+  
+  输出：评分报告 + 各维度分数 + 改进建议
+---
+
+## 功能说明
+
+...
+
+## 输入要求
+
+- 文档路径（必需）
+- 评分维度（可选，默认全部）
+
+## 输出格式
+
+```json
+{
+  "total_score": 85,
+  "dimensions": {
+    "structure": 90,
+    "clarity": 80,
+    ...
+  },
+  "suggestions": [...]
+}
+```
+
+## 注意事项
+
+- 不适用于代码文档
+- 需要先运行 `doc-format-normalize` 格式化
+```
+
+### 与其他 Skill 的协作
+
+在描述中明确说明与其他 Skill 的关系：
+
+```markdown
+## 协作关系
+
+- 前置：`doc-format-normalize`（格式化后评分更准确）
+- 后续：`doc-iterate`（根据评分报告迭代改进）
+```
+
+---
+
 ## 相关文档
 
 - [命令分发机制](./command-dispatch.md) — 了解 Skill 如何被调用
 - [扩展机制](./extension-mechanism.md) — 了解如何新增 Skill
+- [Coding Agents 内部机制](../learning/coding-agents-internals.md) — OpenCode 深度解析中的"描述即 Prompt"设计模式
