@@ -163,6 +163,110 @@ export default {
 
 ---
 
+## 实战案例：自动 Lint 检查
+
+> **来源**：[The definitive guide to OpenCode](https://reading.sh/the-definitive-guide-to-opencode-from-first-install-to-production-workflows-aae1e95855fb)
+
+以下是一个生产级插件示例：在 Agent 完成编辑后自动运行 Biome lint，并将错误反馈给 Agent 自动修复。
+
+### 插件实现
+
+```typescript
+// .opencode/plugins/post-turn-check.ts
+import { promises as fs } from "node:fs";
+import type { Plugin } from "@opencode-ai/plugin";
+
+let hasEdited = false;
+const cooldownMs = 15_000;
+let lastRunAt = 0;
+
+export const PostTurnCheck: Plugin = async ({ client, $ }) => {
+  return {
+    // 追踪编辑操作
+    "tool.execute.after": async (input) => {
+      const editTools = ["write", "edit", "replace_content", "create_text_file"];
+      if (editTools.includes(input.tool)) {
+        hasEdited = true;
+      }
+    },
+
+    // Agent 完成回合后检查
+    event: async ({ event }) => {
+      if (event.type !== "session.idle") return;
+      if (!hasEdited) return;
+
+      const now = Date.now();
+      if (now - lastRunAt < cooldownMs) return;
+
+      lastRunAt = now;
+      hasEdited = false;
+
+      // 运行 Biome 并捕获输出
+      const outputFile = `/tmp/opencode-check-${Date.now()}.log`;
+      await $`sh -c ${"pnpm run check > " + outputFile + " 2>&1 || true"}`;
+
+      const output = await fs.readFile(outputFile, "utf8").catch(() => "");
+      const message = `
+Post-turn lint check completed.
+
+--- BEGIN BIOME OUTPUT ---
+${output || "No issues found."}
+--- END BIOME OUTPUT ---
+
+If there are errors, fix them. If something's unclear, ask.
+`.trim();
+
+      // 将结果发回给 Agent
+      const sessionID = event.properties.sessionID;
+      if (sessionID) {
+        await client.session.prompt({
+          path: { id: sessionID },
+          body: {
+            parts: [{ type: "text", text: message }],
+          },
+        });
+      }
+    },
+  };
+};
+```
+
+### 添加依赖
+
+在 `.opencode/package.json` 中添加：
+
+```json
+{
+  "dependencies": {
+    "@opencode-ai/plugin": "^1.1.13"
+  }
+}
+```
+
+OpenCode 启动时会自动安装依赖。
+
+### 工作原理
+
+| 机制 | 说明 |
+|------|------|
+| **编辑追踪** | 监听 `tool.execute.after`，Agent 使用编辑工具时设置标记 |
+| **冷却时间** | 15 秒冷却，避免 Agent 快速连续编辑时频繁检查 |
+| **结果反馈** | `client.session.prompt()` 像用户输入一样发送消息给 Agent |
+| **自动修复** | Agent 看到 lint 错误后会自动尝试修复 |
+
+### 扩展：其他自动化场景
+
+同样的模式可用于：
+
+| 场景 | 命令 |
+|------|------|
+| **类型检查** | `tsc --noEmit` |
+| **测试运行** | `npm test -- --related` |
+| **安全扫描** | `npm audit` |
+| **自定义验证** | 任何输出错误到 stdout/stderr 的 CLI 工具 |
+
+---
+
 ## 注意事项
 
 1. **性能影响**：每个 Hook 都会增加请求延迟，避免耗时操作
@@ -180,4 +284,4 @@ export default {
 
 ---
 
-*本文档基于 OpenCode 官方文档和社区最佳实践整理，最后更新：2026-02-22*
+*本文档基于 OpenCode 官方文档、社区最佳实践和《The definitive guide to OpenCode》整理，最后更新：2026-02-22*

@@ -101,6 +101,43 @@ OpenCode 默认提供 3 个免费模型（可能不稳定）：
 
 ---
 
+### /sessions — 恢复会话
+
+恢复之前的工作会话，继续上次未完成的对话。
+
+```bash
+/sessions
+```
+
+**别名**：`/resume`、`/continue`
+
+**快捷键**：`ctrl+x l`
+
+这会打开会话选择器，显示最近的对话列表。选择一个即可恢复完整上下文。
+
+#### 从命令行恢复
+
+```bash
+# 恢复最近的会话
+opencode --continue
+opencode -c
+
+# 恢复特定会话
+opencode --session ses_abc123
+```
+
+#### 命名会话
+
+为重要会话命名，便于后续查找：
+
+```bash
+opencode run --title "支付 API 重构" "重构支付模块以使用 Stripe"
+```
+
+命名会话在 `/sessions` 列表中更容易识别，而非显示自动生成的模糊标题。
+
+---
+
 ### /help — 帮助
 
 查看帮助信息。
@@ -137,7 +174,6 @@ OpenCode 默认提供 3 个免费模型（可能不稳定）：
 ---
 
 ## 命令汇总表
-
 | 命令 | 功能 | 示例 |
 |------|------|------|
 | `/models` | 查看和切换模型 | `/models` |
@@ -145,11 +181,13 @@ OpenCode 默认提供 3 个免费模型（可能不稳定）：
 | `/init` | 初始化项目 | `/init` |
 | `/undo` | 撤销操作 | `/undo` |
 | `/redo` | 重做操作 | `/redo` |
+| `/sessions` | 恢复会话 | `/sessions` 或 `/resume` |
 | `/share` | 分享会话 | `/share` |
 | `/help` | 查看帮助 | `/help` |
 | `@skill` | 引用 Skills | `@my-skill 如何使用？` |
 | `@file` | 引用文件 | `@src/index.ts 分析这个文件` |
 | Tab | 切换 plan/build 模式 | — |
+| `ctrl+x l` | 打开会话选择器 | — |
 | ↑/↓ | 浏览历史命令 | — |
 
 ---
@@ -196,4 +234,4 @@ OpenCode 会给出详细指导。
 
 ---
 
-*本文档整合自 `/evolve` 命令，知识来源：技术文章《全网都在刷的 AI Skills 怎么用》及官方文档，最后更新：2026-02-22*
+*本文档整合自 `/evolve` 命令，知识来源：技术文章《全网都在刷的 AI Skills 怎么用》、《The definitive guide to OpenCode》及官方文档，最后更新：2026-02-22*

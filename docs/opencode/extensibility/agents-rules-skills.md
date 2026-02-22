@@ -321,6 +321,46 @@ skills:
 
 ---
 
+## Commands / Skills / Agents：精炼总结
+
+> **来源**：[The definitive guide to OpenCode](https://reading.sh/the-definitive-guide-to-opencode-from-first-install-to-production-workflows-aae1e95855fb)
+
+**一句话总结**：
+
+> **Commands** 是 **what**（做什么），**Skills** 是 **how**（怎么做），**Agents** 是 **who**（谁来做）。
+
+### 何时使用
+
+| 机制 | 触发方式 | 适用场景 |
+|------|---------|---------|
+| **Commands** | `/command-name` | 重复性任务、固定流程、需要参数的模板 |
+| **Skills** | 自动加载或 `@skill-name` | 领域知识、最佳实践、工作方法 |
+| **Agents** | `@agent-name` 或 Task Tool | 专门角色、受限权限、不同模型配置 |
+
+### 协作示例
+
+```markdown
+# 用户输入
+/review src/auth.ts
+
+# 实际执行
+1. Command `/review` 被触发（what：执行代码审查）
+2. Skill `git-master` 被加载（how：使用 Git 最佳实践）
+3. Agent `reviewer` 被激活（who：只读权限的审查专家）
+```
+
+### 与 Commands 的关系
+
+Commands（自定义命令）与 Skills/Agents 的区别：
+
+| 特性 | Command | Skill | Agent |
+|------|---------|-------|-------|
+| 执行时机 | 用户显式调用 | 自动加载或手动引用 | 用户引用或 Task Tool |
+| 主要作用 | 预定义 prompt 模板 | 知识和方法 | 角色和权限 |
+| 可组合性 | 可加载 Skills | 可被 Command/Agent 加载 | 可加载 Skills |
+| 典型用例 | `/commit`、`/review` | `git-master`、`frontend-ui-ux` | `reviewer`、`security-auditor` |
+
+
 ## 相关文档
 
 - [Skills 使用入门](../skills-basics.md) — Skills 基础概念
@@ -330,4 +370,4 @@ skills:
 
 ---
 
-*本文档基于 OpenCode 架构设计整理，最后更新：2026-02-22*
+*本文档基于 OpenCode 架构设计、《The definitive guide to OpenCode》及社区最佳实践整理，最后更新：2026-02-22*
