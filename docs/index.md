@@ -115,11 +115,6 @@ MaeDoc 由四层组成：**用户层**（命令输入）→ **OpenCode 运行时
 |------|------|
 | [Coding Agents 内部机制](./learning/coding-agents-internals.md) | OpenCode 深度解析，系统提示词设计 |
 
-### 开放问题
-
-| 文档 | 说明 |
-|------|------|
-| [开放问题](./questions/open-questions.md) | 还没有答案的问题 |
 
 ---
 
@@ -166,8 +161,7 @@ docs/
 │   └── evolution-roadmap.md
 ├── learning/                         # 学习笔记
 │   └── coding-agents-internals.md
-├── questions/                        # 开放问题
-│   └── open-questions.md
+
 ├── TODO.md                           # 待办事项
 └── _archive/                         # 已归档文档
 ```
