@@ -21,11 +21,17 @@
 .
 ├── docs/                # 用户文档（/create 生成的文档存放于此）
 │   ├── index.md         # 入口文档（导航枢纽，文档地图）
-│   ├── guides/          # 用户指南
-│   └── examples/        # 示例文档
+│   ├── maedoc/          # MaeDoc 核心架构设计
+│   ├── opencode/        # OpenCode 使用指南
+│   ├── retrospect/      # 回顾与反思
+│   ├── forward/         # 方向与规划
+│   ├── learning/        # 学习笔记
+│   ├── questions/       # 开放问题
+│   └── TODO.md          # 待办事项
 ├── maedoc/              # MaeDoc 自身的配置与文档
 │   ├── dev_plan.md      # 迭代计划
-│   └── writing-guidelines.md  # 通用写作规范
+│   ├── writing-guidelines.md  # 通用写作规范
+│   └── docs-structure-standard.md  # docs/ 目录结构标准
 ├── .opencode/
 │   ├── skills/          # AI 写作 Skills
 │   ├── commands/        # 用户写作命令（/create、/iterate 等）
