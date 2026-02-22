@@ -16,8 +16,8 @@ sequenceDiagram
     participant F as 本地文件系统
 
     U->>C: /create 我想写技术设计文档
-    C->>C: 解析意图，识别文档类型
-    C->>R: 组装 Context（AGENTS.md + 模板 + 已有文档）
+    C->>C: 解析意图
+    C->>R: 组装 Context（AGENTS.md + 已有文档）
     R->>S: 加载 Skill（doc-outline-generate）
     S-->>R: 返回结构化大纲
     R->>U: 展示大纲，请求确认
@@ -39,7 +39,7 @@ sequenceDiagram
 | 阶段 | 输入 | 输出 |
 |------|------|------|
 | 意图解析 | 用户命令 | 命令类型 + 参数 |
-| 上下文组装 | AGENTS.md + 模板 | 组装后的 Context |
+| 上下文组装 | AGENTS.md + 已有文档 | 组装后的 Context |
 | Skill 执行 | Context + Skill 定义 | 结构化输出 |
 | 文档写入 | 结构化内容 | 文件系统中的文档 |
 

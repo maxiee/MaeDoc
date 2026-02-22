@@ -26,7 +26,7 @@ MaeDoc 是一个基于 OpenCode 运行时的文档生成系统，其核心设计
 | [核心数据流](./data-flow.md) | 一次写作命令的完整生命周期 |
 | [Skill 契约设计](./skill-contract.md) | Skill 的结构、分类与设计原则 |
 | [命令分发机制](./command-dispatch.md) | 命令与 Skill Chain 的映射关系 |
-| [扩展机制](./extension-mechanism.md) | 新增文档类型、Skill 和 Command |
+| [扩展机制](./extension-mechanism.md) | 新增 Skill 和 Command |
 | [安全边界](./security-boundary.md) | 文件访问、外部请求、写入确认的安全措施 |
 
 ---

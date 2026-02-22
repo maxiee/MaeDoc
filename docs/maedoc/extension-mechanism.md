@@ -5,33 +5,6 @@
 
 ---
 
-## 新增文档类型
-
-在 `docs/_templates/` 下创建类型目录：
-
-```
-docs/_templates/my-type/
-├── type.json       # 类型定义（章节结构、必需字段）
-├── template.md     # 内容模板（示例章节内容）
-└── guidelines.md   # 类型专属写作规范
-```
-
-`type.json` 示例：
-
-```json
-{
-  "type_id": "my-type",
-  "name": "我的文档类型",
-  "description": "用于...",
-  "sections": [
-    { "id": "summary", "name": "摘要", "required": true },
-    { "id": "details", "name": "详情", "required": true }
-  ]
-}
-```
-
----
-
 ## 新增 Skill
 
 在 `.opencode/skills/` 下创建 Skill 目录，目录中只需一个文件：

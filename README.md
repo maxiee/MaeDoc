@@ -15,13 +15,12 @@ MaeDoc 是一个**文档工作区模板**，也是一套运行在 [OpenCode](htt
 ```
 你的文档仓库（从 MaeDoc fork/clone）
 ├── docs/              ← 你写的文档存在这里
-│   └── _templates/    ← 内置文档类型（tech-design、blog-post 等）
 └── .opencode/
     ├── skills/        ← AI 写作能力（MaeDoc 内置）
     └── commands/      ← 写作命令，如 /create
 ```
 
-**核心差异**：不限于技术文档，支持任意文档类型；每个环节都有对应的 AI Skill；结构化、可追溯、可复用。
+**核心差异**：每个写作环节都有对应的 AI Skill；结构化、可追溯、可复用。
 
 ---
 
@@ -110,21 +109,7 @@ Commands loaded: 1 (create)
 接下来，MaeDoc 会引导你完成完整的写作流程：
 
 ```
-MaeDoc: 根据你的描述，我建议使用以下文档类型：
-
-📄 技术设计文档（tech-design）
-用于系统架构与技术方案设计。
-
-可用类型：
-1. 技术设计文档（tech-design）
-2. 博客文章（blog-post）
-3. 通用文档（generic）
-
-✅ 是否使用推荐类型「技术设计文档」？
-
-> 1（确认）
-
-MaeDoc: 正在生成大纲...
+MaeDoc: 正在分析你的描述，生成大纲...
 
 # 文档大纲：微服务架构迁移技术设计
 
@@ -169,18 +154,16 @@ code docs/microservice-migration-design.md
 | `/review` | 对现有文档进行全面审阅 | 🚧 开发中 |
 | `/iterate` | 基于反馈定向迭代文档 | 🚧 开发中 |
 | `/audit` | 批量文档质量检查 | 🚧 开发中 |
-| `/list-types` | 浏览所有可用文档类型 | 🚧 开发中 |
-| `/new-type` | 交互式创建自定义文档类型 | 🚧 开发中 |
 
 ### AI Skills（由命令自动调用，也可单独使用）
 
 | Skill | 功能 | 状态 |
 |-------|------|:----:|
-| `doc-outline-generate` | 根据想法 + 文档类型生成结构化大纲 | ✅ 可用 |
+| `doc-outline-generate` | 根据想法生成结构化大纲 | ✅ 可用 |
 | `doc-content-fill` | 按章节填充完整内容，标注信心等级 | ✅ 可用 |
 | `doc-review` | 结构、逻辑、语言多维度审阅 | ✅ 可用 |
 | `doc-format-normalize` | Markdown 格式规范化，输出 diff | ✅ 可用 |
-| `doc-structure-audit` | 检查是否符合文档类型结构要求 | ✅ 可用 |
+| `doc-structure-audit` | 检查文档结构完整性、断链与重复内容 | ✅ 可用 |
 | `doc-quality-score` | 量化质量评分（0–100）+ 改进建议 | ✅ 可用 |
 | `doc-iterate` | 基于反馈定向修改，输出 diff | ✅ 可用 |
 | `doc-translate` | 保持结构的多语言翻译 | ✅ 可用 |
@@ -190,18 +173,6 @@ Skills 可单独调用，例如直接在 OpenCode 中说：
 ```
 帮我用 doc-quality-score 给这篇文档打分：docs/my-design.md
 ```
-
-### 内置文档类型
-
-| 类型 ID | 名称 | 状态 |
-|---------|------|:----:|
-| `tech-design` | 技术设计文档 | ✅ 可用 |
-| `blog-post` | 博客文章 | ✅ 可用 |
-| `generic` | 通用文档 | ✅ 可用 |
-| `project-proposal` | 项目提案 | 🚧 开发中 |
-| `meeting-notes` | 会议纪要 | 🚧 开发中 |
-| `api-doc` | API 文档 | 🚧 开发中 |
-| `adr` | 架构决策记录（ADR） | 🚧 开发中 |
 
 ---
 
@@ -244,10 +215,6 @@ Skills 可单独调用，例如直接在 OpenCode 中说：
 ```
 maedoc/
 ├── docs/
-│   ├── _templates/         # 文档类型模板库
-│   │   ├── tech-design/    # type.json + template.md + guidelines.md
-│   │   ├── blog-post/
-│   │   └── generic/
 │   ├── guides/             # 用户指南
 │   └── examples/           # 示例文档
 ├── .opencode/
@@ -272,7 +239,6 @@ graph TD
     subgraph Local["本地环境（隐私安全）"]
         Commands["/create /review /iterate\n写作命令层"]
         Skills["8 个 AI Skills\n写作能力层"]
-        Templates["文档类型模板\ntech-design / blog-post / ..."]
     end
 
     subgraph Remote["远程增强（可选）"]
@@ -284,7 +250,6 @@ graph TD
 
     User --> Commands
     Commands --> Skills
-    Skills --> Templates
     Skills --> Docs
     Skills -->|"疑难升级"| Bridge
     Bridge --> RemoteModel
@@ -310,16 +275,13 @@ graph TD
 | 里程碑 | 内容 | 状态 |
 |--------|------|------|
 | M0: 基础设施 | 项目骨架、配置、Agent 规则 | ✅ 完成 |
-| M1: 文档类型系统 | 类型 Schema + 3 种内置模板 | ✅ 完成 |
-| M2: AI 写作能力 | 8 个核心 Skills | ✅ 完成 |
-| M3: 写作命令 | `/create` 等 6 个命令 | 🚧 进行中（1/6） |
-| M4: 技能治理 | Skill 质量审计 + 自检 Skills | ⏳ 计划中 |
-| M5: 远程桥接 | 本地+远程协同写作 | ⏳ 计划中 |
-| M6: 安全审计 | 敏感信息扫描 + 审计日志 | ⏳ 计划中 |
-| M7: CI/CD | GitHub Actions + 质量门禁 | ⏳ 计划中 |
-| M8: 测试 | 测试框架 + 回归用例 | ⏳ 计划中 |
-| M9: 更多类型 | ADR、会议纪要、API 文档等 | ⏳ 计划中 |
-| M10: 品牌发布 | 文档完善 + README 升级 | ⏳ 计划中 |
+| M1: AI 写作能力 | 8 个核心 Skills | ✅ 完成 |
+| M2: 写作命令 | `/create` 等命令 | 🚧 进行中 |
+| M3: 技能治理 | Skill 质量审计 + 自检 Skills | ⏳ 计划中 |
+| M4: 远程桥接 | 本地+远程协同写作 | ⏳ 计划中 |
+| M5: 安全审计 | 敏感信息扫描 + 审计日志 | ⏳ 计划中 |
+| M6: CI/CD | GitHub Actions + 质量门禁 | ⏳ 计划中 |
+| M7: 测试 | 测试框架 + 回归用例 | ⏳ 计划中 |
 
 完整迭代计划见 [`maedoc/dev_plan.md`](maedoc/dev_plan.md)。
 

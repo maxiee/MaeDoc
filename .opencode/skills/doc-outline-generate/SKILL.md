@@ -1,6 +1,6 @@
 ---
 name: doc-outline-generate
-description: 根据用户想法描述和目标文档类型，生成结构化 Markdown 大纲，自动评估文档规模（单文件 vs 多文件文档树），标注所需输入、验收标准与待确认问题清单，缺失信息不阻塞生成
+description: 根据用户想法描述，生成结构化 Markdown 大纲，自动评估文档规模（单文件 vs 多文件文档树），标注所需输入、验收标准与待确认问题清单，缺失信息不阻塞生成
 ---
 
 # doc-outline-generate
@@ -8,7 +8,7 @@ description: 根据用户想法描述和目标文档类型，生成结构化 Mar
 > **Skill ID**：`doc-outline-generate`
 > **版本**：1.0.0
 > **类型**：instruction
-> **用途**：根据用户想法描述 + 目标文档类型，生成结构化 Markdown 大纲
+> **用途**：根据用户想法描述，生成结构化 Markdown 大纲
 
 ---
 

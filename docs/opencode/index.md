@@ -48,14 +48,14 @@ MaeDoc 是运行在 OpenCode 之上的**文档写作 AI Agent**：
 ```
 用户 → /create /iterate /review → OpenCode Runtime
                                         │
-                    ┌───────────────────┼───────────────────┐
-                    ▼                   ▼                   ▼
-               Commands              Skills             Templates
-              (MaeDoc 命令)         (MaeDoc 能力)        (文档类型)
+                    ┌───────────────────┤
+                    ▼                   ▼
+               Commands              Skills
+              (MaeDoc 命令)         (MaeDoc 能力)
 ```
 
 - OpenCode 提供：AI 运行时、模型连接、Skills 加载机制
-- MaeDoc 提供：文档写作命令、AI 写作 Skills、文档类型模板
+- MaeDoc 提供：文档写作命令、AI 写作 Skills
 
 ---
 
