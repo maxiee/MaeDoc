@@ -20,7 +20,7 @@
 
 ## 系统架构快照
 
-MaeDoc 由三层组成：**用户层**（命令输入）→ **OpenCode 运行时**（Commands + Skills）→ **本地文件系统**（输出与配置）。
+MaeDoc 由四层组成：**用户层**（命令输入）→ **OpenCode 运行时**（Commands + Skills）→ **SubAgent 协作层**（4 个核心 Agent）→ **本地文件系统**（输出与配置）。
 
 ```
 用户 ──► /create /iterate /review ──► OpenCode Runtime
@@ -55,7 +55,7 @@ MaeDoc 由三层组成：**用户层**（命令输入）→ **OpenCode 运行时
 | 文档 | 说明 |
 |------|------|
 | [核心架构设计](./maedoc/index.md) | 架构设计导航入口 |
-| [系统全景](./maedoc/system-overview.md) | 三层架构：用户层、OpenCode 运行时、本地文件系统 |
+| [系统全景](./maedoc/system-overview.md) | 四层架构、6 Commands、12 Skills、4 SubAgents |
 | [核心数据流](./maedoc/data-flow.md) | 一次写作命令的完整生命周期 |
 | [Skill 契约设计](./maedoc/skill-contract.md) | Skill 的结构、分类与设计原则 |
 | [命令分发机制](./maedoc/command-dispatch.md) | 命令与 Skill Chain 的映射关系 |
