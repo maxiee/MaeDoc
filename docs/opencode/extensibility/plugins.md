@@ -126,14 +126,14 @@ export default {
 
 ## 配置与启用
 
-在 `opencode.jsonc` 中配置插件：
+在 `opencode.jsonc` 中配置插件（顶层字段为 `plugin`）：
 
 ```jsonc
 {
-  "plugins": {
-    "enabled": ["my-plugin", "another-plugin"],
-    "disabled": ["experimental-*"]
-  }
+  "plugin": [
+    "my-plugin",
+    "another-plugin"
+  ]
 }
 ```
 
