@@ -2,6 +2,7 @@
 name: doc-analyst
 description: 只读文档质量分析代理——对指定文档执行质量评分（doc-quality-score）和内容审阅（doc-review），输出综合质量报告，不修改任何文件。由 /create 和 /iterate 的质量门阶段自动调用。
 mode: subagent
+temperature: 0.1
 tools:
   write: false
   edit: false

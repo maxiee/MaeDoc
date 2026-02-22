@@ -222,22 +222,18 @@
 
 | Skill ID | 功能 | 状态 |
 |----------|------|------|
-| `doc.outline.generate` | 根据想法生成结构化大纲 | WIP |
-| `doc.content.fill` | 根据大纲逐章节填充内容 | WIP |
-| `doc.review` | 多维度文档审阅（结构/逻辑/语言/可读性）——仅内部调用（由 doc-analyst SubAgent 使用） | WIP |
-| `doc.format.normalize` | 统一 Markdown 格式规范 | WIP |
-| `doc.structure.audit` | 检查文档是否符合类型结构要求 | WIP |
-| `doc.quality.score` | 量化质量评分（0-100）+ 改进建议 | WIP |
-| `doc.iterate` | 基于反馈定向迭代优化文档 | WIP |
-| `doc.translate` | 保持结构不变的多语言翻译 | WIP |
-| `sec.secret.scan` | 扫描敏感信息（API Key、密码、PII） | WIP |
-| `sec.prompt_injection.check` | 检测外部输入中的提示注入风险 | WIP |
+| `doc-outline-generate` | 根据想法生成结构化大纲，评估规模（单文件 vs 多文件） | ✅ |
+| `doc-content-fill` | 根据大纲逐章节填充内容，支持 `[待确认]` 占位 | ✅ |
+| `doc-review` | 多维度文档审阅（结构/逻辑/语言/可读性）——内部调用（由 doc-analyst 使用） | ✅ |
+| `doc-format-normalize` | 统一 Markdown 格式规范（标题、列表、代码块、引用） | ✅ |
+| `doc-structure-audit` | 检查文档是否符合类型结构要求，输出结构合规报告 | ✅ |
+| `doc-quality-score` | 量化质量评分（0-100）五维度评分 + 改进建议 | ✅ |
+| `doc-iterate` | 基于反馈定向迭代优化文档，高风险操作需 question 确认 | ✅ |
+| `doc-translate` | 保持结构不变的多语言翻译 | ✅ |
+| `doc-tree-fill` | 多文件文档树批量填充（由 doc-writer 在多文件模式调用） | ✅ |
+| `doc-tree-evolve` | 分析文档树快照与用户意图，输出结构变更计划 | ✅ |
 | `hardness-classify` | 六维硬度评估，超阈值时自动打包上下文并生成外部求助文件 | ✅ |
 | `todo-append` | 向 docs/TODO.md 追加代办事项，供 Commands/Skills 在无法立刻处理时记录 | ✅ |
-| `skill.registry.build` | 自动生成 Skills 目录索引 | WIP |
-| `doc.changelog.generate` | 基于 git 历史生成/更新 CHANGELOG | WIP |
-| `doc.drift.detect` | 检测文档与实际状态之间的漂移 | WIP |
-| `doc.tree.evolve` | 分析文档树快照与用户意图，输出结构变更计划 | WIP |
 
 ### 6.2 用户写作命令（`.opencode/commands/`）
 
@@ -314,6 +310,67 @@ task(
   """
 )
 ```
+
+#### 无状态 Prompt 构成原则
+
+> **核心约束**（来自 OpenCode Task Tool 设计）：每次 SubAgent 调用都是无状态的——SubAgent 无法访问主 Agent 的对话历史，也无法在执行过程中与主 Agent 通信。因此，**prompt 必须完全自给自足**。
+
+构成完整 SubAgent prompt 的要素：
+
+| 要素 | 必要性 | 说明 |
+|------|:------:|------|
+| **任务描述** | 必须 | 清晰说明要做什么、为什么做 |
+| **输入参数** | 必须 | 所有必要参数（文件路径、用户意图、约束等）显式传入 |
+| **上下文摘要** | 视情况 | 对话中的关键决策、已确认的前置条件 |
+| **期望输出格式** | 必须 | 明确说明返回什么格式的报告（SubAgent 的输出就是最后一条文本消息） |
+| **行为约束** | 视情况 | 提醒只读/禁止特定操作等（与 SubAgent 定义中的 tools 配合） |
+
+**反模式**（避免）：
+- ❌ 在 prompt 中写"如上所述" / "基于我们的讨论" — SubAgent 看不到对话历史
+- ❌ 省略文件路径，认为 SubAgent 能"猜到" — 必须显式传入
+- ❌ 不指定输出格式，导致主 Agent 无法解析结果
+
+#### 并行调用原则
+
+> **性能洞察**：当多个 SubAgent 任务相互独立时，应在同一轮 `task` 调用中并行发出，而非顺序等待。
+
+**适合并行的场景**：
+- 多文件质量检查（对多个独立文档同时调用 doc-analyst）
+- 独立的分析与规划任务
+
+**必须顺序的场景**：
+- doc-planner → doc-writer（写作依赖规划结果）
+- doc-writer → doc-analyst（评分依赖写作完成）
+
+#### 温度设定
+
+SubAgent 根据任务性质配置了不同的 `temperature`，以在创意性与准确性之间取得最佳平衡：
+
+| SubAgent | Temperature | 设定理由 |
+|----------|:-----------:|---------|
+| `doc-analyst` | 0.1 | 质量评分需高一致性，低温度确保评分可重复 |
+| `doc-library-analyst` | 0.1 | 全库扫描是事实性分析，不需要创意输出 |
+| `doc-planner` | 0.3 | 规划需要一定灵活性，但要结构化 |
+| `doc-writer` | 0.7 | 内容创作需要创意表达，同时保持逻辑连贯 |
+
+#### 写 → 诊断 → 调整 反馈循环
+
+> **架构原则**（对应 OpenCode 的 LSP 反馈机制）：文档写作与代码一样，需要「写入 → 外部诊断 → 调整」的闭环。`doc-analyst` 在每次重要写作后自动介入，形成质量保障循环。
+
+```
+[doc-writer 写入文档]
+        │
+        ▼
+[doc-analyst 质量评分]  ← 在独立上下文中，客观评分，避免"自说自话"
+        │
+        ├─ PASS（≥70）→ 继续后续流程
+        │
+        └─ FAIL（<70）→ TOP_ISSUES 作为反馈输入 → [doc-iterate 改进] → 循环（最多3次）
+```
+
+**为什么 doc-analyst 是独立 SubAgent 而非 Skill**：
+- Skill 在主 Agent 上下文中运行，受写作过程的"认知惯性"影响，容易对自己写的内容打高分
+- SubAgent 拥有干净上下文，评分更客观，相当于"他人审阅"
 
 #### 协作模式
 
@@ -411,8 +468,8 @@ task(
 
 ### 版本与兼容性
 
-- 本规范版本：`v1.2.0`
-- 对应 MaeDoc 迭代：`v0006`（新增三层 SubAgent 体系：doc-library-analyst / doc-planner / doc-writer）
+- 本规范版本：`v1.3.0`
+- 对应 MaeDoc 迭代：`v0007`（基于 OpenCode 内部机制学习进行全面架构升级：SubAgent temperature 配置、写→诊断→调整反馈循环文档化、无状态 Prompt 构成原则、并行调用指南）
 
 ---
 

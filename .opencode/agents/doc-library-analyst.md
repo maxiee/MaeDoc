@@ -2,6 +2,7 @@
 name: doc-library-analyst
 description: 全库文档分析代理——在独立上下文窗口中扫描整个 docs/ 目录，构建跨文档知识图谱，识别方向对齐度、概念一致性问题、覆盖缺口与结构债务，输出结构化分析报告。由 /evolve 命令在库级分析阶段调用，不修改任何文件。
 mode: subagent
+temperature: 0.1
 tools:
   write: false
   edit: false

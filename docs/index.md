@@ -28,7 +28,7 @@
 
 **落地方案**：MaeDoc 强依赖本地运行时引擎（OpenCode），所有上下文组装和安全红线校验均在本地完成。远程模型仅在用户主动触发 `/escalate` 时介入，且外发内容必须经过敏感信息扫描。
 
-👉 详见：[核心架构设计 — 系统全景](./maedoc/system-overview.md)
+👉 详见：[系统全景](./maedoc/system-overview.md)
 
 ### 理念 2：一切皆契约
 
@@ -36,7 +36,7 @@
 
 **落地方案**：通过 SKILL.md 中的结构化 Prompt 格式约定规范每个 Skill 的输入输出——明确说明接收什么、如何处理、输出什么格式，让 AI 的创造力在可预测的工作流上运行。
 
-👉 详见：[核心架构设计 — Skill 契约设计](./maedoc/skill-contract.md)
+👉 详见：[Skill 契约设计](./maedoc/skill-contract.md)
 
 ### 理念 3：流水线胜于对话框
 
@@ -44,7 +44,7 @@
 
 **落地方案**：将写作过程拆解为定义命令、加载 Skill、执行生成的标准化工作流。`/create` 从意图到大纲再到内容，`/iterate` 精准修改目标章节，`/review` 多维度质量审计——每一步都可追溯、可验证。
 
-👉 详见：[核心架构设计 — 命令分发机制](./maedoc/command-dispatch.md)
+👉 详见：[命令分发机制](./maedoc/command-dispatch.md)
 
 ---
 
@@ -70,63 +70,82 @@ MaeDoc 由三层组成：**用户层**（命令输入）→ **OpenCode 运行时
 
 ---
 
-## 文档大地图
+## 文档地图
 
-按**认知逻辑**组织，帮助你快速找到需要的内容。
+按**主题归属**组织，帮助你快速定位内容。
 
-### 我想了解架构设计
+---
+
+## 一、MaeDoc 核心
+
+关于本项目的设计理念、架构决策与演进历程。
+
+### 架构设计
 
 | 文档 | 说明 |
 |------|------|
-| [核心架构设计](./maedoc/index.md) | OpenCode 运行时、Skill 契约、命令机制的完整说明 |
+| [核心架构设计](./maedoc/index.md) | 架构设计导航入口 |
+| [系统全景](./maedoc/system-overview.md) | 三层架构：用户层、OpenCode 运行时、本地文件系统 |
+| [核心数据流](./maedoc/data-flow.md) | 一次写作命令的完整生命周期 |
+| [Skill 契约设计](./maedoc/skill-contract.md) | Skill 的结构、分类与设计原则 |
+| [命令分发机制](./maedoc/command-dispatch.md) | 命令与 Skill Chain 的映射关系 |
+| [扩展机制](./maedoc/extension-mechanism.md) | 新增 Skill 和 Command |
+| [安全边界](./maedoc/security-boundary.md) | 文件访问、外部请求、写入确认的安全措施 |
 
-### 我想回顾设计决策
+### 项目演进
 
 | 文档 | 说明 |
 |------|------|
 | [项目现状回顾](./retrospect/current-state.md) | Phase 0-7 的关键产出与设计决策 |
 | [核心设计反思](./retrospect/design-reflections/index.md) | 四个关键设计的批判性审视 |
 | [痛点与不足](./retrospect/pain-points.md) | 当前设计的摩擦点与改进方向 |
-
-### 我想规划未来方向
-
-| 文档 | 说明 |
-|------|------|
 | [AI 能力深化方向](./forward/ai-capability-deepening.md) | 本地模型强化与协作模式优化 |
 | [演进路线图](./forward/evolution-roadmap.md) | 从 v0029 到未来的版本规划 |
 
-### 我想学习 OpenCode 使用
+---
+
+## 二、OpenCode 平台
+
+关于底层 AI 运行时的使用与扩展开发。
+
+### 使用指南
 
 | 文档 | 说明 |
 |------|------|
-| [OpenCode 使用指南](./opencode/index.md) | OpenCode 安装、配置、使用的完整指南 |
+| [OpenCode 使用指南](./opencode/index.md) | 使用指南导航入口 |
 | [安装指南](./opencode/installation.md) | 下载地址、桌面端/CLI 安装、文件结构 |
+| [内置命令参考](./opencode/commands-built-in.md) | /models、/connect、/init、模式切换 |
+| [自定义命令开发](./opencode/commands-custom.md) | 创建、配置、参数、选项详解 |
 | [Skills 使用入门](./opencode/skills-basics.md) | 什么是 Skills、目录结构、安装与验证 |
-| [SKILL.md 开发规范](./opencode/skill-md-spec.md) | Frontmatter 字段、名称验证规则、完整示例 |
-| [Skills 权限配置](./opencode/skills-permissions.md) | 权限模式、禁用技能、常见问题 |
-| [内置命令参考](./opencode/commands-built-in.md) | /models、/connect、/init、模式切换、命令汇总表 |
-| [自定义命令开发](./opencode/commands-custom.md) | 创建、配置、参数、选项详解、完整示例 |
+| [SKILL.md 开发规范](./opencode/skill-md-spec.md) | Frontmatter 字段、名称验证规则 |
+| [Skills 权限配置](./opencode/skills-permissions.md) | 权限模式、禁用技能 |
+| [环境变量](./opencode/environment-variables.md) | 全局配置 vs 项目配置 |
+| [常见问题](./opencode/faq.md) | 问题解决与使用技巧 |
 
-### 我想学习 OpenCode 扩展开发
+### 扩展开发
+
+| 文档 | 说明 | 风险 |
+|------|------|:----:|
+| [扩展能力总览](./opencode/extensibility/index.md) | 六支柱架构导航 | — |
+| [Plugins 扩展机制](./opencode/extensibility/plugins.md) | 事件总线 Hook、改写行为 | 🔴 |
+| [Custom Tools](./opencode/extensibility/custom-tools.md) | TypeScript/JS 函数 | 🔴 |
+| [MCP Servers](./opencode/extensibility/mcp-servers.md) | 外部工具集接入 | 🟡 |
+| [Agents/Rules/Skills](./opencode/extensibility/agents-rules-skills.md) | 可组合工作流 | 🟢 |
+| [Server/SDK](./opencode/extensibility/server-sdk.md) | OpenAPI 3.1 + SSE | 🔴 |
+| [安全边界](./opencode/extensibility/security-boundary.md) | 权限、审计、应急响应 | — |
+| [扩展开发学习路径](./opencode/extensibility/learning-path.md) | 从入门到精通 | — |
+
+---
+
+## 三、其他
+
+### 学习笔记
 
 | 文档 | 说明 |
 |------|------|
-| [**扩展能力总览**](./opencode/extensibility/index.md) | 六支柱架构导航、能力选择指南 |
-| [Plugins 扩展机制](./opencode/extensibility/plugins.md) | 事件总线 Hook、改写 LLM/工具调用行为 |
-| [Custom Tools](./opencode/extensibility/custom-tools.md) | TypeScript/JS 定义 LLM 可调用函数 |
-| [MCP Servers](./opencode/extensibility/mcp-servers.md) | 外部工具集接入（本地/远程） |
-| [Agents/Rules/Skills](./opencode/extensibility/agents-rules-skills.md) | 可组合工作流定义体系 |
-| [Server/SDK](./opencode/extensibility/server-sdk.md) | OpenAPI 3.1 + SSE 远程集成 |
-| [安全边界](./opencode/extensibility/security-boundary.md) | 权限控制、审计、应急响应 |
-| [扩展开发学习路径](./opencode/extensibility/learning-path.md) | 从入门到精通的完整路线图 |
+| [Coding Agents 内部机制](./learning/coding-agents-internals.md) | OpenCode 深度解析，系统提示词设计 |
 
-### 我想学习外部最佳实践
-
-| 文档 | 说明 |
-|------|------|
-| [Coding Agents 内部机制](./learning/coding-agents-internals.md) | OpenCode 深度解析，系统提示词设计、工具描述模式、子代理协作 |
-
-### 我想参与讨论
+### 开放问题
 
 | 文档 | 说明 |
 |------|------|
@@ -139,49 +158,48 @@ MaeDoc 由三层组成：**用户层**（命令输入）→ **OpenCode 运行时
 ```
 docs/
 ├── index.md                          # 本文件（导航入口）
-├── learning/                          # 学习笔记（外部最佳实践）
-│   └── coding-agents-internals.md     # OpenCode 深度解析
-├── maedoc/                           # MaeDoc 核心架构设计（拆分）
-│   ├── index.md                      # 架构设计导航入口
+├── maedoc/                           # MaeDoc 核心架构设计
+│   ├── index.md                      # 架构设计导航
 │   ├── system-overview.md            # 系统全景
 │   ├── data-flow.md                  # 核心数据流
 │   ├── skill-contract.md             # Skill 契约设计
 │   ├── command-dispatch.md           # 命令分发机制
 │   ├── extension-mechanism.md        # 扩展机制
 │   └── security-boundary.md          # 安全边界
-├── TODO.md                           # 待办事项（由 /do-todo 处理）
 ├── opencode/                         # OpenCode 使用指南
-│   ├── index.md                      # 分组导航
+│   ├── index.md                      # 使用指南导航
 │   ├── installation.md               # 安装指南
-│   ├── skills-basics.md              # Skills 使用入门
-│   ├── skill-md-spec.md              # SKILL.md 开发规范
-│   ├── skills-permissions.md         # Skills 权限配置
+│   ├── skills-basics.md              # Skills 入门
+│   ├── skill-md-spec.md              # SKILL.md 规范
+│   ├── skills-permissions.md         # 权限配置
 │   ├── environment-variables.md      # 环境变量
-│   ├── commands-built-in.md          # 内置命令参考
-│   ├── commands-custom.md            # 自定义命令开发
+│   ├── commands-built-in.md          # 内置命令
+│   ├── commands-custom.md            # 自定义命令
 │   ├── faq.md                        # 常见问题
-│   └── extensibility/                # 扩展能力（六支柱架构）
-│       ├── index.md                  # 扩展能力导航
-│       ├── plugins.md                # Plugins 扩展机制
-│       ├── custom-tools.md           # Custom Tools
-│       ├── mcp-servers.md            # MCP Servers
-│       ├── agents-rules-skills.md    # Agents/Rules/Skills 体系
-│       ├── server-sdk.md             # Server/SDK 远程集成
-│       ├── security-boundary.md      # 安全边界
-│       └── learning-path.md          # 扩展开发学习路径
+│   └── extensibility/                # 扩展能力
+│       ├── index.md                  # 扩展导航
+│       ├── plugins.md
+│       ├── custom-tools.md
+│       ├── mcp-servers.md
+│       ├── agents-rules-skills.md
+│       ├── server-sdk.md
+│       ├── security-boundary.md
+│       └── learning-path.md
 ├── retrospect/                       # 回顾与反思
-│   ├── index.md                      # 分组导航
-│   ├── current-state.md              # 项目现状回顾
-│   ├── pain-points.md                # 痛点与不足
-│   └── design-reflections/           # 设计反思（4 篇子文档）
+│   ├── index.md
+│   ├── current-state.md
+│   ├── pain-points.md
+│   └── design-reflections/
 ├── forward/                          # 方向与规划
-│   ├── index.md                      # 分组导航
-│   ├── ai-capability-deepening.md    # AI 能力深化方向
-│   └── evolution-roadmap.md          # 演进路线图
+│   ├── index.md
+│   ├── ai-capability-deepening.md
+│   └── evolution-roadmap.md
+├── learning/                         # 学习笔记
+│   └── coding-agents-internals.md
 ├── questions/                        # 开放问题
-│   └── open-questions.md             # 还没有答案的问题
-├── guides/                           # 用户指南（WIP）
-└── examples/                         # 示例文档（WIP）
+│   └── open-questions.md
+├── TODO.md                           # 待办事项
+└── _archive/                         # 已归档文档
 ```
 
 ---
@@ -191,10 +209,10 @@ docs/
 | 文档 | 位置 | 职责 |
 |------|------|------|
 | `README.md` | 项目根目录 | 项目介绍、快速上手 |
-| `AGENTS.md` | 项目根目录 | AI Agent 行为准则、写作原则、安全红线 |
+| `AGENTS.md` | 项目根目录 | AI Agent 行为准则 |
 | `maedoc/writing-guidelines.md` | maedoc/ | 通用写作规范 |
-| `maedoc/dev_plan.md` | maedoc/ | 任务清单、迭代计划（「做什么」） |
-| `docs/` | docs/ | 本文档库（「为什么」「怎么做」） |
+| `maedoc/dev_plan.md` | maedoc/ | 任务清单、迭代计划 |
+| `docs/` | docs/ | 本文档库（深度探索） |
 
 **关键区别**：
 - `maedoc/dev_plan.md` 是**执行层面**的任务跟踪
@@ -202,12 +220,6 @@ docs/
 
 ---
 
-*本文档由 `/create` 和 `/evolve` 命令维护。新建文档会自动追加到文档地图。*
+*本文档由 `/create` 和 `/evolve` 命令维护。*
 
-*结构演进于 2026-02-22：新增 docs/opencode/extensibility/ 目录（六支柱扩展架构，8 个子文档）*
-
-*结构演进于 2026-02-22：拆分 maedoc-architecture.md (233 行) 为 docs/maedoc/ 目录（index.md + 6 个子文档）*
-
-*结构演进于 2026-02-22：拆分 skills-configuration.md (377 行) 为 3 个子文档（skills-basics、skill-md-spec、skills-permissions）*
-
-*结构演进于 2026-02-22：新增 docs/learning/ 目录（外部最佳实践学习笔记）*
+*结构演进于 2026-02-22：将"我想……"导航重构为主题导向的两级结构*

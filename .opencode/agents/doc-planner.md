@@ -2,6 +2,7 @@
 name: doc-planner
 description: 文档规划代理——在独立上下文窗口中接收用户丰富化需求，分析现有文档库结构，生成最优文档创建方案（推荐路径、大纲结构、创建形式、规模评估）。只读，不写入任何文件，输出结构化规划报告供主 Agent 使用。由 /create 命令在规划阶段调用。
 mode: subagent
+temperature: 0.3
 tools:
   write: false
   edit: false

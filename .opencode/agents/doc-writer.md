@@ -2,6 +2,7 @@
 name: doc-writer
 description: 文档写作代理——在独立上下文窗口中接收大纲文件和写作参数，逐章节填充高质量内容并写入文件，最后执行格式规范化。有读写权限，但不执行 bash 命令、不调用其他 SubAgent。由 /create 命令在内容生成阶段调用。
 mode: subagent
+temperature: 0.7
 tools:
   write: true
   edit: true

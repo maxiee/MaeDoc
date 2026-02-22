@@ -296,9 +296,13 @@ description: 一键创建新文档——MaeDoc 最核心的用户入口。与用
 - **subagent_type**：`doc-analyst`
 - **prompt**：
   ```
-  请对以下文档进行质量分析：{output_file 的绝对路径}
+  请对以下文档进行质量分析：
+  {单文件模式：output_file 的绝对路径}
+  {多文件模式：base_dir/index.md 的绝对路径}
   读取文档，按你的执行流程完成评分，输出你的标准格式报告。
   ```
+
+> **多文件模式说明**：多文件模式下 `output_file` 已在阶段 3 被删除，质量评估以 `base_dir/index.md`（文档树导航入口）为目标。index.md 涵盖整体结构和导航，适合作为质量评估锚点。
 
 等待 doc-analyst 返回结构化质量报告。
 
@@ -321,7 +325,7 @@ description: 一键创建新文档——MaeDoc 最核心的用户入口。与用
   3. 手动告诉我改进方向
 
 根据选择：
-- **选择 1（自动改进）**：将 TOP_ISSUES 组合为反馈，加载 `.opencode/skills/doc-iterate/SKILL.md`，按 Skill 步骤执行改进，完成后回到步骤 4.1 重新评分（最多循环 3 次，超过后自动进入"接受"路径）
+- **选择 1（自动改进）**：将 TOP_ISSUES 组合为反馈，加载 `.opencode/skills/doc-iterate/SKILL.md`，按 Skill 步骤对目标文件（单文件：`output_file`，多文件：`base_dir/index.md`）执行改进，完成后回到步骤 4.1 重新评分（最多循环 3 次，超过后自动进入"接受"路径）
 - **选择 2（接受）**：继续阶段 5，在摘要中注明"质量得分 {N}/100（低于推荐标准 70 分）"
 - **选择 3（手动）**：收集用户指定方向，加载 `.opencode/skills/doc-iterate/SKILL.md`，按 Skill 步骤执行改进，完成后回到步骤 4.1 重新评分
 
@@ -486,7 +490,9 @@ description: 一键创建新文档——MaeDoc 最核心的用户入口。与用
     │     → 主 Agent 解析 CONFIDENCE_TABLE + PENDING_ITEMS
     ▼
 [阶段 4] 质量门检查（必做）
-    │ task 工具调用 doc-analyst SubAgent → 等待质量报告
+    │ task 工具调用 doc-analyst SubAgent
+    │   → 单文件：对 output_file 评分
+    │   → 多文件：对 base_dir/index.md 评分（output_file 在阶段 3 已删除）
     │   ├─ PASS: true（总分 ≥ 70）→ 继续阶段 5（附注质量得分）
     │   └─ PASS: false（总分 < 70）→ question 工具
     │         ├─ 选择 1（自动改进）→ 加载 doc-iterate Skill → 改进 → 重新评分（最多循环 3 次）

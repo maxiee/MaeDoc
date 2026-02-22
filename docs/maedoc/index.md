@@ -1,6 +1,6 @@
 # MaeDoc 核心架构设计
 
-> **版本**：2.0.0
+> **版本**：2.1.0
 > **最后更新**：2026-02-22
 > **适用读者**：想深入理解 MaeDoc 设计原理的开发者
 
@@ -18,7 +18,7 @@ MaeDoc 是一个基于 OpenCode 运行时的文档生成系统，其核心设计
 
 ---
 
-## 架构全景
+## 文档目录
 
 | 文档 | 说明 |
 |------|------|
@@ -28,30 +28,6 @@ MaeDoc 是一个基于 OpenCode 运行时的文档生成系统，其核心设计
 | [命令分发机制](./command-dispatch.md) | 命令与 Skill Chain 的映射关系 |
 | [扩展机制](./extension-mechanism.md) | 新增 Skill 和 Command |
 | [安全边界](./security-boundary.md) | 文件访问、外部请求、写入确认的安全措施 |
-
----
-
-## 快速导航
-
-### 我想了解整体架构
-
-👉 [系统全景](./system-overview.md) — OpenCode 运行时与文件系统的边界
-
-### 我想了解数据如何流转
-
-👉 [核心数据流](./data-flow.md) — 从用户输入到文档输出的完整链路
-
-### 我想新增一个 Skill
-
-👉 [Skill 契约设计](./skill-contract.md) + [扩展机制](./extension-mechanism.md)
-
-### 我想新增一个命令
-
-👉 [命令分发机制](./command-dispatch.md) + [扩展机制](./extension-mechanism.md)
-
-### 我想了解安全设计
-
-👉 [安全边界](./security-boundary.md)
 
 ---
 
