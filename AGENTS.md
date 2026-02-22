@@ -252,20 +252,32 @@
 
 ### 6.3 SubAgent（`.opencode/agents/`）
 
-| Agent ID | 调用方式 | 功能 | 工具权限 |
-|----------|---------|------|---------|
-| `doc-analyst` | `task` 工具（自动，由 /create、/iterate 质量门触发）| 只读文档质量分析，输出评分报告 | 只读（write/edit/bash 均禁用）|
+| Agent ID | 层级 | 调用方 | 功能 | 工具权限 |
+|----------|------|--------|------|---------|
+| `doc-library-analyst` | 分析层 | `/evolve` Phase 1 | 全库扫描，构建跨文档知识图谱，输出结构化分析报告 | 只读（write/edit/bash 禁用）|
+| `doc-planner` | 规划层 | `/create` Phase 2 | 分析需求和文档库结构，生成大纲方案（路径/结构/规模评估） | 只读（write/edit/bash 禁用）|
+| `doc-analyst` | 分析层 | `/create`、`/iterate` 质量门 | 文档质量评分与深度审阅，输出量化评分报告 | 只读（write/edit/bash 禁用）|
+| `doc-writer` | 写作层 | `/create` Phase 3 | 接收大纲，逐章节填充内容并格式化，输出写作完成报告 | 读写（bash/task 禁用）|
 
 ### 6.4 典型工作流
 
 **基础写作流程**：
 ```
-/create [描述] → 大纲确认 → 内容生成 → 格式化 → [质量门：评分 ≥ 70 自动完成 / < 70 自动改进] → 输出到 docs/
+/create [描述] → 深化需求探询 → 确定路径
+  → [doc-planner] 生成大纲方案 → 主 Agent 写入文件 → 用户确认大纲
+  → [doc-writer] 填充内容 + 格式化
+  → [doc-analyst] 质量门评分
+  → 更新 docs/index.md → TODO 录入
 ```
 
 **迭代优化流程**：
 ```
-/iterate [文件] [反馈] → 应用修改 → [质量门：评分 ≥ 70 继续 / < 70 自动改进]
+/iterate [文件] [反馈] → 深度需求探索 → 应用修改 → [doc-analyst] 质量门 → 篇幅检查 → TODO 录入
+```
+
+**全库演进流程**：
+```
+/evolve [意图] → [doc-library-analyst] 全库扫描分析 → 主 Agent 生成变更计划 → 用户确认 → 执行操作 → TODO 录入
 ```
 
 **远程增强流程**（遇到疑难问题时）：
@@ -273,6 +285,54 @@
 [手动] /escalate [文档] [问题] → 打包上下文 → 用户去外部 AI → /ingest-remote → 应用修改
 [自动] hardness-classify 触发 → 自动打包（含对话历史+AI分析）→ 用户去外部 AI → /ingest-remote → 应用修改
 ```
+
+### 6.5 SubAgent 协作架构
+
+> **核心洞察**（来自 OpenCode 架构实践）：SubAgent 拥有**独立的上下文窗口**，是处理"上下文密集型"任务的关键机制。
+
+#### SubAgent vs Skill 的选择原则
+
+| 场景 | 使用 SubAgent | 使用 Skill |
+|------|-------------|-----------|
+| 需要加载大量文档内容（如全库扫描） | ✅ 隔离上下文 | ❌ 污染主 Agent |
+| 需要独立的创作焦点（如内容生成） | ✅ 干净上下文 | ❌ 受对话历史干扰 |
+| 需要严格的工具权限限制 | ✅ 可精确配置 | ❌ 继承主 Agent 权限 |
+| 简单、局部的操作（如追加 TODO） | ❌ 开销过大 | ✅ 直接执行 |
+
+#### 调用方式
+
+所有 SubAgent 通过 `task` 工具调用：
+
+```
+task(
+  description: "3-5 字的任务描述",
+  subagent_type: "doc-planner",  // SubAgent ID
+  prompt: """
+    ... 详细任务描述 + 所有必要参数 ...
+
+    注意：请在最终回复中输出标准格式报告，供调用方解析使用。
+  """
+)
+```
+
+#### 协作模式
+
+```
+主 Agent（协调者）
+  ├── 用户交互：提问、确认、展示结果
+  ├── 状态管理：维护文件路径、创建模式等变量
+  ├── 调用 SubAgent（via task 工具）
+  │     ├── doc-library-analyst → 分析报告（紧凑文本）
+  │     ├── doc-planner → 规划报告（大纲 + 元数据）
+  │     ├── doc-writer → 写作完成报告（写入文件）
+  │     └── doc-analyst → 质量报告（评分 + 问题列表）
+  └── 写入 docs/index.md（SubAgent 不做，主 Agent 统一负责）
+```
+
+**关键约定**：
+- SubAgent 的输出是**紧凑的结构化文本报告**，不是原始内容
+- 主 Agent 解析报告，决定后续操作（写文件、确认、告知用户）
+- `docs/index.md` 的更新**始终由主 Agent 负责**，SubAgent 不直接修改
 
 ---
 
@@ -303,7 +363,20 @@
 - **文本用于沟通**：只在需要向用户传达信息时输出文本
 - **不在工具调用中添加注释**：工具的参数本身就说明了意图
 
-### 7.4 信心等级标注
+### 7.4 工具使用规范
+
+> 对应 OpenCode 的 `## Tool Usage` 章节——这些规则直接影响任务执行效率和正确性。
+
+| 规则 | 说明 |
+|------|------|
+| **文件路径使用绝对路径** | 使用 `read` / `write` 工具时，始终使用绝对路径（如 `/Volumes/ssd/Code/MaeDoc/docs/my-doc.md`） |
+| **并行调用独立工具** | 当多个工具调用互不依赖时，在同一轮次中并行发出，不依次等待 |
+| **Skill 调用 = 读取 SKILL.md** | "调用 Skill" 的实质是读取 `.opencode/skills/{skill-id}/SKILL.md` 并按其步骤执行；必须实际读取文件 |
+| **SubAgent 调用 = task 工具** | 调用 SubAgent 必须通过 `task` 工具，并在 prompt 中提供所有必要参数；SubAgent 输出是结构化文本 |
+| **用户交互 = question 工具** | 所有需要用户回答的情况，必须使用 `question` 工具，不得输出文本等待用户回复 |
+| **文件写入前确认** | 首次写入已存在文件前，展示 diff 或变更摘要，等待用户确认（见 §4.4） |
+
+### 7.5 信心等级标注
 
 对不确定或假设性内容，**必须**标注信心等级：
 
@@ -338,8 +411,8 @@
 
 ### 版本与兼容性
 
-- 本规范版本：`v1.1.0`
-- 对应 MaeDoc 迭代：`v0005`
+- 本规范版本：`v1.2.0`
+- 对应 MaeDoc 迭代：`v0006`（新增三层 SubAgent 体系：doc-library-analyst / doc-planner / doc-writer）
 
 ---
 

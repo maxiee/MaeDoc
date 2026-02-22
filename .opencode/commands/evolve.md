@@ -1,13 +1,13 @@
 ---
 name: evolve
-description: 以整个文档库为单位进行演进——读取所有文档全文，构建跨文档知识图谱，分析方向对齐度/概念一致性/覆盖缺口，生成结构操作与内容操作并行的整体变更计划，确认后执行并更新 index.md。
+description: 以整个文档库为单位进行演进——通过 doc-library-analyst SubAgent 在独立上下文中扫描全库，构建跨文档知识图谱，分析方向对齐度/概念一致性/覆盖缺口，主 Agent 基于分析报告生成变更计划，确认后执行并更新 index.md。
 ---
 
 # /evolve 命令
 
 > **命令**：`/evolve`
-> **版本**：2.0.0
-> **用途**：以**整个文档库**为单位进行演进——不是修补单个文档，而是从全局视角重新对齐知识体系、传播方向变化、填补覆盖缺口、同步概念定义、清理结构债务。
+> **版本**：3.0.0
+> **用途**：以**整个文档库**为单位进行演进——通过 `doc-library-analyst` SubAgent 在独立上下文中完成全库分析，主 Agent 专注于变更决策和执行
 
 ---
 
@@ -83,72 +83,53 @@ description: 以整个文档库为单位进行演进——读取所有文档全�
 
 ---
 
-### 阶段 1：全库深度扫描
+### 阶段 1：全库深度扫描（doc-library-analyst）
 
-**步骤 1.1：递归扫描文件元数据**
+> **设计原理**：全库分析需要将所有文档内容加载到上下文中，这会大量消耗主 Agent 的上下文窗口。将此任务委托给 `doc-library-analyst` SubAgent，它在独立上下文中完成全量分析，主 Agent 只接收紧凑的结构化报告。
 
-扫描 `docs/` 下所有 `.md` 文件（含 `_archive/`），对每个文件收集：
+**步骤 1.1：调用 `doc-library-analyst` SubAgent**
 
-- **路径**：相对于项目根目录的路径
-- **行数**：文件总行数
-- **H1 标题**：文件第一个 `#` 标题
-- **所有 H2 标题**：章节结构概览（`##` 级别）
-- **引用关系**：
-  - `references`：本文件中链接到的其他 `docs/` 文件
-  - `referenced_by`：其他文件中链接到本文件的列表
+使用 `task` 工具调用 `doc-library-analyst` SubAgent：
 
-**步骤 1.2：读取所有文档全文**
+- **description**：全库文档分析
+- **subagent_type**：`doc-library-analyst`
+- **prompt**：
+  ```
+  请对 docs/ 目录进行全面深度分析。
 
-逐一读取每个 `.md` 文件的**完整内容**，构建全文映射：
+  intent（用户演进意图）:
+  {阶段 0 获取的演进意图描述}
 
-```
-doc_contents = { "docs/vision/overview.md": "<full content>", ... }
-```
+  docs_root: docs/
 
-> **注意**：如文档数量极多（>30 篇），对行数 < 100 的文档读取全文，对超长文档读取每个 H2 章节的首段。
+  请按照你的执行流程（扫描元数据 → 读取全文 → 知识特征分析 → 结构诊断）完成分析，
+  并输出标准格式报告（LIBRARY_STATS、ALIGNMENT_ANALYSIS、CONSISTENCY_ISSUES、
+  COVERAGE_GAPS、STRUCTURAL_DEBT、EVOLUTION_PLAN、SUMMARY）。
+  ```
 
-**步骤 1.3：提取库级知识特征**
+等待 `doc-library-analyst` 返回结构化分析报告。
 
-基于全文内容，提取：
+**步骤 1.2：解析分析报告并输出扫描摘要**
 
-- **核心概念清单**：各文档中定义或频繁使用的关键术语（如"Intent 协议"、"数据总线"、"能力总线"）
-- **方向对齐度**：每篇文档与 `index.md` "当前探索方向"的对齐情况（高/中/低/偏离）
-- **概念一致性**：同一术语在不同文档中是否定义一致；识别矛盾表述
-- **内容陈旧度**：文档是否引用了已归档/废弃的方案，或与当前方向明显脱节
-
-**步骤 1.4：生成结构诊断**
-
-> **docs 结构标准**：遵循 `maedoc/docs-structure-standard.md` 判断以下违规项。
-
-- **超长文档**：行数 > 300 的文件列表
-- **孤立文档**：未被任何文档（含 index.md）引用的文件
-- **断裂引用**：引用了不存在文件的链接列表
-- **未收录文档**：存在于 `docs/` 但未出现在 `index.md` 中的文件
-
-**步骤 1.5：读取当前 index.md**
-
-读取 `docs/index.md` 全文，提取"当前探索方向"声明，作为全库基准方向和对齐基准。
-
-**步骤 1.6：输出扫描摘要**
+从 `doc-library-analyst` 报告中提取关键信息，向用户展示：
 
 ```
 ---
-docs/ 深度扫描完成
+docs/ 深度扫描完成（由 doc-library-analyst 执行）
 
-文档总数：{N} 篇 / 总行数：{N} 行
+{LIBRARY_STATS 内容}
 
 📐 方向对齐度：
-  高度对齐：{N} 篇
-  部分对齐：{N} 篇
-  方向偏离/陈旧：{N} 篇（{文件列表}）
+  高度对齐：{ALIGNMENT_ANALYSIS.高度对齐}
+  方向偏离/陈旧：{ALIGNMENT_ANALYSIS.方向偏离}
 
-🔤 概念不一致：{N} 处（{概念名列表}或"无"}）
-📋 超长文档（>300 行）：{列表或"无"}
-🔗 孤立文档：{列表或"无"}
-❌ 断裂引用：{列表或"无"}
-📌 未收录文档：{列表或"无"}
+🔤 概念不一致：{CONSISTENCY_ISSUES 条目数}处
+📋 结构债务：{STRUCTURAL_DEBT 条目数}项
+📌 覆盖缺口：{COVERAGE_GAPS 条目数}项
 ---
 ```
+
+保存完整报告供阶段 2 使用（变量 `library_analysis`）。
 
 ---
 
@@ -156,13 +137,13 @@ docs/ 深度扫描完成
 
 **步骤 2.1：调用 `doc-tree-evolve` Skill**
 
-加载 `doc-tree-evolve` Skill，传入以下参数：
+加载 `doc-tree-evolve` Skill（读取 `.opencode/skills/doc-tree-evolve/SKILL.md`），传入以下参数：
 
-- `tree_snapshot`：阶段 1 构建的元数据快照（含 H2 列表、引用关系）
-- `doc_contents`：阶段 1 读取的全文内容映射
-- `current_index`：当前 `index.md` 全文
+- `library_analysis`：阶段 1 保存的 `doc-library-analyst` 完整报告（含 EVOLUTION_PLAN、CONSISTENCY_ISSUES、STRUCTURAL_DEBT 等）
 - `intent`：阶段 0 获取的用户意图
 - `max_lines`：`300`
+
+> **注意**：`library_analysis` 已包含所有必要的库级分析，Skill 无需重复读取全部文档。若 Skill 需要验证某个具体文档的内容，可按需读取单个文件。
 
 Skill 输出结构化变更计划，包含操作列表（结构操作 + 内容操作）和新 index.md 草稿。
 
@@ -368,10 +349,10 @@ mkdir -p {path}
 |---------|---------|
 | `docs/` 目录不存在 | 提示用户先使用 `/create` 创建文档 |
 | `docs/index.md` 不存在 | 自动创建初始 index.md（仅含文件列表），继续流程 |
+| `doc-library-analyst` SubAgent 超时或报错 | 提示用户，询问是否直接描述演进意图以简化分析；主 Agent 可按有限方式读取 docs/index.md 降级处理 |
 | 移动文件时目标路径已存在同名文件 | 使用 `question` 工具询问用户：覆盖 / 重命名 / 跳过 |
 | `UPDATE_SECTION` 找不到目标章节 | 跳过该操作，在完成摘要中标注，提示用户手动处理 |
 | `SYNC_CONCEPT` 找不到概念使用处 | 跳过该文档，继续其他目标文件 |
-| 文档数量过多导致全文内容超长 | 优先读取方向偏离文档和核心文档，其余按"H2首段"策略摘要 |
 | `doc-tree-evolve` Skill 输出操作引用了不存在文件 | 跳过该操作，在完成摘要中标注 |
 | 用户意图过于模糊 | Skill 基于诊断结果提出 2-3 个具体方案，使用 `question` 工具让用户选择 |
 
@@ -386,16 +367,16 @@ mkdir -p {path}
 [阶段 0] 获取演进意图
     │ 若意图为空 → question 工具提供选项 → 追问细节
     ▼
-[阶段 1] 全库深度扫描
-    │ 1.1 元数据扫描（路径/行数/H1/H2/引用关系）
-    │ 1.2 读取所有文档全文 → doc_contents
-    │ 1.3 提取知识特征（概念/方向对齐/一致性/陈旧度）
-    │ 1.4 结构诊断（超长/孤立/断裂/未收录）
-    │ 1.5 读取 index.md 基准方向
-    │ 1.6 输出扫描摘要
+[阶段 1] task 工具调用 doc-library-analyst SubAgent
+    │ SubAgent 在独立上下文中：
+    │   1.1 扫描文件元数据（路径/行数/H1/H2）
+    │   1.2 读取所有文档全文 → 构建知识图谱
+    │   1.3 分析方向对齐/概念一致性/覆盖缺口/结构债务
+    │   1.4 输出结构化报告（library_analysis）
+    │ 主 Agent 解析报告，展示扫描摘要
     ▼
 [阶段 2] 调用 doc-tree-evolve Skill
-    │ 传入：tree_snapshot + doc_contents + current_index + intent
+    │ 传入：library_analysis + intent
     │ 输出：结构化变更计划（结构操作 + 内容操作）+ 新 index.md 草稿
     ▼
 [阶段 3] 展示变更计划 → question 工具确认

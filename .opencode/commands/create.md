@@ -1,13 +1,13 @@
 ---
 name: create
-description: 一键创建新文档——MaeDoc 最核心的用户入口。与用户简短对话，AI 根据内容性质自主判断文档结构，直接生成并落盘，后续可通过 /iterate 持续演化。
+description: 一键创建新文档——MaeDoc 最核心的用户入口。与用户简短对话，通过 doc-planner 生成规划方案，确认后由 doc-writer 在独立上下文中完成内容创作，最后经质量门验证。
 ---
 
 # /create 命令
 
 > **命令**：`/create`
-> **版本**：2.0.0
-> **用途**：从用户的一句话描述，自由创建结构化文档——AI 根据内容自主决定结构，不套模板
+> **版本**：3.0.0
+> **用途**：从用户的一句话描述，自由创建结构化文档——通过三层 SubAgent 协作（规划 → 写作 → 质量验证）实现高质量输出
 
 ---
 
@@ -160,41 +160,61 @@ description: 一键创建新文档——MaeDoc 最核心的用户入口。与用
 
 ---
 
-### 阶段 2：大纲生成
+### 阶段 2：规划方案生成（doc-planner）
 
-**步骤 2.1：调用 `doc-outline-generate` Skill**
+**步骤 2.1：调用 `doc-planner` SubAgent**
 
-加载 `doc-outline-generate` Skill，传入以下参数：
+使用 `task` 工具调用 `doc-planner` SubAgent：
 
-- `idea`：阶段 0.5 汇总的 `enriched_context`（包含原始描述 + 所有追问回答）；若用户跳过追问则使用原始描述
-- `extra_constraints`：（如有）用户在描述或追问回答中提到的额外约束
-- `output_file`：阶段 1 确定的文件路径
+- **description**：文档规划
+- **subagent_type**：`doc-planner`
+- **prompt**：
+  ```
+  请基于以下信息生成文档创建方案：
 
-> **注意**：AI 根据内容的性质自主决定文档结构，不依赖预设模板。思考"这份内容最适合什么形式呈现"，而非"套用哪个模板"。
+  enriched_context:
+  {阶段 0.5 汇总的 enriched_context（含原始描述 + 所有追问结论）}
 
-执行大纲生成。**`doc-outline-generate` 会在生成大纲后立即将大纲内容写入 `output_file`**，无需本命令再次写入。
+  existing_docs_summary:
+  {docs/index.md 的文档地图部分（读取 docs/index.md 并提取相关内容）}
 
-**步骤 2.2：大纲交互确认**
+  target_path: {output_file（阶段 1 确定的路径）}
 
-大纲生成并写入文件完毕后，读取大纲中的**规模评估**（`## 规模评估` 部分），获取"建议形式"字段：
+  constraints: {用户指定的额外约束，若无则写"无"}
+
+  请读取 docs/index.md 了解现有文档结构，然后按你的执行流程生成规划报告。
+  ```
+
+等待 `doc-planner` 返回结构化规划报告（含 OUTLINE、CREATION_MODE、ESTIMATED_LINES、SCALE_EVALUATION 等字段）。
+
+**步骤 2.2：写入大纲文件**
+
+基于 `doc-planner` 输出的 `OUTLINE` 字段内容，将大纲写入 `output_file`：
+- 大纲格式：使用 doc-planner 输出的 Markdown 层级结构（含每章节的简短说明）
+- 记录 `estimated_lines = ESTIMATED_LINES`
+- 记录 `creation_mode_recommendation = CREATION_MODE`（来自 doc-planner 建议）
+
+**步骤 2.3：大纲交互确认**
+
+读取 `doc-planner` 输出中的 `SCALE_EVALUATION` 字段，获取建议创建形式：
 
 **若"建议形式"为"多文件文档树"**，使用 `question` 工具：
 
 - **标题**：确认文档大纲与创建形式
-- **问题**：大纲已生成并保存至 `{output_file}`，规模评估建议以多文件文档树形式创建（预估 ~{N} 行，超出单文档 300 行上限）。请选择创建形式：
+- **问题**：大纲已生成并保存至 `{output_file}`，规模评估建议以多文件文档树形式创建（预估 ~{estimated_lines} 行，超出单文档 300 行上限）。请选择创建形式：
 - **选项**：
   1. 以多文件文档树形式创建（Recommended）
   2. 改为单文件创建（不拆分）
   3. 修改大纲（请在选择后说明需要调整的内容）
-  4. 重新生成大纲（请在选择后补充更多背景信息）
+  4. 重新规划（请在选择后补充更多背景信息，重新调用 doc-planner）
   5. 放弃
 
 根据用户回应：
 
-- **选择 1（多文件）**：记录 `creation_mode = multi_file`，继续阶段 3-B
-- **选择 2（单文件）**：记录 `creation_mode = single_file`，继续阶段 3-A
-- **选择 3（修改）**：收集用户修改意见，更新大纲并重新写入 `output_file`，再次执行步骤 2.2
-- **选择 4（重新生成）**：使用 `question` 工具收集更多背景信息，重新调用 `doc-outline-generate`（附带 `output_file`），再次执行步骤 2.2
+- **选择 1（多文件）**：记录 `creation_mode = multi_file`，记录 `tree_plan = SCALE_EVALUATION 中的多文件结构`，继续阶段 3
+- **选择 2（单文件）**：记录 `creation_mode = single_file`，继续阶段 3
+- **选择 3（修改）**：收集用户修改意见，更新大纲（手动编辑 output_file），重新执行步骤 2.3
+- **选择 4（重新规划）**：使用 `question` 工具收集更多背景信息，重新调用 `doc-planner`（更新 enriched_context），重新执行步骤 2.2-2.3
 - **选择 5（放弃）**：输出 `已取消文档创建流程。` 并终止
 
 **若"建议形式"为"单文件"**，使用 `question` 工具：
@@ -204,90 +224,71 @@ description: 一键创建新文档——MaeDoc 最核心的用户入口。与用
 - **选项**：
   1. 确认大纲，开始填充内容（Recommended）
   2. 修改大纲（请在选择后说明需要调整的内容）
-  3. 重新生成大纲（请在选择后补充更多背景信息）
+  3. 重新规划（请在选择后补充更多背景信息）
   4. 放弃
 
 根据用户回应：
 
-- **选择 1（确认）**：记录 `creation_mode = single_file`，继续阶段 3-A
-- **选择 2（修改）**：收集用户修改意见，更新大纲并重新写入 `output_file`，再次执行步骤 2.2
-- **选择 3（重新生成）**：使用 `question` 工具收集更多背景信息，重新调用 `doc-outline-generate`（附带 `output_file`），再次执行步骤 2.2
+- **选择 1（确认）**：记录 `creation_mode = single_file`，继续阶段 3
+- **选择 2（修改）**：收集用户修改意见，更新大纲，重新执行步骤 2.3
+- **选择 3（重新规划）**：使用 `question` 工具收集更多背景信息，重新调用 `doc-planner`，重新执行步骤 2.2-2.3
 - **选择 4（放弃）**：输出 `已取消文档创建流程。` 并终止
 
 ---
 
-### 阶段 3：内容填充
+### 阶段 3：内容创作（doc-writer）
 
-根据阶段 2.2 确认的 `creation_mode`，执行对应的填充流程：
+> **设计原理**：`doc-writer` 拥有独立的上下文窗口，专注于内容创作，不受对话历史干扰。它完成内容填充 + 格式规范化的全部工作，主 Agent 接收完成报告后继续流程。
 
----
+**步骤 3.1：处理多文件模式的文件路径**
 
-#### 阶段 3-A：单文件填充（`creation_mode = single_file`）
+若 `creation_mode = multi_file`：
+- 将 `base_dir` 作为写作目录传给 `doc-writer`
+- 删除 `output_file`（该文件仅用于存储草稿大纲，多文件模式下由 `doc-writer` 在 `base_dir` 内创建正式文件）
 
-**步骤 3-A.1：调用 `doc-content-fill` Skill**
+**步骤 3.2：调用 `doc-writer` SubAgent**
 
-加载 `doc-content-fill` Skill，传入以下参数：
+使用 `task` 工具调用 `doc-writer` SubAgent：
 
-- `output_file`：阶段 1 确定的文件路径（Skill 从此文件读取大纲，并逐章节将内容写回此文件）
-- `materials`：用户在对话中提供的任何素材（背景资料、数据、代码片段等）
-- `constraints`：用户指定的额外约束（语言风格、目标长度等）
-- `max_lines`：`300`
+- **description**：文档内容创作
+- **subagent_type**：`doc-writer`
+- **prompt**：
+  ```
+  请根据以下参数完成文档内容创作：
 
-**`doc-content-fill` 直接操作 `output_file`**：从文件读取大纲，逐章节填充内容后写回文件，文件在此过程中持续更新。
+  output_file: {单文件模式下的大纲文件路径，多文件模式下写 null}
+  creation_mode: {single_file | multi_file}
+  base_dir: {多文件模式下的根目录，单文件模式下写 null}
+  tree_plan: {多文件模式下来自 doc-planner 的 SCALE_EVALUATION 中的多文件结构，单文件模式下写 null}
+  max_lines: 300
 
-**步骤 3-A.2：内容填充进度提示**
+  materials:
+  {用户在对话中提供的素材，若无则写"无"}
 
-每开始填充一个章节时，输出进度提示：
+  constraints:
+  {用户指定的约束，含 doc-planner 输出的 CONSTRAINTS_APPLIED 和 DOC_TYPE 信息}
 
-```
-正在填充：## {章节标题}（{当前章节序号}/{总章节数}）→ 已写入 {output_file}
-```
+  请按照你的执行流程（逐章节填充 → 格式规范化）完成写作，并输出标准格式报告。
+  ```
 
-> 💡 **后台扫描触发点**：每次填充完一个章节，若写下了 `[待确认]`/`[假设]` 标注，或因信息不足而简化了该章节的内容，立即在心智便签中记一笔（章节名 + 简要原因）。这是整个创建流程中产生 TODO 候选项最密集的阶段。
+等待 `doc-writer` 返回结构化完成报告（含 WRITE_COMPLETE、FILES_CREATED、CONFIDENCE_TABLE、PENDING_ITEMS）。
 
----
+**步骤 3.3：解析完成报告**
 
-#### 阶段 3-B：多文件文档树填充（`creation_mode = multi_file`）
+解析 `doc-writer` 输出：
+- 提取 `FILES_CREATED`：用于阶段 5 完成摘要和阶段 6 index 更新
+- 提取 `CONFIDENCE_TABLE`：用于阶段 5 完成摘要
+- 提取 `PENDING_ITEMS`：用于阶段 5 完成摘要和阶段 7 TODO 录入
 
-**步骤 3-B.1：确认 `base_dir` 并清理临时大纲文件**
-
-使用阶段 1.4 推导的 `base_dir` 候选路径。
-
-删除 `output_file`（该文件仅用于存储草稿大纲，多文件模式下由 `doc-tree-fill` 在 `base_dir` 内创建正式文件）。
-
-**步骤 3-B.2：调用 `doc-tree-fill` Skill**
-
-加载 `doc-tree-fill` Skill，传入以下参数：
-
-- `tree_plan`：阶段 2 大纲中的"建议的文档树结构"部分（各子文档文件名、标题、覆盖章节、预估行数）
-- `base_dir`：步骤 3-B.1 确认的目录路径
-- `original_idea`：阶段 0.5 汇总的 `enriched_context`
-- `materials`：用户在对话中提供的任何素材
-- `constraints`：用户指定的额外约束
-- `max_lines_per_doc`：`300`
-
-**`doc-tree-fill` 在 `base_dir` 下逐子文档创建文件、生成大纲、填充内容，最后生成 `{base_dir}/index.md` 作为导航入口**。
+> 💡 **后台扫描触发点**：从 `PENDING_ITEMS` 和 `WRITER_NOTES` 中识别可能的 TODO 候选项，立即在心智便签中标记，供阶段 7 处理。
 
 ---
 
-### 阶段 4：格式规范化
+### 阶段 4：质量门检查（必做，不可跳过）
 
-**步骤 4.1：调用 `doc-format-normalize` Skill**
+> **设计原理**：基于"写→诊断→调整"反馈循环。`doc-writer` 完成写作后，主 Agent 使用 `task` 工具调用只读 `doc-analyst` SubAgent 进行质量评估，在独立上下文中完成分析，结果决定是否需要继续迭代。
 
-加载 `doc-format-normalize` Skill：
-
-- **单文件模式**：传入 `document = output_file`，`dry_run = false`
-- **多文件模式**：对 `base_dir` 下每个填充完成的 `.md` 文件（含 `index.md`）依次调用，确保所有子文档格式统一
-
-**`doc-format-normalize` 直接读取文件，完成格式修正后写回同一文件**。
-
----
-
-### 阶段 4.5：质量门检查（必做，不可跳过）
-
-> **设计原理**：基于"写→诊断→调整"反馈循环。使用 `task` 工具调用只读 `doc-analyst` 子代理，在独立上下文中进行质量评估，结果决定是否需要继续迭代。
-
-**步骤 4.5.1：调用 doc-analyst 进行质量评估**
+**步骤 4.1：调用 doc-analyst 进行质量评估**
 
 使用 `task` 工具调用 `doc-analyst` 子代理：
 
@@ -301,7 +302,7 @@ description: 一键创建新文档——MaeDoc 最核心的用户入口。与用
 
 等待 doc-analyst 返回结构化质量报告。
 
-**步骤 4.5.2：解析结果并决定下一步**
+**步骤 4.2：解析结果并决定下一步**
 
 解析报告中的 `PASS` 字段：
 
@@ -320,9 +321,9 @@ description: 一键创建新文档——MaeDoc 最核心的用户入口。与用
   3. 手动告诉我改进方向
 
 根据选择：
-- **选择 1（自动改进）**：将 TOP_ISSUES 组合为反馈，加载 `.opencode/skills/doc-iterate/SKILL.md`，按 Skill 步骤执行改进，完成后回到步骤 4.5.1 重新评分（最多循环 3 次，超过后自动进入"接受"路径）
+- **选择 1（自动改进）**：将 TOP_ISSUES 组合为反馈，加载 `.opencode/skills/doc-iterate/SKILL.md`，按 Skill 步骤执行改进，完成后回到步骤 4.1 重新评分（最多循环 3 次，超过后自动进入"接受"路径）
 - **选择 2（接受）**：继续阶段 5，在摘要中注明"质量得分 {N}/100（低于推荐标准 70 分）"
-- **选择 3（手动）**：收集用户指定方向，加载 `.opencode/skills/doc-iterate/SKILL.md`，按 Skill 步骤执行改进，完成后回到步骤 4.5.1 重新评分
+- **选择 3（手动）**：收集用户指定方向，加载 `.opencode/skills/doc-iterate/SKILL.md`，按 Skill 步骤执行改进，完成后回到步骤 4.1 重新评分
 
 ---
 
@@ -340,13 +341,14 @@ description: 一键创建新文档——MaeDoc 最核心的用户入口。与用
 文档创建完成！
 
 📄 **文件路径**：`{output_file}`
-📊 **文档概况**：共 {N} 个章节，约 {N} 字
+📊 **文档概况**：共 {N} 个章节，约 {N} 行（来自 doc-writer FILES_CREATED）
+🎯 **质量评分**：{QUALITY_SCORE}/100（来自 doc-analyst）
 
 **各章节信心等级**：
-{从填充摘要中提取的信心等级表}
+{来自 doc-writer CONFIDENCE_TABLE}
 
 **遗留待确认项**（共 {N} 项）：
-{从填充摘要中提取的待确认项列表，若无则显示"无"}
+{来自 doc-writer PENDING_ITEMS，若无则显示"无"}
 
 ---
 
@@ -460,31 +462,31 @@ description: 一键创建新文档——MaeDoc 最核心的用户入口。与用
 [阶段 1] 确定输出文件路径 → 创建 docs/ 目录（如需）→ 判断路径深度 → 记录 output_file + base_dir 候选
     │
     ▼
-[阶段 2] doc-outline-generate（传入 enriched_context，AI 自主决定结构 + 规模评估）→ 写入 output_file
+[阶段 2] task 工具调用 doc-planner SubAgent
+    │     → doc-planner 读取 docs/index.md，生成规划报告（OUTLINE + CREATION_MODE + SCALE_EVALUATION）
+    │     → 主 Agent 解析报告，将 OUTLINE 写入 output_file
     │
     ▼
-[阶段 2.2] 读取规模评估"建议形式"
-    │   ├─ 多文件文档树 → question（5 选项：多文件推荐/单文件/修改/重新生成/放弃）
-    │   │     ├─ 选多文件 → creation_mode = multi_file
+[阶段 2.3] 读取 SCALE_EVALUATION"建议形式"
+    │   ├─ 多文件文档树 → question（5 选项：多文件推荐/单文件/修改/重新规划/放弃）
+    │   │     ├─ 选多文件 → creation_mode = multi_file，记录 tree_plan
     │   │     ├─ 选单文件 → creation_mode = single_file
-    │   │     ├─ 修改/重新生成 → 更新大纲 → 重新执行 2.2
+    │   │     ├─ 修改 → 更新 output_file 中的大纲 → 重新执行 2.3
+    │   │     ├─ 重新规划 → 重新调用 doc-planner → 重新执行 2.3
     │   │     └─ 放弃 → 终止
-    │   └─ 单文件 → question（4 选项：确认/修改/重新生成/放弃）
+    │   └─ 单文件 → question（4 选项：确认/修改/重新规划/放弃）
     │         ├─ 确认 → creation_mode = single_file
-    │         ├─ 修改/重新生成 → 更新大纲 → 重新执行 2.2
+    │         ├─ 修改 → 更新大纲 → 重新执行 2.3
+    │         ├─ 重新规划 → 重新调用 doc-planner → 重新执行 2.3
     │         └─ 放弃 → 终止
     ▼
-[阶段 3] 内容填充
-    │   ├─ single_file → [3-A] doc-content-fill（max_lines=300）→ 逐章节填充 → 写回 output_file
-    │   └─ multi_file  → [3-B] 删除临时 output_file → doc-tree-fill（base_dir, tree_plan）
-    │                          → 逐子文档（doc-outline-generate + doc-content-fill）
-    │                          → 生成 base_dir/index.md
+[阶段 3] task 工具调用 doc-writer SubAgent
+    │   ├─ single_file → doc-writer 读取 output_file 大纲 → 逐章节填充 → 格式规范化 → 完成报告
+    │   └─ multi_file  → 删除临时 output_file → doc-writer 在 base_dir 创建子文档树 + index.md → 完成报告
+    │     → 主 Agent 解析 CONFIDENCE_TABLE + PENDING_ITEMS
     ▼
-[阶段 4] doc-format-normalize → 单文件：规范 output_file；多文件：逐一规范 base_dir/*.md
-    │
-    ▼
-[阶段 4.5] 质量门检查（必做）
-    │ task 工具调用 doc-analyst 子代理 → 等待质量报告
+[阶段 4] 质量门检查（必做）
+    │ task 工具调用 doc-analyst SubAgent → 等待质量报告
     │   ├─ PASS: true（总分 ≥ 70）→ 继续阶段 5（附注质量得分）
     │   └─ PASS: false（总分 < 70）→ question 工具
     │         ├─ 选择 1（自动改进）→ 加载 doc-iterate Skill → 改进 → 重新评分（最多循环 3 次）
@@ -492,14 +494,14 @@ description: 一键创建新文档——MaeDoc 最核心的用户入口。与用
     │         └─ 选择 3（手动）→ 收集方向 → 加载 doc-iterate Skill → 改进 → 重新评分
     │
     ▼
-[阶段 5] 输出完成摘要（单文件：文件路径+章节信心；多文件：目录+文件清单）
+[阶段 5] 输出完成摘要
+    │   单文件：文件路径 + 行数 + 质量得分 + CONFIDENCE_TABLE + PENDING_ITEMS
+    │   多文件：目录 + 文件清单 + 质量得分 + PENDING_ITEMS
+    ▼
+[阶段 6] 主 Agent 更新 docs/index.md → 追加文档地图条目
     │
     ▼
-    ▼
-[阶段 6] 更新 docs/index.md → 追加文档地图条目（单文件链接文档；多文件链接 base_dir/index.md）
-    │
-    ▼
-[阶段 7] TODO 录入（必做）→ 回顾心智便签，逐条判断 5 项具体触发线索
+[阶段 7] TODO 录入（必做）→ 回顾心智便签（含 doc-writer PENDING_ITEMS + WRITER_NOTES）
     │   ├─ 有"是" → 读取 .opencode/skills/todo-append/SKILL.md → 按步骤追加 docs/TODO.md → 摘要列出编号
     │   └─ 零 TODO → 摘要逐条说明 5 条线索为何未触发（不可仅写"无项"）
 ```
@@ -508,11 +510,11 @@ description: 一键创建新文档——MaeDoc 最核心的用户入口。与用
 
 ## 注意事项
 
-1. **文件优先**：`output_file` 在阶段 1 确定后贯穿全流程，所有 Skill 都操作同一文件（单文件模式）；多文件模式下以 `base_dir` 为根，各子文档独立操作
+1. **SubAgent 协作**：规划（`doc-planner`）、写作（`doc-writer`）、质量验证（`doc-analyst`）均在独立上下文窗口中运行；主 Agent 负责用户交互、路径管理和 `docs/index.md` 更新
 2. **交互优先**：大纲确认等关键决策节点必须等待用户响应，不得跳过
 3. **不阻塞原则**：大纲和内容中的未知信息用 `[待确认: ...]` 占位，不因信息缺失而暂停整个流程
 4. **权限意识**：写入 `docs/` 目录前，遵循 `opencode.jsonc` 中 `edit` 权限配置；若需要询问，先询问再执行
 5. **幂等设计**：若目标文件已存在，不直接覆盖，改用带序号的新文件名，并告知用户
-6. **自由结构**：AI 根据内容自主判断最合适的文档结构，不依赖预设模板；同一个 `/create` 命令对不同主题可能产生完全不同的章节组织
-7. **规模优先**：对于预估超出 300 行的主题，优先建议多文件文档树形式；不强迫用户选择，但应主动说明单文件的超限风险（详见 `maedoc/docs-structure-standard.md §3`）
-8. **临时文件清理**：多文件模式下，阶段 3-B 会删除阶段 1-2 创建的临时大纲文件（`output_file`），确保 `base_dir` 下的文件是唯一的正式版本
+6. **自由结构**：`doc-planner` 根据内容自主判断最合适的文档结构，不依赖预设模板
+7. **规模优先**：对于预估超出 300 行的主题，`doc-planner` 会优先建议多文件文档树形式；不强迫用户选择，但会说明单文件的超限风险
+8. **临时文件清理**：多文件模式下，阶段 3 开始前删除临时大纲文件（`output_file`），确保 `base_dir` 下的文件是唯一的正式版本
