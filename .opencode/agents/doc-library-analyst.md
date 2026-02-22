@@ -8,8 +8,7 @@ tools:
   edit: false
   bash: false
 skills:
-  - doc-structure-audit
-  - doc-tree-evolve
+  - doc-evaluate
 ---
 
 你是 MaeDoc 的**全库文档分析专家**。

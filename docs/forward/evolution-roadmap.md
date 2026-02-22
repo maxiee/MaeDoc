@@ -225,7 +225,7 @@
 **目标**：让 `/review` 命令更实用。
 
 **改动点**：
-- 整合 `doc-quality-score` 和 `doc-structure-audit`
+- ~~整合 `doc-quality-score` 和 `doc-structure-audit`~~ ✅ 已在 v0008 完成（三者合并为 `doc-evaluate`）
 - 输出更结构化的审阅报告
 - 提供「修复建议」而非只是「问题列表」
 
@@ -268,7 +268,7 @@
 **目标**：重新审视 Skills 的划分逻辑。
 
 **可能的变化**：
-- 合并 `doc-review` + `doc-quality-score` + `doc-structure-audit`
+- ~~合并 `doc-review` + `doc-quality-score` + `doc-structure-audit`~~ ✅ 已在 v0008 完成（合并为 `doc-evaluate`）
 - 按使用场景重新分层
 - 引入「能力组合」概念
 

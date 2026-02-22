@@ -18,10 +18,7 @@ Command                      Skill Chain
                                ▼
                             doc-format-normalize
 
-/review    ───────────────► doc-review
-                               │
-                               ▼ (可选)
-                            doc-quality-score
+/review    ───────────────► doc-evaluate
 
 /iterate   ───────────────► doc-iterate
 

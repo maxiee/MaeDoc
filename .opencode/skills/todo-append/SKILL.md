@@ -20,7 +20,7 @@ mode: read-write
 **正确调用时机**（满足以下任一条件时调用）：
 - 发现了需要后续处理的事项，但当前时机不适合立即处理
 - 当前任务末尾的"TODO 录入"阶段（见各 Command 的最后阶段）
-- 其他 Skills（`doc-content-fill`、`doc-iterate`、`doc-review`、`doc-outline-generate`）在完成主体工作后的遗留项记录
+- 其他 Skills（`doc-content-fill`、`doc-iterate`、`doc-evaluate`、`doc-outline-generate`）在完成主体工作后的遗留项记录
 
 **不应调用的情况**：
 - 当前时机完全可以立即处理该事项时（优先直接执行）
@@ -32,7 +32,7 @@ mode: read-write
 - `priority` 必须明确：`高` / `中` / `低`，不得模糊
 
 **与其他 Skills 的协作**：
-- 被多个 Skills 调用（`doc-content-fill`、`doc-iterate`、`doc-review`、`doc-outline-generate`）
+- 被多个 Skills 调用（`doc-content-fill`、`doc-iterate`、`doc-evaluate`、`doc-outline-generate`）
 - 输出记录到 `docs/TODO.md`，由 `/do-todo` 命令执行
 
 ---

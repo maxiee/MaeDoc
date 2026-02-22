@@ -78,6 +78,8 @@ dev_plan.md 是任务清单，记录了「做了什么」。但这份文档想�
 | `doc-iterate` | 基于反馈迭代 |
 | `doc-translate` | 多语言翻译 |
 
+> **编者注（2026-02-22）**：`doc-review`、`doc-quality-score`、`doc-structure-audit` 三个 Skill 已在 v0008 重构中合并为 `doc-evaluate`（7 维度统一评估）。上表反映的是 Phase 1-2 时期的历史状态。
+
 **设计决策**：
 - 按「功能」拆分，而非按「文档类型」拆分
 - 每个 Skill 专注一件事，理论上可组合

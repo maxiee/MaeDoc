@@ -7,7 +7,14 @@
 
 ## 待处理事项
 
-> 暂无待处理事项。
+### TODO-001: 实现安全扫描 Skill
+
+- **来源**：R6 重构（清理幽灵引用）
+- **创建时间**：2026-02-22
+- **优先级**：P2
+- **相关文档**：`AGENTS.md` §4.3, §4.5
+- **描述**：
+  AGENTS.md 原引用了 `sec.secret.scan` 和 `sec.prompt_injection.check` 两个不存在的 Skill。当前已改为内联检查指导。未来应实现专门的安全扫描 Skill（`sec-secret-scan`），在 `/escalate` 外发前自动扫描敏感信息。
 
 ---
 

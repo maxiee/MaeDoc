@@ -232,7 +232,7 @@ mode: read-write
 ### 建议后续操作
 
 1. 确认上述待确认项，使用 `doc-iterate` Skill 针对性更新对应章节
-2. 使用 `doc-review` Skill 对全文进行质量审阅
+2. 使用 `doc-evaluate` Skill 对全文进行质量审阅
 3. 使用 `doc-format-normalize` Skill 统一格式
 ```
 

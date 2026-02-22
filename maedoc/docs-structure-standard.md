@@ -80,7 +80,7 @@ docs/
 - `doc-outline-generate` Skill 在规模评估阶段自动判断单文件 vs 多文件
 - `/create` 命令按 Skill 输出决定创建形式
 - `/evolve` 命令在全库扫描时检测并修复超长文档
-- `doc-structure-audit` Skill 报告违规文档
+- `doc-evaluate` Skill 报告违规文档
 
 ---
 
@@ -131,10 +131,10 @@ docs/{topic}/
 
 | 违规类型 | 检测方式 | 修复方式 |
 |---------|---------|---------|
-| 文档超过 300 行（含弹性） | `/evolve` 扫描 / `doc-structure-audit` | 使用 `/evolve` 拆分 |
+| 文档超过 300 行（含弹性） | `/evolve` 扫描 / `doc-evaluate` | 使用 `/evolve` 拆分 |
 | 子文档未在 `docs/index.md` 中注册 | `/evolve` 扫描（未收录文档列表） | `/create` 自动注册 / 手动补充 |
-| index.md 包含大量实质内容 | 人工判断 / `doc-structure-audit` | 将实质内容迁移到子文档 |
-| 使用绝对路径引用 | `doc-structure-audit`（断链检测） | 替换为相对路径 |
+| index.md 包含大量实质内容 | 人工判断 / `doc-evaluate` | 将实质内容迁移到子文档 |
+| 使用绝对路径引用 | `doc-evaluate`（断链检测） | 替换为相对路径 |
 | 子目录缺少 index.md | `/evolve` 扫描 | 创建导航入口 |
 | 新建子目录未登记到上层 index.md | `/create` 检查 / `/evolve` 扫描 | 补充文档地图条目 |
 
