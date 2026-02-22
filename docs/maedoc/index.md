@@ -1,6 +1,6 @@
 # MaeDoc 核心架构设计
 
-> **版本**：2.1.0
+> **版本**：2.2.0
 > **最后更新**：2026-02-22
 > **适用读者**：想深入理解 MaeDoc 设计原理的开发者
 
@@ -22,7 +22,8 @@ MaeDoc 是一个基于 OpenCode 运行时的文档生成系统，其核心设计
 
 | 文档 | 说明 |
 |------|------|
-| [系统全景](./system-overview.md) | 三层架构：用户层、OpenCode 运行时、本地文件系统 |
+| [系统全景](./system-overview.md) | 四层架构：用户层、OpenCode 运行时、SubAgent 协作层、本地文件系统 |
+| [伴侣模式架构](./companion-mode.md) | Plan → Build → Crystallize 闭环与控制平面设计 |
 | [核心数据流](./data-flow.md) | 一次写作命令的完整生命周期 |
 | [Skill 契约设计](./skill-contract.md) | Skill 的结构、分类与设计原则 |
 | [命令分发机制](./command-dispatch.md) | 命令与 Skill Chain 的映射关系 |

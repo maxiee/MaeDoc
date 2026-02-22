@@ -20,10 +20,10 @@
 
 ## 系统架构快照
 
-MaeDoc 由四层组成：**用户层**（命令输入）→ **OpenCode 运行时**（Commands + Skills）→ **SubAgent 协作层**（4 个核心 Agent）→ **本地文件系统**（输出与配置）。
+MaeDoc 由四层组成：**用户层**（命令输入）→ **OpenCode 运行时**（Commands + Skills）→ **SubAgent 协作层**（7 个核心 Agent）→ **本地文件系统**（输出与配置）。
 
 ```
-用户 ──► /create /iterate /review ──► OpenCode Runtime
+用户 ──► /companion /focus /create /iterate /review ──► OpenCode Runtime
                                             │
                     ┌───────────────────────┤
                     ▼                       ▼
@@ -55,7 +55,8 @@ MaeDoc 由四层组成：**用户层**（命令输入）→ **OpenCode 运行时
 | 文档 | 说明 |
 |------|------|
 | [核心架构设计](./maedoc/index.md) | 架构设计导航入口 |
-| [系统全景](./maedoc/system-overview.md) | 四层架构、6 Commands、12 Skills、4 SubAgents |
+| [系统全景](./maedoc/system-overview.md) | 四层架构、9 Commands、13 Skills、7 SubAgents |
+| [伴侣模式架构](./maedoc/companion-mode.md) | Plan → Build → Crystallize 闭环与自治策略 |
 | [核心数据流](./maedoc/data-flow.md) | 一次写作命令的完整生命周期 |
 | [Skill 契约设计](./maedoc/skill-contract.md) | Skill 的结构、分类与设计原则 |
 | [命令分发机制](./maedoc/command-dispatch.md) | 命令与 Skill Chain 的映射关系 |
@@ -71,6 +72,16 @@ MaeDoc 由四层组成：**用户层**（命令输入）→ **OpenCode 运行时
 | [痛点与不足](./retrospect/pain-points.md) | 当前设计的摩擦点与改进方向 |
 | [AI 能力深化方向](./forward/ai-capability-deepening.md) | 本地模型强化与协作模式优化 |
 | [演进路线图](./forward/evolution-roadmap.md) | 从 v0029 到未来的版本规划 |
+
+### 伴侣控制平面
+
+| 文档 | 说明 |
+|------|------|
+| [伴侣控制平面](./companion/index.md) | 伴侣模式入口与状态文件导航 |
+| [当前焦点](./companion/current-focus.md) | 当前目标、非目标和节奏 |
+| [主题地图](./companion/theme-map.md) | 主题状态和覆盖率追踪 |
+| [知识晶体](./companion/knowledge-crystals.md) | 可复用真知沉淀（证据链 + 置信度） |
+| [会话续航](./companion/session-brief.md) | 中断恢复与下一轮入口 |
 
 ---
 
@@ -123,9 +134,16 @@ MaeDoc 由四层组成：**用户层**（命令输入）→ **OpenCode 运行时
 ```
 docs/
 ├── index.md                          # 本文件（导航入口）
+├── companion/                        # 伴侣控制平面（运行状态层）
+│   ├── index.md
+│   ├── current-focus.md
+│   ├── theme-map.md
+│   ├── knowledge-crystals.md
+│   └── session-brief.md
 ├── maedoc/                           # MaeDoc 核心架构设计
 │   ├── index.md                      # 架构设计导航
 │   ├── system-overview.md            # 系统全景
+│   ├── companion-mode.md             # 伴侣模式架构
 │   ├── data-flow.md                  # 核心数据流
 │   ├── skill-contract.md             # Skill 契约设计
 │   ├── command-dispatch.md           # 命令分发机制
@@ -184,6 +202,6 @@ docs/
 
 ---
 
-*本文档由 `/create` 和 `/evolve` 命令维护。*
+*本文档由 `/create`、`/evolve` 与 `/companion` 命令维护。*
 
 *结构演进于 2026-02-22：将"我想……"导航重构为主题导向的两级结构*

@@ -13,6 +13,9 @@
 | `doc-planner` | 规划层 | `/create` Phase 2 | 分析需求和文档库结构，生成大纲方案（路径/结构/规模评估） | 只读（write/edit/bash 禁用）|
 | `doc-analyst` | 分析层 | `/create`、`/iterate`、`/review` 质量门 | 文档质量评估（7 维度评分 + P0/P1/P2 问题清单） | 只读（write/edit/bash 禁用）|
 | `doc-writer` | 写作层 | `/create` Phase 3 | 接收大纲，逐章节填充内容并格式化，输出写作完成报告 | 读写（bash/task 禁用）|
+| `doc-explorer` | 分析层 | `/companion`、`/focus` Phase 1 | 生成主题图谱、焦点迁移信号与动作候选 | 只读（write/edit/bash 禁用）|
+| `doc-companion-planner` | 规划层 | `/companion` Phase 1 | 将探索结果转为可执行计划（风险 + 自动执行边界） | 只读（write/edit/bash 禁用）|
+| `knowledge-synthesizer` | 分析层 | `/companion` Phase 3 | 提炼知识晶体（Claim/Evidence/Confidence） | 只读（write/edit/bash 禁用）|
 
 ---
 
@@ -67,8 +70,8 @@ task(
 
 当多个 SubAgent 任务相互独立时，应在同一轮 `task` 调用中并行发出。
 
-**适合并行**：多文件质量检查、独立的分析任务
-**必须顺序**：doc-planner → doc-writer、doc-writer → doc-analyst
+**适合并行**：多文件质量检查、`doc-explorer` + `doc-companion-planner` 联合规划
+**必须顺序**：doc-planner → doc-writer、doc-writer → doc-analyst、Build → knowledge-synthesizer
 
 ---
 
@@ -80,6 +83,9 @@ task(
 | `doc-library-analyst` | 0.1 | 全库扫描是事实性分析 |
 | `doc-planner` | 0.3 | 规划需要一定灵活性 |
 | `doc-writer` | 0.7 | 内容创作需要创意表达 |
+| `doc-explorer` | 0.2 | 主题识别需稳定且保留少量弹性 |
+| `doc-companion-planner` | 0.25 | 编排需清晰、可执行、低歧义 |
+| `knowledge-synthesizer` | 0.2 | 真知提炼强调证据一致性 |
 
 ---
 
@@ -110,7 +116,10 @@ task(
   |     |-- doc-library-analyst -> 分析报告
   |     |-- doc-planner -> 规划报告（大纲 + 元数据）
   |     |-- doc-writer -> 写作完成报告（写入文件）
-  |     +-- doc-analyst -> 质量报告（评分 + 问题列表）
+  |     |-- doc-analyst -> 质量报告（评分 + 问题列表）
+  |     |-- doc-explorer -> 主题图谱与动作候选
+  |     |-- doc-companion-planner -> 执行计划与风险边界
+  |     +-- knowledge-synthesizer -> 知识晶体报告
   +-- 写入 docs/index.md（SubAgent 不做，主 Agent 统一负责）
 ```
 
@@ -118,3 +127,4 @@ task(
 - SubAgent 的输出是**紧凑的结构化文本报告**
 - 主 Agent 解析报告，决定后续操作
 - `docs/index.md` 的更新**始终由主 Agent 负责**
+- `/companion` 采用 Plan → Build → Crystallize 三段式调度

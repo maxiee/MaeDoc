@@ -115,7 +115,8 @@
 
 ### 4.4 禁止自动执行破坏性操作
 
-删除文件、覆盖已存在文档、破坏性 Git 命令、修改配置文件、批量修改多个文件——**必须经过用户显式确认**。
+删除文件、覆盖已存在文档、破坏性 Git 命令、修改配置文件——**必须经过用户显式确认**。  
+批量修改多个文件默认先展示变更计划；在 `/companion` 模式下，低/中风险批量操作可自动执行，高风险操作仍必须确认。
 
 ### 4.5 提示注入防护
 
@@ -148,6 +149,9 @@
 | `doc-tree-evolve` | 分析文档树快照与用户意图，输出结构变更计划 | ✅ |
 | `hardness-classify` | 六维硬度评估，超阈值时自动打包上下文 | ✅ |
 | `todo-append` | 向 docs/TODO.md 追加待办事项 | ✅ |
+| `doc-focus-map` | 全库主题图谱与焦点迁移分析 | ✅ |
+| `knowledge-crystallize` | 真知提炼（论断 + 证据链 + 置信度） | ✅ |
+| `companion-state-sync` | 伴侣控制平面状态同步 | ✅ |
 
 ### 6.2 用户写作命令（`.opencode/commands/`）
 
@@ -160,6 +164,8 @@
 | `/ingest-remote` | `/ingest-remote <slug>` | 导入外部 AI 的回答并应用 |
 | `/evolve` | `/evolve <新方向或结构调整需求>` | 扫描 docs/ 树并执行结构演进 |
 | `/do-todo` | `/do-todo` 或 `/do-todo <编号>` | 查看或执行 docs/TODO.md 中的待办事项 |
+| `/companion` | `/companion <探索方向>` | 高自治伴侣入口（Plan → Build → Crystallize） |
+| `/focus` | `/focus <新焦点>` | 快速切换主题焦点并同步状态 |
 
 ### 6.3 SubAgent 与协作架构
 
@@ -171,6 +177,9 @@
 | `doc-writer` | 0.7 | 内容填充、格式化 | `doc-content-fill`, `doc-format-normalize`, `doc-tree-fill` |
 | `doc-analyst` | 0.1 | 质量评估（7 维度） | `doc-evaluate` |
 | `doc-library-analyst` | 0.1 | 全库扫描、知识图谱 | `doc-evaluate` |
+| `doc-explorer` | 0.2 | 主题探索与焦点迁移建议 | `doc-focus-map` |
+| `doc-companion-planner` | 0.25 | 伴侣执行计划编排 | `doc-tree-evolve` |
+| `knowledge-synthesizer` | 0.2 | 真知提炼与冲突检测 | `knowledge-crystallize` |
 
 **主 Agent（协调者）** 负责用户交互、状态管理、调用 SubAgent、统一维护 `docs/index.md`。
 
@@ -183,6 +192,8 @@
 **迭代优化**：`/iterate` → 智能需求探索 → 修改 → [doc-analyst] 质量门 → TODO 录入
 
 **全库演进**：`/evolve` → [doc-library-analyst] 全库扫描 → 变更计划 → 执行 → TODO 录入
+
+**伴侣自治**：`/companion` → [doc-explorer] 主题图谱 → [doc-companion-planner] 计划编排 → 自动执行低/中风险操作 → [knowledge-synthesizer] 真知沉淀 → 状态同步 → TODO 录入
 
 ---
 
@@ -224,10 +235,11 @@
 - 默认输出语言跟随用户输入语言
 - 文档内容默认使用 Markdown 格式
 - 生成大纲后**必须等待用户确认**再继续
-- 批量修改前**展示变更清单**并等待确认
+- 批量修改前默认**展示变更清单**并等待确认
+- `/companion` 模式下，采用风险分级确认：低/中风险可自动执行，高风险必须确认
 - 无法完成的任务**明确说明原因**
 
-版本：`v1.4.0` / MaeDoc 迭代：`v0008`
+版本：`v1.5.0` / MaeDoc 迭代：`v0009`
 
 ---
 

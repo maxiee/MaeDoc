@@ -12,7 +12,7 @@ MaeDoc 由四层组成：
 ```mermaid
 graph TB
     subgraph UserLayer[用户层]
-        User["用户输入 /create /review /iterate 等命令"]
+        User["用户输入 /companion /focus /create /review /iterate 等命令"]
     end
 
     subgraph MainAgent[主 Agent 协调层]
@@ -20,8 +20,8 @@ graph TB
     end
 
     subgraph Runtime[OpenCode 运行时]
-        Commands["Commands<br>/create /review /iterate<br>/evolve /escalate /ingest-remote /do-todo<br>(7 个)"]
-        Skills["Skills<br>AI 写作能力<br>(10 个)"]
+        Commands["Commands<br>/companion /focus /create /review /iterate<br>/evolve /escalate /ingest-remote /do-todo<br>(9 个)"]
+        Skills["Skills<br>AI 写作能力<br>(13 个 + quality-gate)"]
     end
 
     subgraph SubAgentLayer[SubAgent 协作层]
@@ -29,6 +29,9 @@ graph TB
         Writer["doc-writer<br>内容填充<br>T=0.7"]
         Analyst["doc-analyst<br>质量评估<br>T=0.1"]
         LibAnalyst["doc-library-analyst<br>全库分析<br>T=0.1"]
+        Explorer["doc-explorer<br>主题探索<br>T=0.2"]
+        CompanionPlanner["doc-companion-planner<br>执行编排<br>T=0.25"]
+        Synthesizer["knowledge-synthesizer<br>真知结晶<br>T=0.2"]
     end
 
     subgraph FileSystem[本地文件系统]
@@ -51,18 +54,21 @@ graph TB
 **关键数据流说明**：
 - **主 Agent（协调者）** 是用户与 SubAgent 之间的桥梁，负责解析 SubAgent 报告、与用户交互、统一维护 `docs/index.md`
 - SubAgent **读取 SKILL.md 并按步骤执行**，而非通过接口调用
-- 只有 `doc-writer` 有写权限，其他 3 个 SubAgent 只产出文本报告
+- 只有 `doc-writer` 有写权限，其他 6 个 SubAgent 只产出文本报告
 - 部分 Commands（如 `/evolve` Phase 2）直接调用 Skills，不经过 SubAgent
+- `/companion` 采用 **Plan → Build → Crystallize** 闭环，默认自动执行低/中风险操作
 
 ---
 
 ## 核心组件
 
-### Commands（7 个）
+### Commands（9 个）
 
 | 命令 | 功能 |
 |------|------|
 | `/create` | 一键创建新文档（意图 → 大纲 → 内容 → 质量门） |
+| `/companion` | 高自治写作伴侣入口（全库探索 → 执行 → 真知沉淀） |
+| `/focus` | 快速切换探索焦点并同步伴侣状态 |
 | `/review` | 只读质量审阅（调用 doc-analyst，输出评分报告） |
 | `/iterate` | 基于反馈迭代文档（智能追问 + 质量门） |
 | `/evolve` | 文档树结构演进 |
@@ -70,7 +76,7 @@ graph TB
 | `/ingest-remote` | 导入外部 AI 回答 |
 | `/do-todo` | 处理待办事项 |
 
-### Skills（10 个）
+### Skills（13 个）
 
 | Skill | 功能 |
 |-------|------|
@@ -84,10 +90,13 @@ graph TB
 | `doc-tree-evolve` | 文档树结构演进 |
 | `hardness-classify` | 六维硬度评估 |
 | `todo-append` | TODO 追加机制 |
+| `doc-focus-map` | 全库主题图谱与焦点迁移分析 |
+| `knowledge-crystallize` | 真知提炼（论断 + 证据链 + 置信度） |
+| `companion-state-sync` | 伴侣控制平面状态同步 |
 
 > 另有 `quality-gate` Skill 作为可复用的质量门循环逻辑，由 `/create` 和 `/iterate` 共享调用。
 
-### SubAgents（4 个）
+### SubAgents（7 个）
 
 | Agent | Temperature | 职责 | 调用 Skills |
 |-------|:-----------:|------|------------|
@@ -95,6 +104,9 @@ graph TB
 | `doc-writer` | 0.7 | 内容填充、格式化 | `doc-content-fill`, `doc-format-normalize`, `doc-tree-fill` |
 | `doc-analyst` | 0.1 | 质量评估（7 维度） | `doc-evaluate` |
 | `doc-library-analyst` | 0.1 | 全库扫描、知识图谱 | `doc-evaluate` |
+| `doc-explorer` | 0.2 | 主题探索与焦点迁移建议 | `doc-focus-map` |
+| `doc-companion-planner` | 0.25 | 伴侣执行计划编排 | `doc-tree-evolve` |
+| `knowledge-synthesizer` | 0.2 | 真知提炼与冲突检测 | `knowledge-crystallize` |
 
 > **详细协作架构**：见 [maedoc/agent-architecture.md](../../maedoc/agent-architecture.md)
 
@@ -110,6 +122,22 @@ graph TB
 ```
 
 doc-analyst 在独立上下文中评分，避免"自说自话"偏差。
+
+### 伴侣闭环
+
+```
+[Plan: doc-explorer + doc-companion-planner]
+                    ↓
+[Build: create/iterate/evolve 链路执行]
+                    ↓
+[Crystallize: knowledge-synthesizer]
+                    ↓
+[State Sync: companion-state-sync + docs/index.md]
+```
+
+### 插件化收尾守护
+
+`maedoc-guardian` 插件监听 `docs/` 写入与 `session.idle` 事件，在每轮结束时提醒执行治理收尾，避免漏掉状态同步和 TODO 声明。
 
 ### Temperature 分层策略
 
@@ -151,6 +179,7 @@ SubAgent 无法访问主 Agent 对话历史。每次调用的 prompt 必须自�
 | 目录 | 用途 |
 |------|------|
 | `docs/` | 输出文档存放位置 |
+| `docs/companion/` | 伴侣控制平面（焦点/主题图谱/知识晶体/会话续航） |
 | `.opencode/` | Skills、Commands、Agents 定义 |
 | `.docforge/` | 远程桥接工作区 |
 | `maedoc/` | 项目自身规范与迭代计划 |
@@ -160,6 +189,7 @@ SubAgent 无法访问主 Agent 对话历史。每次调用的 prompt 必须自�
 ## 相关文档
 
 - [核心数据流](./data-flow.md) — 数据如何在各层流转
+- [伴侣模式架构](./companion-mode.md) — 自治闭环与控制平面
 - [安全边界](./security-boundary.md) — 各层安全措施
 - [SubAgent 协作架构](../../maedoc/agent-architecture.md) — 详细的 SubAgent 设计
 - [AGENTS.md](../../AGENTS.md) — 完整 Agent 行为准则

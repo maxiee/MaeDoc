@@ -3,13 +3,23 @@
 {
   // 禁用会话分享，确保文档内容不外泄
   "share": "disabled",
+  // 启用文档库守护插件：docs/ 发生写入后在 session idle 触发治理提醒
+  "plugins": {
+    "enabled": [
+      "maedoc-guardian"
+    ]
+  },
   // 权限策略：所有敏感操作均需用户确认
   "permission": {
-    "edit": "allow", // 文件编辑前询问
-    "bash": "allow", // 执行 Shell 命令前询问
-    "webfetch": "allow", // 网络请求前询问
-    "external_directory": "allow", // 访问外部目录前询问
-    "doom_loop": "allow" // 检测到循环卡死时询问
+    "edit": "allow", // 允许编辑（由命令层控制确认策略）
+    "bash": "allow", // 允许执行命令（由命令层控制确认策略）
+    "webfetch": "allow", // 允许网络请求（敏感外发仍需脱敏检查）
+    "external_directory": "allow", // 允许外部目录访问（命令内需说明原因）
+    "doom_loop": "allow", // 允许循环保护机制继续执行
+    "plugin": {
+      "*": "ask",
+      "maedoc-guardian": "allow"
+    }
   },
   // 上下文压缩策略：自动压缩，保留关键上下文
   "compaction": {
